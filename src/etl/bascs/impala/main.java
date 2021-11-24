@@ -714,6 +714,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tbMaestroProductos = new javax.swing.JTable();
         lMaestroCantidad = new javax.swing.JLabel();
         tMaestroCantidad = new javax.swing.JTextField();
+        tProductoEstado = new javax.swing.JTextField();
+        cbOrigen = new javax.swing.JComboBox<>();
         pConsultaPrestashop = new javax.swing.JPanel();
         bPrestashopProcesar = new javax.swing.JButton();
         bPrestashopLimpiar = new javax.swing.JButton();
@@ -824,8 +826,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         pDebug = new javax.swing.JPanel();
         spDebug = new javax.swing.JScrollPane();
         taDebug = new javax.swing.JTextArea();
-        pConsulta1 = new javax.swing.JPanel();
-        tpConsulta1 = new javax.swing.JTabbedPane();
+        pWebsite = new javax.swing.JPanel();
+        tpWebsite = new javax.swing.JTabbedPane();
         pConsultaProductos = new javax.swing.JPanel();
         sProductoSeparador5 = new javax.swing.JSeparator();
         bMaestroLimpiar1 = new javax.swing.JButton();
@@ -853,8 +855,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         taProductoImagen1 = new javax.swing.JLabel();
         tProductoEAN1 = new javax.swing.JTextField();
         lCuotas = new javax.swing.JLabel();
-        tProductoEstado = new javax.swing.JTextField();
-        cbOrigen = new javax.swing.JComboBox<>();
+        bProductoLimpiar2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ETL - PrestaShop - v210617");
@@ -942,7 +943,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     .addComponent(tPrestashopExportColumnas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(644, Short.MAX_VALUE))
+                .addContainerGap(694, Short.MAX_VALUE))
         );
 
         tpPrincipal.addTab("Prestashop", pPrestashop);
@@ -1363,15 +1364,33 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tMaestroCantidad.setEnabled(false);
         tMaestroCantidad.setPreferredSize(new java.awt.Dimension(100, 20));
 
+        tProductoEstado.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tProductoEstado.setEnabled(false);
+        tProductoEstado.setPreferredSize(new java.awt.Dimension(600, 20));
+        tProductoEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tProductoEstadoActionPerformed(evt);
+            }
+        });
+
+        cbOrigen.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        cbOrigen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Impala", "Jellyfish" }));
+        cbOrigen.setPreferredSize(new java.awt.Dimension(60, 20));
+        cbOrigen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbOrigenActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pConsultaMaestroLayout = new javax.swing.GroupLayout(pConsultaMaestro);
         pConsultaMaestro.setLayout(pConsultaMaestroLayout);
         pConsultaMaestroLayout.setHorizontalGroup(
             pConsultaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaMaestroLayout.createSequentialGroup()
+            .addGroup(pConsultaMaestroLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addGroup(pConsultaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(sProductoSeparador2, javax.swing.GroupLayout.DEFAULT_SIZE, 1020, Short.MAX_VALUE)
-                    .addGroup(pConsultaMaestroLayout.createSequentialGroup()
+                .addGroup(pConsultaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sProductoSeparador2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1005, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaMaestroLayout.createSequentialGroup()
                         .addComponent(lMaestroCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(5, 5, 5)
                         .addComponent(tMaestroCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1379,8 +1398,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(bMaestroLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bMaestroBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(spMaestroProductos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(5, 5, 5))
+                    .addComponent(spMaestroProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pConsultaMaestroLayout.createSequentialGroup()
+                        .addComponent(tProductoEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         pConsultaMaestroLayout.setVerticalGroup(
             pConsultaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1394,9 +1416,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(bMaestroBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(5, 5, 5)
                 .addComponent(sProductoSeparador2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(spMaestroProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addComponent(spMaestroProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(pConsultaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tProductoEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbOrigen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(130, 130, 130))
         );
 
         tpConsulta.addTab("Maestro", pConsultaMaestro);
@@ -1477,7 +1503,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                 .addComponent(tPrestashopFileExport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(tPrestashopWorkerEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 142, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
                                 .addComponent(bPrestashopAbrir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(5, 5, 5)
                                 .addComponent(bPrestashopLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1489,10 +1515,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGroup(pConsultaPrestashopLayout.createSequentialGroup()
                     .addGap(628, 628, 628)
                     .addComponent(lMaestroCantidad2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(302, Short.MAX_VALUE)))
+                    .addContainerGap(282, Short.MAX_VALUE)))
             .addGroup(pConsultaPrestashopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaPrestashopLayout.createSequentialGroup()
-                    .addContainerGap(312, Short.MAX_VALUE)
+                    .addContainerGap(292, Short.MAX_VALUE)
                     .addComponent(lMaestroCantidad7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(618, 618, 618)))
         );
@@ -1511,16 +1537,16 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGap(5, 5, 5)
                 .addComponent(sProductoSeparador3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spPrestashop, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
+                .addComponent(spPrestashop, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(pConsultaPrestashopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(pConsultaPrestashopLayout.createSequentialGroup()
                     .addGap(331, 331, 331)
                     .addComponent(lMaestroCantidad2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(353, Short.MAX_VALUE)))
+                    .addContainerGap(397, Short.MAX_VALUE)))
             .addGroup(pConsultaPrestashopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaPrestashopLayout.createSequentialGroup()
-                    .addContainerGap(363, Short.MAX_VALUE)
+                    .addContainerGap(407, Short.MAX_VALUE)
                     .addComponent(lMaestroCantidad7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(321, 321, 321)))
         );
@@ -1532,16 +1558,15 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         pConsultaLayout.setHorizontalGroup(
             pConsultaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pConsultaLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(tpConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addContainerGap()
+                .addComponent(tpConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, 1015, Short.MAX_VALUE)
+                .addContainerGap())
         );
         pConsultaLayout.setVerticalGroup(
             pConsultaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pConsultaLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(tpConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, 736, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(tpConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 780, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         tpPrincipal.addTab("Consulta", pConsulta);
@@ -1639,7 +1664,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGroup(pCGeneralesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lBASCSInstancia3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tGeneralesEnviosHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(584, Short.MAX_VALUE))
+                .addContainerGap(632, Short.MAX_VALUE))
         );
 
         tpConfiguracion.addTab("Generales", pCGenerales);
@@ -2452,7 +2477,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             pConfiguracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pConfiguracionLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(tpConfiguracion, javax.swing.GroupLayout.DEFAULT_SIZE, 735, Short.MAX_VALUE)
+                .addComponent(tpConfiguracion, javax.swing.GroupLayout.DEFAULT_SIZE, 783, Short.MAX_VALUE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -2479,16 +2504,16 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             pDebugLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pDebugLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addComponent(spDebug, javax.swing.GroupLayout.DEFAULT_SIZE, 737, Short.MAX_VALUE)
+                .addComponent(spDebug, javax.swing.GroupLayout.DEFAULT_SIZE, 787, Short.MAX_VALUE)
                 .addGap(5, 5, 5))
         );
 
         tpPrincipal.addTab("Debug", pDebug);
 
-        pConsulta1.setPreferredSize(new java.awt.Dimension(980, 730));
+        pWebsite.setPreferredSize(new java.awt.Dimension(980, 730));
 
-        tpConsulta1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tpConsulta1.setPreferredSize(new java.awt.Dimension(970, 720));
+        tpWebsite.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tpWebsite.setPreferredSize(new java.awt.Dimension(970, 720));
 
         pConsultaProductos.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         pConsultaProductos.setPreferredSize(new java.awt.Dimension(960, 710));
@@ -2565,12 +2590,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(bMaestroBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(5, 5, 5)
                 .addComponent(sProductoSeparador5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(spMaestroProductos1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(spMaestroProductos1, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(93, 93, 93))
         );
 
-        tpConsulta1.addTab("Productos", pConsultaProductos);
+        tpWebsite.addTab("Productos", pConsultaProductos);
 
         pConsultaProducto.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         pConsultaProducto.setPreferredSize(new java.awt.Dimension(960, 710));
@@ -2662,6 +2687,15 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lCuotas.setText("Cuotas");
         lCuotas.setPreferredSize(new java.awt.Dimension(80, 20));
 
+        bProductoLimpiar2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        bProductoLimpiar2.setText("Actualizar");
+        bProductoLimpiar2.setPreferredSize(new java.awt.Dimension(80, 20));
+        bProductoLimpiar2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bProductoLimpiar2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pConsultaProductoLayout = new javax.swing.GroupLayout(pConsultaProducto);
         pConsultaProducto.setLayout(pConsultaProductoLayout);
         pConsultaProductoLayout.setHorizontalGroup(
@@ -2671,26 +2705,25 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGroup(pConsultaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pConsultaProductoLayout.createSequentialGroup()
                         .addGroup(pConsultaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pConsultaProductoLayout.createSequentialGroup()
-                                .addComponent(lProductoDescripcionLarga1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(spProductoDescripcionLarga1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaProductoLayout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addGroup(pConsultaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(lCuotas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lProductoCategoria1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(pConsultaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(pConsultaProductoLayout.createSequentialGroup()
-                                        .addComponent(tProductoCategoria1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lProductoMarca1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(tProductoMarca1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(spProductoImagenes1, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)))
+                                .addComponent(tProductoCategoria1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(87, 87, 87)
+                                .addComponent(lProductoMarca1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tProductoMarca1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18))
+                            .addGroup(pConsultaProductoLayout.createSequentialGroup()
+                                .addComponent(lProductoDescripcionLarga1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pConsultaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(spProductoImagenes1, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(spProductoDescripcionLarga1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(taProductoImagen1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pConsultaProductoLayout.createSequentialGroup()
                         .addComponent(lProductoCodigo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2699,10 +2732,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(tProductoEAN1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tProductoDescripcion1, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tProductoDescripcion1, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(bProductoLimpiar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bProductoLimpiar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(5, 5, 5)
                         .addComponent(bProductoBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(sProductoSeparador4))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -2714,7 +2749,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGroup(pConsultaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pConsultaProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(bProductoLimpiar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(bProductoBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(bProductoBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bProductoLimpiar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tProductoDescripcion1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tProductoEAN1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tProductoID1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2742,44 +2778,26 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addGap(125, 125, 125))))
         );
 
-        tpConsulta1.addTab("Producto", pConsultaProducto);
+        tpWebsite.addTab("Producto", pConsultaProducto);
 
-        javax.swing.GroupLayout pConsulta1Layout = new javax.swing.GroupLayout(pConsulta1);
-        pConsulta1.setLayout(pConsulta1Layout);
-        pConsulta1Layout.setHorizontalGroup(
-            pConsulta1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pConsulta1Layout.createSequentialGroup()
+        javax.swing.GroupLayout pWebsiteLayout = new javax.swing.GroupLayout(pWebsite);
+        pWebsite.setLayout(pWebsiteLayout);
+        pWebsiteLayout.setHorizontalGroup(
+            pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pWebsiteLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(tpConsulta1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
-        pConsulta1Layout.setVerticalGroup(
-            pConsulta1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pConsulta1Layout.createSequentialGroup()
+        pWebsiteLayout.setVerticalGroup(
+            pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pWebsiteLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(tpConsulta1, javax.swing.GroupLayout.PREFERRED_SIZE, 712, Short.MAX_VALUE)
-                .addGap(35, 35, 35))
+                .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
+                .addGap(73, 73, 73))
         );
 
-        tpPrincipal.addTab("Website", pConsulta1);
-
-        tProductoEstado.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tProductoEstado.setEnabled(false);
-        tProductoEstado.setPreferredSize(new java.awt.Dimension(600, 20));
-        tProductoEstado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tProductoEstadoActionPerformed(evt);
-            }
-        });
-
-        cbOrigen.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        cbOrigen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Impala", "Jellyfish" }));
-        cbOrigen.setPreferredSize(new java.awt.Dimension(60, 20));
-        cbOrigen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbOrigenActionPerformed(evt);
-            }
-        });
+        tpPrincipal.addTab("Website", pWebsite);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -2787,22 +2805,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(tProductoEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 1040, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tProductoEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbOrigen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0))
+            .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 824, Short.MAX_VALUE)
         );
 
         pack();
@@ -2957,10 +2964,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         // TODO add your handling code here:
     }//GEN-LAST:event_tJellyfishRecursoProductoImagenesActionPerformed
 
-    private void cbOrigenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbOrigenActionPerformed
-
-    }//GEN-LAST:event_cbOrigenActionPerformed
-
     private void tImpalaHilosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tImpalaHilosActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tImpalaHilosActionPerformed
@@ -3039,6 +3042,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         // TODO add your handling code here:
     }//GEN-LAST:event_bMaestroBuscar1ActionPerformed
 
+    private void bProductoLimpiar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoLimpiar2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bProductoLimpiar2ActionPerformed
+
+    private void cbOrigenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbOrigenActionPerformed
+
+    }//GEN-LAST:event_cbOrigenActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -3079,6 +3090,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JButton bProductoBuscar1;
     private javax.swing.JButton bProductoLimpiar;
     private javax.swing.JButton bProductoLimpiar1;
+    private javax.swing.JButton bProductoLimpiar2;
     private javax.swing.JComboBox<String> cbOrigen;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
@@ -3169,7 +3181,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JPanel pCPrestashop;
     private javax.swing.JPanel pConfiguracion;
     private javax.swing.JPanel pConsulta;
-    private javax.swing.JPanel pConsulta1;
     private javax.swing.JPanel pConsultaDetalle;
     private javax.swing.JPanel pConsultaMaestro;
     private javax.swing.JPanel pConsultaPrestashop;
@@ -3177,6 +3188,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JPanel pConsultaProductos;
     private javax.swing.JPanel pDebug;
     private javax.swing.JPanel pPrestashop;
+    private javax.swing.JPanel pWebsite;
     private javax.swing.JSeparator sProductoSeparador1;
     private javax.swing.JSeparator sProductoSeparador2;
     private javax.swing.JSeparator sProductoSeparador3;
@@ -3271,8 +3283,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JTable tbProductoImagenes1;
     private javax.swing.JTabbedPane tpConfiguracion;
     private javax.swing.JTabbedPane tpConsulta;
-    private javax.swing.JTabbedPane tpConsulta1;
     private javax.swing.JTabbedPane tpPrincipal;
+    private javax.swing.JTabbedPane tpWebsite;
     // End of variables declaration//GEN-END:variables
 
     @Override

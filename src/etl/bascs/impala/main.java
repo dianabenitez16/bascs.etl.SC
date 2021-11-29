@@ -6,6 +6,7 @@
 package etl.bascs.impala;
 
 import com.formdev.flatlaf.IntelliJTheme;
+import etl.bascs.impala.clases.ConexionDB;
 import etl.bascs.impala.clases.Producto;
 import etl.bascs.impala.clases.Scalr;
 import etl.bascs.impala.config.Propiedades;
@@ -37,6 +38,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -55,6 +60,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -344,7 +350,83 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             tbMaestroProductos.getColumnModel().getColumn(i).setPreferredWidth(tablaWithMaestro[i]);
         }
     }
+         public DefaultTableModel mostraritm()
+    {
+        String []  nombresColumnas = {"Codigo","Descripcion","DesLarga","Cod Alt","Cod2","Minimo","Maximo","Fecha"};
+        String [] registros = new String[8];
+        
+        DefaultTableModel modelo = new DefaultTableModel(null,nombresColumnas);
+        
+        String sql = "SELECT * FROM items where descripcion like '%Bom%'";
+        
+        Connection cn = null;
+        
+        PreparedStatement pst = null;
+        
+        ResultSet rs = null;
+        
+        try
+        {
+            cn = ConexionDB.conectar();
+            
+            pst = cn.prepareStatement(sql);                        
+            
+            rs = pst.executeQuery();
+            
+            while(rs.next())
+            {
+                registros[0] = rs.getString("coditm");
+                registros[1] = rs.getString("descripcion");
+                registros[2] = rs.getString("descripcionlarga");
+        //        registros[4] = rs.getString("itemprefi");
+        //        registros[5] = rs.getString("tipovalor");
+        //        registros[6] = rs.getString("xxxtipobienserv");
+                registros[3] = rs.getString("coditmalternativo");
+                registros[4] = rs.getString("codagr");
+                registros[5] = rs.getString("minimo");
+                registros[6] = rs.getString("maximo");
+      //        registros[11] = rs.getString("despachos");
+        //        registros[12] = rs.getString("unicompras");
+          //      registros[13] = rs.getString("univentas");
+            //    registros[14] = rs.getString("dimension");
+                registros[7] = rs.getString("fechareg");
+       //         registros[16] = rs.getString("peso");
+       //         registros[17] = rs.getString("volumen");
+                
+                
+                
+                modelo.addRow(registros);
+                
+            }
+            
+           
+        }
+        catch(SQLException e)
+        {
+            
+            JOptionPane.showMessageDialog(null,"Error al conectar" + e);
+            
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null) rs.close();
+                
+                if (pst != null) pst.close();
+                
+                if (cn != null) cn.close();
+            }
+            catch(SQLException e)
+            {
+                JOptionPane.showMessageDialog(null,e);
+            }
+        }
+         return modelo;
+    }
     
+
+  
     public void generarArchivoContenido(Object[] headers, Object[][] contenido, String filename){
         File carpeta = new File("export/");
         Writer out;
@@ -833,7 +915,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         bMaestroLimpiar1 = new javax.swing.JButton();
         bMaestroBuscar1 = new javax.swing.JButton();
         spMaestroProductos1 = new javax.swing.JScrollPane();
-        tbMaestroProductos1 = new javax.swing.JTable();
+        tbWeb = new javax.swing.JTable();
         lMaestroCantidad1 = new javax.swing.JLabel();
         tMaestroCantidad1 = new javax.swing.JTextField();
         pConsultaProducto = new javax.swing.JPanel();
@@ -2541,14 +2623,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         spMaestroProductos1.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         spMaestroProductos1.setPreferredSize(new java.awt.Dimension(900, 480));
 
-        tbMaestroProductos1.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
-        tbMaestroProductos1.setModel(new javax.swing.table.DefaultTableModel(
+        tbWeb.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
+        tbWeb.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             tablaHeaderMaestro
         ));
-        spMaestroProductos1.setViewportView(tbMaestroProductos1);
+        spMaestroProductos1.setViewportView(tbWeb);
 
         lMaestroCantidad1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad1.setText("Cantidad");
@@ -3039,7 +3121,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }//GEN-LAST:event_bMaestroLimpiar1ActionPerformed
 
     private void bMaestroBuscar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMaestroBuscar1ActionPerformed
-        // TODO add your handling code here:
+ 
+        DefaultTableModel modelo = mostraritm();
+        
+        tbWeb.setModel(modelo);        // TODO add your handling code here:
     }//GEN-LAST:event_bMaestroBuscar1ActionPerformed
 
     private void bProductoLimpiar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoLimpiar2ActionPerformed
@@ -3276,11 +3361,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JTable tbCPrestashopCargado;
     private javax.swing.JTable tbCPrestashopDefault;
     private javax.swing.JTable tbMaestroProductos;
-    private javax.swing.JTable tbMaestroProductos1;
     private javax.swing.JTable tbPrestashop;
     private javax.swing.JTable tbProductoDetallesTecnicos;
     private javax.swing.JTable tbProductoImagenes;
     private javax.swing.JTable tbProductoImagenes1;
+    private javax.swing.JTable tbWeb;
     private javax.swing.JTabbedPane tpConfiguracion;
     private javax.swing.JTabbedPane tpConsulta;
     private javax.swing.JTabbedPane tpPrincipal;

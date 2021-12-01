@@ -54,7 +54,7 @@ public class DetalleWorker extends SwingWorker<Producto, String> implements Prop
                     setProgress(100);
                 }else{
                     error = true;
-                    publish("No se obtubo información al consultar: "+producto.getCodigo());
+                    publish("No se obtuvo información al consultar: "+producto.getCodigo());
                     //System.out.println("_No se obtubo información al consultar: "+producto.getCodigo());
                 }
             }else{

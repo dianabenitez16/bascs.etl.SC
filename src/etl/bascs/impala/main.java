@@ -8,6 +8,7 @@ package etl.bascs.impala;
 import com.formdev.flatlaf.IntelliJTheme;
 import etl.bascs.impala.clases.ConexionDB;
 import etl.bascs.impala.clases.Producto;
+import etl.bascs.impala.clases.ProductosBASCs;
 import etl.bascs.impala.clases.Scalr;
 import etl.bascs.impala.config.Propiedades;
 import etl.bascs.impala.json.ConsultaHttp;
@@ -95,6 +96,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public String[] tablaHeaderPrestashop;
     
     public Producto productoBusqueda;
+    public ProductosBASCs busqueda;
             
     /* CONSTRUCTOR */        
     /**********************************************************************************************************/
@@ -145,6 +147,64 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         
         tProductoEstado.setText("");
     }
+    public void buscarProductoBASCs(String coditm){
+        String []  nombresColumnas = {"Codigo","Descripcion","DesLarga","Cod Alt","Cod2","Minimo","Maximo","Fecha"};
+        String [] registros = new String[8];
+        
+        DefaultTableModel modelo = new DefaultTableModel(null,nombresColumnas);
+        
+        String sql = "SELECT * FROM items where coditm= 'coditm'";     
+        Connection cn = null;     
+        PreparedStatement pst = null;     
+        ResultSet rs = null;     
+        try
+        {
+            cn = ConexionDB.conectar();            
+            pst = cn.prepareStatement(sql);                                
+            rs = pst.executeQuery();
+            
+            while(rs.next())
+            {
+                registros[0] = rs.getString("coditm");
+                registros[1] = rs.getString("descripcion");
+                registros[2] = rs.getString("descripcionlarga");
+        //        registros[4] = rs.getString("itemprefi");
+        //        registros[5] = rs.getString("tipovalor");
+        //        registros[6] = rs.getString("xxxtipobienserv");
+                registros[3] = rs.getString("coditmalternativo");
+                registros[4] = rs.getString("codagr");
+                registros[5] = rs.getString("minimo");
+                registros[6] = rs.getString("maximo");
+      //        registros[11] = rs.getString("despachos");
+        //        registros[12] = rs.getString("unicompras");
+          //      registros[13] = rs.getString("univentas");
+            //    registros[14] = rs.getString("dimension");
+                registros[7] = rs.getString("fechareg");
+       //         registros[16] = rs.getString("peso");
+       //         registros[17] = rs.getString("volumen");
+                modelo.addRow(registros);
+            }
+        }
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(null,"Error al conectar" + e);
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null) rs.close();
+                
+                if (pst != null) pst.close();
+                
+                if (cn != null) cn.close();
+            }
+            catch(SQLException e)
+            {
+                JOptionPane.showMessageDialog(null,e);
+            }
+        }
+    }
         
     public void buscarProducto(Producto producto){
         if(!tProductoID.getText().isEmpty()){
@@ -156,6 +216,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             JOptionPane.showMessageDialog(null, "Ingrese un codigo de producto válido.");
         }
     }
+ 
     
     public void cargarProducto(Producto producto){
         if(producto.cargado){
@@ -350,14 +411,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             tbMaestroProductos.getColumnModel().getColumn(i).setPreferredWidth(tablaWithMaestro[i]);
         }
     }
-         public DefaultTableModel mostraritm()
+       public DefaultTableModel mostraritm() //SARA_COMERCIAL PRUEBA
     {
         String []  nombresColumnas = {"Codigo","Descripcion","DesLarga","Cod Alt","Cod2","Minimo","Maximo","Fecha"};
         String [] registros = new String[8];
         
         DefaultTableModel modelo = new DefaultTableModel(null,nombresColumnas);
         
-        String sql = "SELECT * FROM items where descripcion like '%Bom%'";
+        String sql = "SELECT * FROM items where descripcion like '%hel%'";
         
         Connection cn = null;
         
@@ -908,7 +969,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         pDebug = new javax.swing.JPanel();
         spDebug = new javax.swing.JScrollPane();
         taDebug = new javax.swing.JTextArea();
-        pWebsite = new javax.swing.JPanel();
+        pBASCs = new javax.swing.JPanel();
         tpWebsite = new javax.swing.JTabbedPane();
         pConsultaProductos = new javax.swing.JPanel();
         sProductoSeparador5 = new javax.swing.JSeparator();
@@ -925,11 +986,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lProductoCategoria1 = new javax.swing.JLabel();
         bProductoLimpiar1 = new javax.swing.JButton();
         bProductoBuscar1 = new javax.swing.JButton();
-        tProductoID1 = new javax.swing.JTextField();
+        coditm = new javax.swing.JTextField();
         sProductoSeparador4 = new javax.swing.JSeparator();
         tProductoDescripcion1 = new javax.swing.JTextField();
         spProductoDescripcionLarga1 = new javax.swing.JScrollPane();
-        taProductoDescripcionLarga1 = new javax.swing.JTextArea();
+        taProductoDescripcionLargaBASCs = new javax.swing.JTextArea();
         tProductoMarca1 = new javax.swing.JTextField();
         tProductoCategoria1 = new javax.swing.JTextField();
         spProductoImagenes1 = new javax.swing.JScrollPane();
@@ -938,6 +999,36 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoEAN1 = new javax.swing.JTextField();
         lCuotas = new javax.swing.JLabel();
         bProductoLimpiar2 = new javax.swing.JButton();
+        pWebsite = new javax.swing.JPanel();
+        tpWebsite1 = new javax.swing.JTabbedPane();
+        pConsultaProductos1 = new javax.swing.JPanel();
+        sProductoSeparador6 = new javax.swing.JSeparator();
+        bMaestroLimpiar2 = new javax.swing.JButton();
+        bMaestroBuscar2 = new javax.swing.JButton();
+        spMaestroProductos2 = new javax.swing.JScrollPane();
+        tbWeb1 = new javax.swing.JTable();
+        lMaestroCantidad8 = new javax.swing.JLabel();
+        tMaestroCantidad2 = new javax.swing.JTextField();
+        pConsultaProducto1 = new javax.swing.JPanel();
+        lProductoCodigo2 = new javax.swing.JLabel();
+        lProductoDescripcionLarga2 = new javax.swing.JLabel();
+        lProductoMarca2 = new javax.swing.JLabel();
+        lProductoCategoria2 = new javax.swing.JLabel();
+        bProductoLimpiar3 = new javax.swing.JButton();
+        bProductoBuscar2 = new javax.swing.JButton();
+        tProductoID2 = new javax.swing.JTextField();
+        sProductoSeparador7 = new javax.swing.JSeparator();
+        tProductoDescripcion2 = new javax.swing.JTextField();
+        spProductoDescripcionLarga2 = new javax.swing.JScrollPane();
+        taProductoDescripcionLarga2 = new javax.swing.JTextArea();
+        tProductoMarca2 = new javax.swing.JTextField();
+        tProductoCategoria2 = new javax.swing.JTextField();
+        spProductoImagenes2 = new javax.swing.JScrollPane();
+        tbProductoImagenes2 = new javax.swing.JTable();
+        taProductoImagen2 = new javax.swing.JLabel();
+        tProductoEAN2 = new javax.swing.JTextField();
+        lCuotas1 = new javax.swing.JLabel();
+        bProductoLimpiar4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ETL - PrestaShop - v210617");
@@ -1090,6 +1181,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         tProductoID.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoID.setPreferredSize(new java.awt.Dimension(100, 20));
+        tProductoID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tProductoIDActionPerformed(evt);
+            }
+        });
 
         tProductoDescripcion.setEditable(false);
         tProductoDescripcion.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -2592,7 +2688,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         tpPrincipal.addTab("Debug", pDebug);
 
-        pWebsite.setPreferredSize(new java.awt.Dimension(980, 730));
+        pBASCs.setPreferredSize(new java.awt.Dimension(980, 730));
 
         tpWebsite.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tpWebsite.setPreferredSize(new java.awt.Dimension(970, 720));
@@ -2716,8 +2812,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        tProductoID1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tProductoID1.setPreferredSize(new java.awt.Dimension(100, 20));
+        coditm.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        coditm.setPreferredSize(new java.awt.Dimension(100, 20));
 
         tProductoDescripcion1.setEditable(false);
         tProductoDescripcion1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -2728,12 +2824,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        taProductoDescripcionLarga1.setEditable(false);
-        taProductoDescripcionLarga1.setColumns(20);
-        taProductoDescripcionLarga1.setFont(new java.awt.Font("Monospaced", 0, 10)); // NOI18N
-        taProductoDescripcionLarga1.setLineWrap(true);
-        taProductoDescripcionLarga1.setRows(5);
-        spProductoDescripcionLarga1.setViewportView(taProductoDescripcionLarga1);
+        taProductoDescripcionLargaBASCs.setEditable(false);
+        taProductoDescripcionLargaBASCs.setColumns(20);
+        taProductoDescripcionLargaBASCs.setFont(new java.awt.Font("Monospaced", 0, 10)); // NOI18N
+        taProductoDescripcionLargaBASCs.setLineWrap(true);
+        taProductoDescripcionLargaBASCs.setRows(5);
+        spProductoDescripcionLarga1.setViewportView(taProductoDescripcionLargaBASCs);
 
         tProductoMarca1.setEditable(false);
         tProductoMarca1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -2810,7 +2906,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     .addGroup(pConsultaProductoLayout.createSequentialGroup()
                         .addComponent(lProductoCodigo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(5, 5, 5)
-                        .addComponent(tProductoID1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(coditm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(tProductoEAN1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -2835,7 +2931,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(bProductoLimpiar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tProductoDescripcion1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tProductoEAN1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tProductoID1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(coditm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lProductoCodigo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(5, 5, 5)
                 .addComponent(sProductoSeparador4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2862,20 +2958,311 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         tpWebsite.addTab("Producto", pConsultaProducto);
 
+        javax.swing.GroupLayout pBASCsLayout = new javax.swing.GroupLayout(pBASCs);
+        pBASCs.setLayout(pBASCsLayout);
+        pBASCsLayout.setHorizontalGroup(
+            pBASCsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pBASCsLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
+        );
+        pBASCsLayout.setVerticalGroup(
+            pBASCsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pBASCsLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
+                .addGap(73, 73, 73))
+        );
+
+        tpPrincipal.addTab("BASCs", pBASCs);
+
+        pWebsite.setPreferredSize(new java.awt.Dimension(980, 730));
+
+        tpWebsite1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tpWebsite1.setPreferredSize(new java.awt.Dimension(970, 720));
+
+        pConsultaProductos1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        pConsultaProductos1.setPreferredSize(new java.awt.Dimension(960, 710));
+
+        sProductoSeparador6.setPreferredSize(new java.awt.Dimension(900, 10));
+
+        bMaestroLimpiar2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        bMaestroLimpiar2.setText("Limpiar");
+        bMaestroLimpiar2.setPreferredSize(new java.awt.Dimension(80, 20));
+        bMaestroLimpiar2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bMaestroLimpiar2ActionPerformed(evt);
+            }
+        });
+
+        bMaestroBuscar2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        bMaestroBuscar2.setText("Buscar");
+        bMaestroBuscar2.setPreferredSize(new java.awt.Dimension(80, 20));
+        bMaestroBuscar2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bMaestroBuscar2ActionPerformed(evt);
+            }
+        });
+
+        spMaestroProductos2.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
+        spMaestroProductos2.setPreferredSize(new java.awt.Dimension(900, 480));
+
+        tbWeb1.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
+        tbWeb1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        spMaestroProductos2.setViewportView(tbWeb1);
+
+        lMaestroCantidad8.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        lMaestroCantidad8.setText("Cantidad");
+        lMaestroCantidad8.setPreferredSize(new java.awt.Dimension(80, 20));
+
+        tMaestroCantidad2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tMaestroCantidad2.setText("0");
+        tMaestroCantidad2.setEnabled(false);
+        tMaestroCantidad2.setPreferredSize(new java.awt.Dimension(100, 20));
+
+        javax.swing.GroupLayout pConsultaProductos1Layout = new javax.swing.GroupLayout(pConsultaProductos1);
+        pConsultaProductos1.setLayout(pConsultaProductos1Layout);
+        pConsultaProductos1Layout.setHorizontalGroup(
+            pConsultaProductos1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaProductos1Layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addGroup(pConsultaProductos1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(sProductoSeparador6, javax.swing.GroupLayout.DEFAULT_SIZE, 1020, Short.MAX_VALUE)
+                    .addGroup(pConsultaProductos1Layout.createSequentialGroup()
+                        .addComponent(lMaestroCantidad8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(tMaestroCantidad2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(bMaestroLimpiar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bMaestroBuscar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spMaestroProductos2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(5, 5, 5))
+        );
+        pConsultaProductos1Layout.setVerticalGroup(
+            pConsultaProductos1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pConsultaProductos1Layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addGroup(pConsultaProductos1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lMaestroCantidad8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tMaestroCantidad2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pConsultaProductos1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(bMaestroLimpiar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bMaestroBuscar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(5, 5, 5)
+                .addComponent(sProductoSeparador6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(spMaestroProductos2, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(93, 93, 93))
+        );
+
+        tpWebsite1.addTab("Productos", pConsultaProductos1);
+
+        pConsultaProducto1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        pConsultaProducto1.setPreferredSize(new java.awt.Dimension(960, 710));
+
+        lProductoCodigo2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        lProductoCodigo2.setText("Código");
+        lProductoCodigo2.setPreferredSize(new java.awt.Dimension(80, 20));
+
+        lProductoDescripcionLarga2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        lProductoDescripcionLarga2.setText("Descripción");
+        lProductoDescripcionLarga2.setPreferredSize(new java.awt.Dimension(80, 20));
+
+        lProductoMarca2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        lProductoMarca2.setText("Rubro");
+        lProductoMarca2.setPreferredSize(new java.awt.Dimension(80, 20));
+
+        lProductoCategoria2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        lProductoCategoria2.setText("Marca");
+        lProductoCategoria2.setPreferredSize(new java.awt.Dimension(80, 20));
+
+        bProductoLimpiar3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        bProductoLimpiar3.setText("Limpiar");
+        bProductoLimpiar3.setPreferredSize(new java.awt.Dimension(80, 20));
+        bProductoLimpiar3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bProductoLimpiar3ActionPerformed(evt);
+            }
+        });
+
+        bProductoBuscar2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        bProductoBuscar2.setText("Buscar");
+        bProductoBuscar2.setPreferredSize(new java.awt.Dimension(80, 20));
+        bProductoBuscar2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bProductoBuscar2ActionPerformed(evt);
+            }
+        });
+
+        tProductoID2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tProductoID2.setPreferredSize(new java.awt.Dimension(100, 20));
+
+        tProductoDescripcion2.setEditable(false);
+        tProductoDescripcion2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tProductoDescripcion2.setPreferredSize(new java.awt.Dimension(400, 20));
+        tProductoDescripcion2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tProductoDescripcion2ActionPerformed(evt);
+            }
+        });
+
+        taProductoDescripcionLarga2.setEditable(false);
+        taProductoDescripcionLarga2.setColumns(20);
+        taProductoDescripcionLarga2.setFont(new java.awt.Font("Monospaced", 0, 10)); // NOI18N
+        taProductoDescripcionLarga2.setLineWrap(true);
+        taProductoDescripcionLarga2.setRows(5);
+        spProductoDescripcionLarga2.setViewportView(taProductoDescripcionLarga2);
+
+        tProductoMarca2.setEditable(false);
+        tProductoMarca2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tProductoMarca2.setPreferredSize(new java.awt.Dimension(150, 20));
+
+        tProductoCategoria2.setEditable(false);
+        tProductoCategoria2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tProductoCategoria2.setPreferredSize(new java.awt.Dimension(150, 20));
+
+        spProductoImagenes2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        spProductoImagenes2.setPreferredSize(new java.awt.Dimension(400, 100));
+
+        tbProductoImagenes2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tbProductoImagenes2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Número", "Importe", "Descuento", "Porcentaje Descuento"
+            }
+        ));
+        spProductoImagenes2.setViewportView(tbProductoImagenes2);
+
+        taProductoImagen2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        taProductoImagen2.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        taProductoImagen2.setPreferredSize(new java.awt.Dimension(400, 400));
+
+        tProductoEAN2.setEditable(false);
+        tProductoEAN2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tProductoEAN2.setPreferredSize(new java.awt.Dimension(100, 20));
+
+        lCuotas1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        lCuotas1.setText("Cuotas");
+        lCuotas1.setPreferredSize(new java.awt.Dimension(80, 20));
+
+        bProductoLimpiar4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        bProductoLimpiar4.setText("Actualizar");
+        bProductoLimpiar4.setPreferredSize(new java.awt.Dimension(80, 20));
+        bProductoLimpiar4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bProductoLimpiar4ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pConsultaProducto1Layout = new javax.swing.GroupLayout(pConsultaProducto1);
+        pConsultaProducto1.setLayout(pConsultaProducto1Layout);
+        pConsultaProducto1Layout.setHorizontalGroup(
+            pConsultaProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pConsultaProducto1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pConsultaProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pConsultaProducto1Layout.createSequentialGroup()
+                        .addGroup(pConsultaProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaProducto1Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(pConsultaProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lCuotas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lProductoCategoria2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tProductoCategoria2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(87, 87, 87)
+                                .addComponent(lProductoMarca2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tProductoMarca2, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18))
+                            .addGroup(pConsultaProducto1Layout.createSequentialGroup()
+                                .addComponent(lProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pConsultaProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(spProductoImagenes2, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(spProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(taProductoImagen2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pConsultaProducto1Layout.createSequentialGroup()
+                        .addComponent(lProductoCodigo2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(tProductoID2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tProductoEAN2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tProductoDescripcion2, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(bProductoLimpiar4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bProductoLimpiar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(bProductoBuscar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sProductoSeparador7))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pConsultaProducto1Layout.setVerticalGroup(
+            pConsultaProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaProducto1Layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addGroup(pConsultaProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pConsultaProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(bProductoLimpiar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bProductoBuscar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bProductoLimpiar4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tProductoDescripcion2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tProductoEAN2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tProductoID2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lProductoCodigo2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addComponent(sProductoSeparador7, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pConsultaProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(pConsultaProducto1Layout.createSequentialGroup()
+                        .addComponent(taProductoImagen2, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(263, 263, 263))
+                    .addGroup(pConsultaProducto1Layout.createSequentialGroup()
+                        .addGroup(pConsultaProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(37, 37, 37)
+                        .addGroup(pConsultaProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(spProductoImagenes2, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lCuotas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(38, 38, 38)
+                        .addGroup(pConsultaProducto1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tProductoCategoria2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lProductoCategoria2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lProductoMarca2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tProductoMarca2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(125, 125, 125))))
+        );
+
+        tpWebsite1.addTab("Producto", pConsultaProducto1);
+
         javax.swing.GroupLayout pWebsiteLayout = new javax.swing.GroupLayout(pWebsite);
         pWebsite.setLayout(pWebsiteLayout);
         pWebsiteLayout.setHorizontalGroup(
             pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pWebsiteLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(tpWebsite1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
         pWebsiteLayout.setVerticalGroup(
             pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pWebsiteLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
+                .addComponent(tpWebsite1, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
                 .addGap(73, 73, 73))
         );
 
@@ -3109,7 +3496,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }//GEN-LAST:event_bProductoLimpiar1ActionPerformed
 
     private void bProductoBuscar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoBuscar1ActionPerformed
-        // TODO add your handling code here:
+
+
     }//GEN-LAST:event_bProductoBuscar1ActionPerformed
 
     private void tProductoDescripcion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tProductoDescripcion1ActionPerformed
@@ -3134,6 +3522,34 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private void cbOrigenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbOrigenActionPerformed
 
     }//GEN-LAST:event_cbOrigenActionPerformed
+
+    private void tProductoIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tProductoIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tProductoIDActionPerformed
+
+    private void bMaestroLimpiar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMaestroLimpiar2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bMaestroLimpiar2ActionPerformed
+
+    private void bMaestroBuscar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMaestroBuscar2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bMaestroBuscar2ActionPerformed
+
+    private void bProductoLimpiar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoLimpiar3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bProductoLimpiar3ActionPerformed
+
+    private void bProductoBuscar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoBuscar2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bProductoBuscar2ActionPerformed
+
+    private void tProductoDescripcion2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tProductoDescripcion2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tProductoDescripcion2ActionPerformed
+
+    private void bProductoLimpiar4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoLimpiar4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bProductoLimpiar4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -3165,18 +3581,24 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bMaestroBuscar;
     private javax.swing.JButton bMaestroBuscar1;
+    private javax.swing.JButton bMaestroBuscar2;
     private javax.swing.JButton bMaestroLimpiar;
     private javax.swing.JButton bMaestroLimpiar1;
+    private javax.swing.JButton bMaestroLimpiar2;
     private javax.swing.JButton bPrestashopAbrir;
     private javax.swing.JButton bPrestashopLimpiar;
     private javax.swing.JButton bPrestashopProcesar;
     private javax.swing.JButton bPrestashopSeleccionar;
     private javax.swing.JButton bProductoBuscar;
     private javax.swing.JButton bProductoBuscar1;
+    private javax.swing.JButton bProductoBuscar2;
     private javax.swing.JButton bProductoLimpiar;
     private javax.swing.JButton bProductoLimpiar1;
     private javax.swing.JButton bProductoLimpiar2;
+    private javax.swing.JButton bProductoLimpiar3;
+    private javax.swing.JButton bProductoLimpiar4;
     private javax.swing.JComboBox<String> cbOrigen;
+    private javax.swing.JTextField coditm;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -3204,6 +3626,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JLabel lBASCSUsuario;
     private javax.swing.JLabel lBASCSUsuario1;
     private javax.swing.JLabel lCuotas;
+    private javax.swing.JLabel lCuotas1;
     private javax.swing.JLabel lImpalaClave;
     private javax.swing.JLabel lImpalaClave1;
     private javax.swing.JLabel lImpalaCliente;
@@ -3238,12 +3661,16 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JLabel lMaestroCantidad5;
     private javax.swing.JLabel lMaestroCantidad6;
     private javax.swing.JLabel lMaestroCantidad7;
+    private javax.swing.JLabel lMaestroCantidad8;
     private javax.swing.JLabel lProductoCategoria;
     private javax.swing.JLabel lProductoCategoria1;
+    private javax.swing.JLabel lProductoCategoria2;
     private javax.swing.JLabel lProductoCodigo;
     private javax.swing.JLabel lProductoCodigo1;
+    private javax.swing.JLabel lProductoCodigo2;
     private javax.swing.JLabel lProductoDescripcionLarga;
     private javax.swing.JLabel lProductoDescripcionLarga1;
+    private javax.swing.JLabel lProductoDescripcionLarga2;
     private javax.swing.JLabel lProductoDetallesTecnicos;
     private javax.swing.JLabel lProductoDetallesTecnicos1;
     private javax.swing.JLabel lProductoDivision;
@@ -3255,10 +3682,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JLabel lProductoExistencia5;
     private javax.swing.JLabel lProductoMarca;
     private javax.swing.JLabel lProductoMarca1;
+    private javax.swing.JLabel lProductoMarca2;
     private javax.swing.JLabel lProductoPrecio;
     private javax.swing.JLabel lProductoPrecio1;
     private javax.swing.JLabel lProductoPrecio2;
     private javax.swing.JLabel lProductoPrecio3;
+    private javax.swing.JPanel pBASCs;
     private javax.swing.JPanel pCBASCS;
     private javax.swing.JPanel pCGenerales;
     private javax.swing.JPanel pCImpala;
@@ -3270,7 +3699,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JPanel pConsultaMaestro;
     private javax.swing.JPanel pConsultaPrestashop;
     private javax.swing.JPanel pConsultaProducto;
+    private javax.swing.JPanel pConsultaProducto1;
     private javax.swing.JPanel pConsultaProductos;
+    private javax.swing.JPanel pConsultaProductos1;
     private javax.swing.JPanel pDebug;
     private javax.swing.JPanel pPrestashop;
     private javax.swing.JPanel pWebsite;
@@ -3279,17 +3710,22 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JSeparator sProductoSeparador3;
     private javax.swing.JSeparator sProductoSeparador4;
     private javax.swing.JSeparator sProductoSeparador5;
+    private javax.swing.JSeparator sProductoSeparador6;
+    private javax.swing.JSeparator sProductoSeparador7;
     private javax.swing.JScrollPane spCPrestashopCargado;
     private javax.swing.JScrollPane spCPrestashopDefault;
     private javax.swing.JScrollPane spDebug;
     private javax.swing.JScrollPane spMaestroProductos;
     private javax.swing.JScrollPane spMaestroProductos1;
+    private javax.swing.JScrollPane spMaestroProductos2;
     private javax.swing.JScrollPane spPrestashop;
     private javax.swing.JScrollPane spProductoDescripcionLarga;
     private javax.swing.JScrollPane spProductoDescripcionLarga1;
+    private javax.swing.JScrollPane spProductoDescripcionLarga2;
     private javax.swing.JScrollPane spProductoDetallesTecnicos;
     private javax.swing.JScrollPane spProductoImagenes;
     private javax.swing.JScrollPane spProductoImagenes1;
+    private javax.swing.JScrollPane spProductoImagenes2;
     private javax.swing.JTextField tBASCSBD;
     private javax.swing.JPasswordField tBASCSClave;
     private javax.swing.JTextField tBASCSInstancia;
@@ -3326,6 +3762,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JTextField tJellyfishUsuario;
     private javax.swing.JTextField tMaestroCantidad;
     private javax.swing.JTextField tMaestroCantidad1;
+    private javax.swing.JTextField tMaestroCantidad2;
     private javax.swing.JTextField tPrestashopExportColumnas;
     private javax.swing.JTextField tPrestashopExportLineas;
     private javax.swing.JTextField tPrestashopFileExport;
@@ -3333,20 +3770,24 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JLabel tPrestashopWorkerEstado;
     private javax.swing.JTextField tProductoCategoria;
     private javax.swing.JTextField tProductoCategoria1;
+    private javax.swing.JTextField tProductoCategoria2;
     private javax.swing.JTextField tProductoDescripcion;
     private javax.swing.JTextField tProductoDescripcion1;
+    private javax.swing.JTextField tProductoDescripcion2;
     private javax.swing.JTextField tProductoDivision;
     private javax.swing.JTextField tProductoEAN;
     private javax.swing.JTextField tProductoEAN1;
+    private javax.swing.JTextField tProductoEAN2;
     private javax.swing.JTextField tProductoEnvioImporte;
     private javax.swing.JTextField tProductoEstado;
     private javax.swing.JCheckBox tProductoExistencia;
     private javax.swing.JTextField tProductoFactorCosto;
     private javax.swing.JTextField tProductoFactorVenta;
     private javax.swing.JTextField tProductoID;
-    private javax.swing.JTextField tProductoID1;
+    private javax.swing.JTextField tProductoID2;
     private javax.swing.JTextField tProductoMarca;
     private javax.swing.JTextField tProductoMarca1;
+    private javax.swing.JTextField tProductoMarca2;
     private javax.swing.JTextField tProductoMoneda;
     private javax.swing.JTextField tProductoPrecioCosto;
     private javax.swing.JTextField tProductoPrecioLista;
@@ -3355,9 +3796,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JTextField tProductoStock;
     private javax.swing.JTextArea taDebug;
     private javax.swing.JTextArea taProductoDescripcionLarga;
-    private javax.swing.JTextArea taProductoDescripcionLarga1;
+    private javax.swing.JTextArea taProductoDescripcionLarga2;
+    private javax.swing.JTextArea taProductoDescripcionLargaBASCs;
     private javax.swing.JLabel taProductoImagen;
     private javax.swing.JLabel taProductoImagen1;
+    private javax.swing.JLabel taProductoImagen2;
     private javax.swing.JTable tbCPrestashopCargado;
     private javax.swing.JTable tbCPrestashopDefault;
     private javax.swing.JTable tbMaestroProductos;
@@ -3365,11 +3808,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JTable tbProductoDetallesTecnicos;
     private javax.swing.JTable tbProductoImagenes;
     private javax.swing.JTable tbProductoImagenes1;
+    private javax.swing.JTable tbProductoImagenes2;
     private javax.swing.JTable tbWeb;
+    private javax.swing.JTable tbWeb1;
     private javax.swing.JTabbedPane tpConfiguracion;
     private javax.swing.JTabbedPane tpConsulta;
     private javax.swing.JTabbedPane tpPrincipal;
     private javax.swing.JTabbedPane tpWebsite;
+    private javax.swing.JTabbedPane tpWebsite1;
     // End of variables declaration//GEN-END:variables
 
     @Override

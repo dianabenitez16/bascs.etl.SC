@@ -27,7 +27,7 @@ public String dimension;
 public String fechareg;
 public int Peso;
 public int volumen;
-
+public int rubro;
     public String getCoditm() {
         return coditm;
     }
@@ -162,6 +162,14 @@ public int volumen;
 
     public void setVolumen(int volumen) {
         this.volumen = volumen;
+    }
+
+    public int getRubro() {
+        return rubro;
+    }
+
+    public void setRubro(int rubro) {
+        this.rubro = rubro;
     }
 
 

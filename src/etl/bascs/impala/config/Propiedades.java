@@ -41,11 +41,11 @@ public class Propiedades {
         main.appendMensaje(main.propGenerales.toString());
         main.appendMensaje("");
         
-        main.propBASCS = new Properties();
-        main.propBASCS.setProperty("config","bascs");
-        cargarPropiedades(main.propBASCS,"config/bascs.conf");
-        main.appendMensaje("Se cargo archivo de configuraciones BASCS");
-        main.appendMensaje(main.propBASCS.toString());
+        main.propVictoria = new Properties();
+        main.propVictoria.setProperty("config","victoria");
+        cargarPropiedades(main.propVictoria,"config/victoria.conf");
+        main.appendMensaje("Se cargo archivo de configuraciones Victoria");
+        main.appendMensaje(main.propVictoria.toString());
         main.appendMensaje("");
                         
         main.propImpala = new Properties();
@@ -94,13 +94,12 @@ public class Propiedades {
                 propiedades.setProperty("envios_desde", "0");
                 propiedades.setProperty("envios_hasta", "499999");
                 break;
-            case "bascs":
-                propiedades.setProperty("servidor", "192.168.25.5");
-                propiedades.setProperty("puerto", "1433");
-                propiedades.setProperty("instancia", "");
-                propiedades.setProperty("db", "SARA_COMERCIAL");
-                propiedades.setProperty("usuario", "ws");
-                propiedades.setProperty("clave", "ws");
+            case "victoria":
+                propiedades.setProperty("servidor", "192.168.192.137");
+                propiedades.setProperty("puerto", "8080");
+                propiedades.setProperty("metodo", "GET");
+                propiedades.setProperty("recurso", "/victoria/webapi/productos");
+               
                 break;
             case "prestashop":
                 propiedades.setProperty("servidor", "192.168.25.5");
@@ -113,7 +112,7 @@ public class Propiedades {
             case "impala":
                 propiedades.setProperty("servidor", "181.40.23.235");
                 propiedades.setProperty("puerto", "8099");
-                propiedades.setProperty("metodo", "POST");  //Tradicional%
+               propiedades.setProperty("metodo", "POST");  //Tradicional%
                 propiedades.setProperty("cliente", "Ang0ras4");
                 propiedades.setProperty("usuario", "warthog");
                 propiedades.setProperty("clave", "joez.mapa");

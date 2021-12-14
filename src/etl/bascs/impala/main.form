@@ -112,7 +112,7 @@
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jSeparator4" min="-2" pref="10" max="-2" attributes="0"/>
-                      <EmptySpace pref="694" max="32767" attributes="0"/>
+                      <EmptySpace pref="691" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1106,28 +1106,7 @@
                               <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    tablaHeaderMaestro&#xa;)" type="code"/>
                             </Property>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-                              <TableColumnModel selectionModel="0">
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                              </TableColumnModel>
+                              <TableColumnModel selectionModel="0"/>
                             </Property>
                             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
@@ -1681,8 +1660,8 @@
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="BasCS">
-                        <Property name="tabTitle" type="java.lang.String" value="BasCS"/>
+                      <JTabbedPaneConstraints tabName="Victoria">
+                        <Property name="tabTitle" type="java.lang.String" value="Victoria"/>
                       </JTabbedPaneConstraints>
                     </Constraint>
                   </Constraints>
@@ -1698,17 +1677,17 @@
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="lBASCSUsuario" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="tBASCSUsuario" min="-2" max="-2" attributes="0"/>
+                                              <Component id="tVictoriaRecurso" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="lBASCSServidor" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="tBASCSServidor" min="-2" max="-2" attributes="0"/>
+                                              <Component id="tVictoriaSServidor" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="lBASCSInstancia" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="tBASCSInstancia" min="-2" max="-2" attributes="0"/>
+                                              <Component id="tVictoriaInstancia" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
@@ -1719,9 +1698,11 @@
                                       </Group>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="tBASCSBD" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="tBASCSClave" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="tBASCSPuerto" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="tVictoriaMet" alignment="1" min="-2" max="-2" attributes="0"/>
+                                              <Component id="tVictoriaPuerto" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Component id="tVictoriaBD" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="0" pref="485" max="32767" attributes="0"/>
                                   </Group>
@@ -1737,27 +1718,31 @@
                               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="lBASCSServidor" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tBASCSServidor" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tVictoriaSServidor" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lBASCSPuerto" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tBASCSPuerto" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tVictoriaPuerto" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="lBASCSInstancia" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tBASCSInstancia" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lBASCSBD" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tBASCSBD" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tVictoriaInstancia" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                      <Component id="lBASCSBD" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tVictoriaBD" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="lBASCSUsuario" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tBASCSUsuario" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lBASCSClave" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tBASCSClave" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tVictoriaRecurso" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                      <Component id="lBASCSClave" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tVictoriaMet" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                               <Component id="jSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="667" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1812,7 +1797,7 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Usuario"/>
+                        <Property name="text" type="java.lang.String" value="Recurso"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1823,13 +1808,13 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Clave"/>
+                        <Property name="text" type="java.lang.String" value="M&#xe9;todo"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="tBASCSServidor">
+                    <Component class="javax.swing.JTextField" name="tVictoriaSServidor">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -1840,7 +1825,7 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="tBASCSPuerto">
+                    <Component class="javax.swing.JTextField" name="tVictoriaPuerto">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -1851,10 +1836,10 @@
                         </Property>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tBASCSPuertoActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tVictoriaPuertoActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="tBASCSInstancia">
+                    <Component class="javax.swing.JTextField" name="tVictoriaInstancia">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -1865,7 +1850,7 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="tBASCSBD">
+                    <Component class="javax.swing.JTextField" name="tVictoriaMet">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -1876,7 +1861,7 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="tBASCSUsuario">
+                    <Component class="javax.swing.JTextField" name="tVictoriaRecurso">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -1887,21 +1872,21 @@
                         </Property>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tBASCSUsuarioActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tVictoriaRecursoActionPerformed"/>
                       </Events>
-                    </Component>
-                    <Component class="javax.swing.JPasswordField" name="tBASCSClave">
-                      <Properties>
-                        <Property name="editable" type="boolean" value="false"/>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Tahoma" size="10" style="0"/>
-                        </Property>
-                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[150, 20]"/>
-                        </Property>
-                      </Properties>
                     </Component>
                     <Component class="javax.swing.JSeparator" name="jSeparator2">
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="tVictoriaBD">
+                      <Properties>
+                        <Property name="editable" type="boolean" value="false"/>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="10" style="0"/>
+                        </Property>
+                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[150, 20]"/>
+                        </Property>
+                      </Properties>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -3189,8 +3174,8 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="BASCs">
-                <Property name="tabTitle" type="java.lang.String" value="BASCs"/>
+              <JTabbedPaneConstraints tabName="Victoria">
+                <Property name="tabTitle" type="java.lang.String" value="Victoria"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -3261,9 +3246,13 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="bMaestroBuscar1" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="spMaestroProductos1" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="spMaestroProductos1" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -3301,7 +3290,7 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Limpiar"/>
+                        <Property name="text" type="java.lang.String" value="Actualizar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3339,13 +3328,13 @@
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                       <SubComponents>
-                        <Component class="javax.swing.JTable" name="tbWeb">
+                        <Component class="javax.swing.JTable" name="tbBASCs">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Tahoma" size="8" style="0"/>
                             </Property>
-                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    tablaHeaderMaestro&#xa;)" type="code"/>
+                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                              <Table columnCount="0" rowCount="0"/>
                             </Property>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                               <TableColumnModel selectionModel="0"/>
@@ -3354,6 +3343,10 @@
                               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                             </Property>
                           </Properties>
+                          <Events>
+                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbBASCsMouseClicked"/>
+                            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tbBASCsMousePressed"/>
+                          </Events>
                         </Component>
                       </SubComponents>
                     </Container>
@@ -3606,7 +3599,7 @@
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                       <SubComponents>
-                        <Component class="javax.swing.JTextArea" name="taProductoDescripcionLargaBASCs">
+                        <Component class="javax.swing.JTextArea" name="desBASCs">
                           <Properties>
                             <Property name="editable" type="boolean" value="false"/>
                             <Property name="columns" type="int" value="20"/>
@@ -3915,13 +3908,13 @@
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                       <SubComponents>
-                        <Component class="javax.swing.JTable" name="tbWeb1">
+                        <Component class="javax.swing.JTable" name="tbWeb">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Tahoma" size="8" style="0"/>
                             </Property>
-                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                              <Table columnCount="0" rowCount="0"/>
+                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    tablaHeaderWeb&#xa;)" type="code"/>
                             </Property>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                               <TableColumnModel selectionModel="0"/>

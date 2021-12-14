@@ -75,6 +75,11 @@ public class Producto {
     private Double dPesoMayor;
     private Boolean pesoRecalculado;
 
+    public Producto() {
+    }
+
+    
+    
     public Producto(Properties propiedades) {
         this.id = null;
         this.codigo = null;
@@ -124,7 +129,7 @@ public class Producto {
             setPrecioCosto();
             setPrecioVenta();
             setPrecioFinal();
-            
+            System.out.println("" + productoJ);
             detallesTecnicos = new ProductoDetalleTecnico[0];
             if(productoJ.has("technical_details")){
                 JSONArray technicalDetails = productoJ.optJSONArray("technical_details");
@@ -171,8 +176,9 @@ public class Producto {
             setPrecioCosto();
             setPrecioVenta();
             setPrecioFinal();
-            
+            System.out.println(" json " + productoJ);
             cargado = true;
+            System.out.println(" " + cargado);
         } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -715,5 +721,10 @@ public class Producto {
             return false;
         }
         return true;
+    }
+       
+    public static void main(String[] args) throws Exception {
+        
+    
     }
 }

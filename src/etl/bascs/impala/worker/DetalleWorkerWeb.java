@@ -5,51 +5,45 @@
  */
 package etl.bascs.impala.worker;
 
-import etl.bascs.impala.clases.Producto;
-import etl.bascs.impala.json.ConsultaHttp;
-import etl.bascs.impala.main;
+import etl.bascs.impala.clases.ProductosVictoria;
+import etl.bascs.impala.json.ConsultaHttpVictoria;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import org.json.JSONObject;
 
 /**
  *
- * @author Juan Bogado
+ * @author User
  */
-public class DetalleWorker extends SwingWorker<Producto, String> implements PropertyChangeListener {
-    public ConsultaHttp consulta;
-    public Properties propiedades;
-    public Integer id;
-    public Producto producto;
-    public Boolean error;
-    
-    public DetalleWorker(Producto producto, Properties propImpala) {
+public class DetalleWorkerWeb extends SwingWorker<ProductosVictoria, String> implements PropertyChangeListener {
+public ConsultaHttpVictoria consulta;
+public Integer id;
+public ProductosVictoria producto;
+public Boolean error;
+public Properties propiedades;
+
+  public DetalleWorkerWeb(ProductosVictoria producto, Properties propVictoria) {
         this.producto = producto;
-        this.propiedades = propImpala;
-        this.error = false;
+         this.propiedades = propVictoria;
+         this.error = false;
+       
     }  
-    
+
     @Override
-    protected Producto doInBackground() {
-        //producto = new Producto();
-        try {
+    protected ProductosVictoria doInBackground() throws Exception {
+          try {
             setProgress(0);
-            consulta = new ConsultaHttp("http", 
-                propiedades.getProperty("servidor"), 
-                propiedades.getProperty("puerto"), 
-                propiedades.getProperty("metodo"), 
-                propiedades.getProperty("usuario"), 
-                  propiedades.getProperty("clave"), 
-                propiedades.getProperty("detalle"), 
-                "user="+propiedades.getProperty("cliente")+"&product_id="+producto.getCodigo());
+            consulta = new ConsultaHttpVictoria("http", 
+               propiedades.getProperty("servidor"), 
+               propiedades.getProperty("puerto"),         
+               propiedades.getProperty("metodo"),
+                propiedades.getProperty("recursos"));
             if(!consulta.getError()){
-                if(consulta.getJson().has("data")){
-                    JSONObject productoJ = consulta.getJson().getJSONObject("data");
+                if(!consulta.getJson().isEmpty()){
+                    JSONObject productoJ = consulta.getJson().getJSONObject("products");
                     producto.loadJSONConsulta(productoJ);
                     setProgress(100);
                 }else{
@@ -69,24 +63,21 @@ public class DetalleWorker extends SwingWorker<Producto, String> implements Prop
             publish("Error desconocido al consultar: "+producto.getCodigo());
             //Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
-        return producto;
+        return producto; //To change body of generated methods, choose Tools | Templates.
     }
-        
-    @Override
+   @Override
     protected void process(List<String> chunks) {
         for (String key : chunks) {
             System.out.println(key);
         }
     }
-
-    public Properties getPropImpala() {
+       public Properties getPropVictoria() {
         return propiedades;
     }
 
-    public void setPropImpala(Properties propImpala) {
-        this.propiedades = propImpala;
+    public void setPropVictoria(Properties propVictoria) {
+        this.propiedades = propVictoria;
     }
-
     public Integer getId() {
         return id;
     }
@@ -102,6 +93,7 @@ public class DetalleWorker extends SwingWorker<Producto, String> implements Prop
     public void setError(Boolean error) {
         this.error = error;
     }
+
     
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -112,5 +104,4 @@ public class DetalleWorker extends SwingWorker<Producto, String> implements Prop
         
         System.out.println(clase+">> "+source+" > "+value);
     }
-    
 }

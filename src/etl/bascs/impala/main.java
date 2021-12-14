@@ -9,11 +9,13 @@ import com.formdev.flatlaf.IntelliJTheme;
 import etl.bascs.impala.clases.ConexionDB;
 import etl.bascs.impala.clases.Producto;
 import etl.bascs.impala.clases.ProductosBASCs;
+import etl.bascs.impala.clases.ProductosVictoria;
 import etl.bascs.impala.clases.Scalr;
 import etl.bascs.impala.config.Propiedades;
 import etl.bascs.impala.json.ConsultaHttp;
 import etl.bascs.impala.worker.DetalleWorker;
 import etl.bascs.impala.worker.MaestroWorker;
+import etl.bascs.impala.worker.MaestroWorkerWeb;
 import etl.bascs.impala.worker.PrestashopWorker;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -30,8 +32,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -53,10 +57,12 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.jws.WebService;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -76,27 +82,36 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     
     public Propiedades propiedades;
     public Properties propGenerales = new Properties();
-    public Properties propBASCS = new Properties();
+    public Properties propVictoria = new Properties();
     public Properties propImpala = new Properties();
     public Properties propJellyfish = new Properties();
     
     public PrestashopWorker prestashopW;
-    public MaestroWorker maestroW;
+    public MaestroWorker maestroW; //aquí se instancia la clase MaestroWorker
     public DetalleWorker detalleW;
+    
+    public MaestroWorkerWeb maestroWeb;
     
     public JFileChooser fc;
     public File fPrestashopImport;
     
     public Integer contadorVolumetrico;
     
+   // public String[] tablaHeaderBASCs = new String[] {"Codigo","Descripcion","DesLarga","Cod Alt","Cod2","Minimo","Maximo","Fecha"};
+            
+    
     public String[] tablaHeaderMaestro = new String[] {"X", "ID","Codigo", "Alternativo", "EAN", "Stock", "Descripcion", "Marca", "Categoria", "Division" , "Precio"};
     public Integer[] tablaWithMaestro = new Integer[] {5,90,30,80,20,500,80,150,150,50};
     public Object[][] tablaContenidoMaestro;
     
+    public String[] tablaHeaderWeb = new String[] {"ID", "Codigo Interno", "Nombre", "Descripcion"};
+    public Integer[] tablaWeb = new Integer[] {5,90,50,500,1,100};
+    public Object[][] tablaContenidoWeb;
+    
     public String[] tablaHeaderPrestashop;
     
     public Producto productoBusqueda;
-    public ProductosBASCs busqueda;
+    public ProductosBASCs busqueda; //se instancia la clase 
             
     /* CONSTRUCTOR */        
     /**********************************************************************************************************/
@@ -146,64 +161,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         taProductoImagen.setIcon(null);
         
         tProductoEstado.setText("");
-    }
-    public void buscarProductoBASCs(String coditm){
-        String []  nombresColumnas = {"Codigo","Descripcion","DesLarga","Cod Alt","Cod2","Minimo","Maximo","Fecha"};
-        String [] registros = new String[8];
-        
-        DefaultTableModel modelo = new DefaultTableModel(null,nombresColumnas);
-        
-        String sql = "SELECT * FROM items where coditm= 'coditm'";     
-        Connection cn = null;     
-        PreparedStatement pst = null;     
-        ResultSet rs = null;     
-        try
-        {
-            cn = ConexionDB.conectar();            
-            pst = cn.prepareStatement(sql);                                
-            rs = pst.executeQuery();
-            
-            while(rs.next())
-            {
-                registros[0] = rs.getString("coditm");
-                registros[1] = rs.getString("descripcion");
-                registros[2] = rs.getString("descripcionlarga");
-        //        registros[4] = rs.getString("itemprefi");
-        //        registros[5] = rs.getString("tipovalor");
-        //        registros[6] = rs.getString("xxxtipobienserv");
-                registros[3] = rs.getString("coditmalternativo");
-                registros[4] = rs.getString("codagr");
-                registros[5] = rs.getString("minimo");
-                registros[6] = rs.getString("maximo");
-      //        registros[11] = rs.getString("despachos");
-        //        registros[12] = rs.getString("unicompras");
-          //      registros[13] = rs.getString("univentas");
-            //    registros[14] = rs.getString("dimension");
-                registros[7] = rs.getString("fechareg");
-       //         registros[16] = rs.getString("peso");
-       //         registros[17] = rs.getString("volumen");
-                modelo.addRow(registros);
-            }
-        }
-        catch(SQLException e)
-        {
-            JOptionPane.showMessageDialog(null,"Error al conectar" + e);
-        }
-        finally
-        {
-            try
-            {
-                if (rs != null) rs.close();
-                
-                if (pst != null) pst.close();
-                
-                if (cn != null) cn.close();
-            }
-            catch(SQLException e)
-            {
-                JOptionPane.showMessageDialog(null,e);
-            }
-        }
     }
         
     public void buscarProducto(Producto producto){
@@ -403,90 +360,25 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         maestroW.addPropertyChangeListener(this);
         maestroW.execute();
     }
-    
+     public void buscarMaestroWeb(){
+        maestroWeb = new MaestroWorkerWeb(getPropiedades());
+        maestroWeb.addPropertyChangeListener(this);
+        maestroWeb.execute();
+    }
     public void cargarTablaMaestro(Object[][] contenido){
         tbMaestroProductos.setModel(new javax.swing.table.DefaultTableModel(contenido,tablaHeaderMaestro));
         tbMaestroProductos.getColumnModel().removeColumn(tbMaestroProductos.getColumnModel().getColumn(0));
         for (int i = 0; i < tbMaestroProductos.getColumnCount(); i++) {
             tbMaestroProductos.getColumnModel().getColumn(i).setPreferredWidth(tablaWithMaestro[i]);
         }
-    }
-       public DefaultTableModel mostraritm() //SARA_COMERCIAL PRUEBA
-    {
-        String []  nombresColumnas = {"Codigo","Descripcion","DesLarga","Cod Alt","Cod2","Minimo","Maximo","Fecha"};
-        String [] registros = new String[8];
-        
-        DefaultTableModel modelo = new DefaultTableModel(null,nombresColumnas);
-        
-        String sql = "SELECT * FROM items where descripcion like '%hel%'";
-        
-        Connection cn = null;
-        
-        PreparedStatement pst = null;
-        
-        ResultSet rs = null;
-        
-        try
-        {
-            cn = ConexionDB.conectar();
-            
-            pst = cn.prepareStatement(sql);                        
-            
-            rs = pst.executeQuery();
-            
-            while(rs.next())
-            {
-                registros[0] = rs.getString("coditm");
-                registros[1] = rs.getString("descripcion");
-                registros[2] = rs.getString("descripcionlarga");
-        //        registros[4] = rs.getString("itemprefi");
-        //        registros[5] = rs.getString("tipovalor");
-        //        registros[6] = rs.getString("xxxtipobienserv");
-                registros[3] = rs.getString("coditmalternativo");
-                registros[4] = rs.getString("codagr");
-                registros[5] = rs.getString("minimo");
-                registros[6] = rs.getString("maximo");
-      //        registros[11] = rs.getString("despachos");
-        //        registros[12] = rs.getString("unicompras");
-          //      registros[13] = rs.getString("univentas");
-            //    registros[14] = rs.getString("dimension");
-                registros[7] = rs.getString("fechareg");
-       //         registros[16] = rs.getString("peso");
-       //         registros[17] = rs.getString("volumen");
-                
-                
-                
-                modelo.addRow(registros);
-                
-            }
-            
-           
+    } //tablawebcargar
+     public void cargarTablaWeb(Object[][] contenido){
+        tbWeb.setModel(new javax.swing.table.DefaultTableModel(contenido,tablaHeaderWeb));
+        tbWeb.getColumnModel().removeColumn(tbWeb.getColumnModel().getColumn(0));
+        for (int i = 0; i < tbWeb.getColumnCount(); i++) {
+            tbWeb.getColumnModel().getColumn(i).setPreferredWidth(tablaWeb[i]);
         }
-        catch(SQLException e)
-        {
-            
-            JOptionPane.showMessageDialog(null,"Error al conectar" + e);
-            
-        }
-        finally
-        {
-            try
-            {
-                if (rs != null) rs.close();
-                
-                if (pst != null) pst.close();
-                
-                if (cn != null) cn.close();
-            }
-            catch(SQLException e)
-            {
-                JOptionPane.showMessageDialog(null,e);
-            }
-        }
-         return modelo;
-    }
-    
-
+     }
   
     public void generarArchivoContenido(Object[] headers, Object[][] contenido, String filename){
         File carpeta = new File("export/");
@@ -650,12 +542,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tGeneralesEnviosDesde.setText(propGenerales.getProperty("envios_desde"));
         tGeneralesEnviosHasta.setText(propGenerales.getProperty("envios_hasta"));
                 
-        tBASCSServidor.setText(propBASCS.getProperty("servidor"));
-        tBASCSPuerto.setText(propBASCS.getProperty("puerto"));
-        tBASCSInstancia.setText(propBASCS.getProperty("instancia"));
-        tBASCSBD.setText(propBASCS.getProperty("db"));
-        tBASCSUsuario.setText(propBASCS.getProperty("usuario"));
-        tBASCSClave.setText(propBASCS.getProperty("clave"));
+        tVictoriaSServidor.setText(propVictoria.getProperty("servidor"));
+        tVictoriaPuerto.setText(propVictoria.getProperty("puerto"));
+        tVictoriaInstancia.setText(propVictoria.getProperty("instancia"));
+        tVictoriaMet.setText(propVictoria.getProperty("metodo"));
+        tVictoriaRecurso.setText(propVictoria.getProperty("recursos"));
+     
         
         tImpalaServidor.setText(propImpala.getProperty("servidor"));
         tImpalaPuerto.setText(propImpala.getProperty("puerto"));
@@ -732,7 +624,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 return propImpala;
         }
     }
-    
+   
 
     /* LISTENERS */
     /**********************************************************************************************************/
@@ -757,6 +649,35 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tbMaestroProductos.setDefaultEditor(Object.class, null);
         tbMaestroProductos.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         
+        tbBASCs.addMouseListener(new MouseAdapter() {
+         
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+            JTable table =(JTable) mouseEvent.getSource();
+            Point point = mouseEvent.getPoint();
+           int fila = table.rowAtPoint(point);
+            if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+
+          String codigo = tbBASCs.getValueAt(fila, 0).toString();
+   //      String descripcion = tbBASCs.getValueAt(fila, 1).toString();
+          String deslarga = tbBASCs.getValueAt(fila, 1).toString();
+      /*   String codalt = tbBASCs.getValueAt(fila, 3).toString();
+         String cod2 = tbBASCs.getValueAt(fila, 4).toString();
+         String minimo = tbBASCs.getValueAt(fila, 5).toString();
+         String maximo = tbBASCs.getValueAt(fila, 6).toString();
+         String fecha = tbBASCs.getValueAt(fila, 7).toString();*/
+         
+         coditm.setText(codigo);
+         desBASCs.setText(deslarga);
+         
+        
+                }
+            }
+        });
+        tbBASCs.setDefaultEditor(Object.class, null);
+        tbBASCs.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        
+        
         // TABLA IMAGENES 
         tbProductoImagenes.addMouseListener(new MouseAdapter() {
             @Override
@@ -770,7 +691,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
         tbProductoImagenes.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        
     }
+    
+    
     
     /* DEBUG */
     /**
@@ -890,13 +814,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lBASCSBD = new javax.swing.JLabel();
         lBASCSUsuario = new javax.swing.JLabel();
         lBASCSClave = new javax.swing.JLabel();
-        tBASCSServidor = new javax.swing.JTextField();
-        tBASCSPuerto = new javax.swing.JTextField();
-        tBASCSInstancia = new javax.swing.JTextField();
-        tBASCSBD = new javax.swing.JTextField();
-        tBASCSUsuario = new javax.swing.JTextField();
-        tBASCSClave = new javax.swing.JPasswordField();
+        tVictoriaSServidor = new javax.swing.JTextField();
+        tVictoriaPuerto = new javax.swing.JTextField();
+        tVictoriaInstancia = new javax.swing.JTextField();
+        tVictoriaMet = new javax.swing.JTextField();
+        tVictoriaRecurso = new javax.swing.JTextField();
         jSeparator2 = new javax.swing.JSeparator();
+        tVictoriaBD = new javax.swing.JTextField();
         pCImpala = new javax.swing.JPanel();
         lImpalaServidor = new javax.swing.JLabel();
         lImpalaPuerto = new javax.swing.JLabel();
@@ -976,7 +900,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         bMaestroLimpiar1 = new javax.swing.JButton();
         bMaestroBuscar1 = new javax.swing.JButton();
         spMaestroProductos1 = new javax.swing.JScrollPane();
-        tbWeb = new javax.swing.JTable();
+        tbBASCs = new javax.swing.JTable();
         lMaestroCantidad1 = new javax.swing.JLabel();
         tMaestroCantidad1 = new javax.swing.JTextField();
         pConsultaProducto = new javax.swing.JPanel();
@@ -990,7 +914,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         sProductoSeparador4 = new javax.swing.JSeparator();
         tProductoDescripcion1 = new javax.swing.JTextField();
         spProductoDescripcionLarga1 = new javax.swing.JScrollPane();
-        taProductoDescripcionLargaBASCs = new javax.swing.JTextArea();
+        desBASCs = new javax.swing.JTextArea();
         tProductoMarca1 = new javax.swing.JTextField();
         tProductoCategoria1 = new javax.swing.JTextField();
         spProductoImagenes1 = new javax.swing.JScrollPane();
@@ -1006,7 +930,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         bMaestroLimpiar2 = new javax.swing.JButton();
         bMaestroBuscar2 = new javax.swing.JButton();
         spMaestroProductos2 = new javax.swing.JScrollPane();
-        tbWeb1 = new javax.swing.JTable();
+        tbWeb = new javax.swing.JTable();
         lMaestroCantidad8 = new javax.swing.JLabel();
         tMaestroCantidad2 = new javax.swing.JTextField();
         pConsultaProducto1 = new javax.swing.JPanel();
@@ -1116,7 +1040,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     .addComponent(tPrestashopExportColumnas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(694, Short.MAX_VALUE))
+                .addContainerGap(691, Short.MAX_VALUE))
         );
 
         tpPrincipal.addTab("Prestashop", pPrestashop);
@@ -1866,46 +1790,46 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lBASCSBD.setPreferredSize(new java.awt.Dimension(80, 20));
 
         lBASCSUsuario.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lBASCSUsuario.setText("Usuario");
+        lBASCSUsuario.setText("Recurso");
         lBASCSUsuario.setPreferredSize(new java.awt.Dimension(80, 20));
 
         lBASCSClave.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lBASCSClave.setText("Clave");
+        lBASCSClave.setText("Método");
         lBASCSClave.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        tBASCSServidor.setEditable(false);
-        tBASCSServidor.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tBASCSServidor.setPreferredSize(new java.awt.Dimension(150, 20));
+        tVictoriaSServidor.setEditable(false);
+        tVictoriaSServidor.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tVictoriaSServidor.setPreferredSize(new java.awt.Dimension(150, 20));
 
-        tBASCSPuerto.setEditable(false);
-        tBASCSPuerto.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tBASCSPuerto.setPreferredSize(new java.awt.Dimension(80, 20));
-        tBASCSPuerto.addActionListener(new java.awt.event.ActionListener() {
+        tVictoriaPuerto.setEditable(false);
+        tVictoriaPuerto.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tVictoriaPuerto.setPreferredSize(new java.awt.Dimension(80, 20));
+        tVictoriaPuerto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tBASCSPuertoActionPerformed(evt);
+                tVictoriaPuertoActionPerformed(evt);
             }
         });
 
-        tBASCSInstancia.setEditable(false);
-        tBASCSInstancia.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tBASCSInstancia.setPreferredSize(new java.awt.Dimension(150, 20));
+        tVictoriaInstancia.setEditable(false);
+        tVictoriaInstancia.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tVictoriaInstancia.setPreferredSize(new java.awt.Dimension(150, 20));
 
-        tBASCSBD.setEditable(false);
-        tBASCSBD.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tBASCSBD.setPreferredSize(new java.awt.Dimension(150, 20));
+        tVictoriaMet.setEditable(false);
+        tVictoriaMet.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tVictoriaMet.setPreferredSize(new java.awt.Dimension(150, 20));
 
-        tBASCSUsuario.setEditable(false);
-        tBASCSUsuario.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tBASCSUsuario.setPreferredSize(new java.awt.Dimension(150, 20));
-        tBASCSUsuario.addActionListener(new java.awt.event.ActionListener() {
+        tVictoriaRecurso.setEditable(false);
+        tVictoriaRecurso.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tVictoriaRecurso.setPreferredSize(new java.awt.Dimension(150, 20));
+        tVictoriaRecurso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tBASCSUsuarioActionPerformed(evt);
+                tVictoriaRecursoActionPerformed(evt);
             }
         });
 
-        tBASCSClave.setEditable(false);
-        tBASCSClave.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tBASCSClave.setPreferredSize(new java.awt.Dimension(150, 20));
+        tVictoriaBD.setEditable(false);
+        tVictoriaBD.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tVictoriaBD.setPreferredSize(new java.awt.Dimension(150, 20));
 
         javax.swing.GroupLayout pCBASCSLayout = new javax.swing.GroupLayout(pCBASCS);
         pCBASCS.setLayout(pCBASCSLayout);
@@ -1919,15 +1843,15 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                             .addGroup(pCBASCSLayout.createSequentialGroup()
                                 .addComponent(lBASCSUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tBASCSUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(tVictoriaRecurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pCBASCSLayout.createSequentialGroup()
                                 .addComponent(lBASCSServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tBASCSServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(tVictoriaSServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pCBASCSLayout.createSequentialGroup()
                                 .addComponent(lBASCSInstancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tBASCSInstancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(tVictoriaInstancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(50, 50, 50)
                         .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lBASCSBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1935,9 +1859,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                             .addComponent(lBASCSPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tBASCSBD, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tBASCSClave, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tBASCSPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(tVictoriaMet, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tVictoriaPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tVictoriaBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 485, Short.MAX_VALUE))
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(10, 10, 10))
@@ -1948,27 +1873,29 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGap(5, 5, 5)
                 .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lBASCSServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tBASCSServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tVictoriaSServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lBASCSPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tBASCSPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tVictoriaPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(5, 5, 5)
                 .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lBASCSInstancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tBASCSInstancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lBASCSBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tBASCSBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                    .addComponent(tVictoriaInstancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lBASCSBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tVictoriaBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(4, 4, 4)
                 .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lBASCSUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tBASCSUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lBASCSClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tBASCSClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                    .addComponent(tVictoriaRecurso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lBASCSClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tVictoriaMet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(4, 4, 4)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(667, Short.MAX_VALUE))
         );
 
-        tpConfiguracion.addTab("BasCS", pCBASCS);
+        tpConfiguracion.addTab("Victoria", pCBASCS);
 
         pCImpala.setPreferredSize(new java.awt.Dimension(755, 200));
 
@@ -2699,7 +2626,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         sProductoSeparador5.setPreferredSize(new java.awt.Dimension(900, 10));
 
         bMaestroLimpiar1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        bMaestroLimpiar1.setText("Limpiar");
+        bMaestroLimpiar1.setText("Actualizar");
         bMaestroLimpiar1.setPreferredSize(new java.awt.Dimension(80, 20));
         bMaestroLimpiar1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2719,14 +2646,24 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         spMaestroProductos1.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         spMaestroProductos1.setPreferredSize(new java.awt.Dimension(900, 480));
 
-        tbWeb.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
-        tbWeb.setModel(new javax.swing.table.DefaultTableModel(
+        tbBASCs.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
+        tbBASCs.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
-            tablaHeaderMaestro
+            new String [] {
+
+            }
         ));
-        spMaestroProductos1.setViewportView(tbWeb);
+        tbBASCs.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbBASCsMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tbBASCsMousePressed(evt);
+            }
+        });
+        spMaestroProductos1.setViewportView(tbBASCs);
 
         lMaestroCantidad1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad1.setText("Cantidad");
@@ -2752,9 +2689,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(bMaestroLimpiar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bMaestroBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(spMaestroProductos1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(bMaestroBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(5, 5, 5))
+            .addGroup(pConsultaProductosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(spMaestroProductos1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(49, 49, 49))
         );
         pConsultaProductosLayout.setVerticalGroup(
             pConsultaProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2824,12 +2764,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        taProductoDescripcionLargaBASCs.setEditable(false);
-        taProductoDescripcionLargaBASCs.setColumns(20);
-        taProductoDescripcionLargaBASCs.setFont(new java.awt.Font("Monospaced", 0, 10)); // NOI18N
-        taProductoDescripcionLargaBASCs.setLineWrap(true);
-        taProductoDescripcionLargaBASCs.setRows(5);
-        spProductoDescripcionLarga1.setViewportView(taProductoDescripcionLargaBASCs);
+        desBASCs.setEditable(false);
+        desBASCs.setColumns(20);
+        desBASCs.setFont(new java.awt.Font("Monospaced", 0, 10)); // NOI18N
+        desBASCs.setLineWrap(true);
+        desBASCs.setRows(5);
+        spProductoDescripcionLarga1.setViewportView(desBASCs);
 
         tProductoMarca1.setEditable(false);
         tProductoMarca1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -2975,7 +2915,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGap(73, 73, 73))
         );
 
-        tpPrincipal.addTab("BASCs", pBASCs);
+        tpPrincipal.addTab("Victoria", pBASCs);
 
         pWebsite.setPreferredSize(new java.awt.Dimension(980, 730));
 
@@ -3008,16 +2948,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         spMaestroProductos2.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         spMaestroProductos2.setPreferredSize(new java.awt.Dimension(900, 480));
 
-        tbWeb1.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
-        tbWeb1.setModel(new javax.swing.table.DefaultTableModel(
+        tbWeb.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
+        tbWeb.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
-            new String [] {
-
-            }
+            tablaHeaderWeb
         ));
-        spMaestroProductos2.setViewportView(tbWeb1);
+        spMaestroProductos2.setViewportView(tbWeb);
 
         lMaestroCantidad8.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad8.setText("Cantidad");
@@ -3296,13 +3234,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         // TODO add your handling code here:
     }//GEN-LAST:event_tImpalaPuertoActionPerformed
 
-    private void tBASCSUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tBASCSUsuarioActionPerformed
+    private void tVictoriaRecursoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tVictoriaRecursoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tBASCSUsuarioActionPerformed
+    }//GEN-LAST:event_tVictoriaRecursoActionPerformed
 
-    private void tBASCSPuertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tBASCSPuertoActionPerformed
+    private void tVictoriaPuertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tVictoriaPuertoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tBASCSPuertoActionPerformed
+    }//GEN-LAST:event_tVictoriaPuertoActionPerformed
 
     private void tImpalaRecursoProductoDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tImpalaRecursoProductoDetalleActionPerformed
         // TODO add your handling code here:
@@ -3505,14 +3443,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }//GEN-LAST:event_tProductoDescripcion1ActionPerformed
 
     private void bMaestroLimpiar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMaestroLimpiar1ActionPerformed
-        // TODO add your handling code here:
+     
     }//GEN-LAST:event_bMaestroLimpiar1ActionPerformed
 
     private void bMaestroBuscar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMaestroBuscar1ActionPerformed
  
-        DefaultTableModel modelo = mostraritm();
-        
-        tbWeb.setModel(modelo);        // TODO add your handling code here:
+ 
     }//GEN-LAST:event_bMaestroBuscar1ActionPerformed
 
     private void bProductoLimpiar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoLimpiar2ActionPerformed
@@ -3532,7 +3468,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }//GEN-LAST:event_bMaestroLimpiar2ActionPerformed
 
     private void bMaestroBuscar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMaestroBuscar2ActionPerformed
-        // TODO add your handling code here:
+ 
     }//GEN-LAST:event_bMaestroBuscar2ActionPerformed
 
     private void bProductoLimpiar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoLimpiar3ActionPerformed
@@ -3550,6 +3486,15 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private void bProductoLimpiar4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoLimpiar4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_bProductoLimpiar4ActionPerformed
+
+    private void tbBASCsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBASCsMouseClicked
+      
+    }//GEN-LAST:event_tbBASCsMouseClicked
+
+    private void tbBASCsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBASCsMousePressed
+ 
+                  // TODO add your handling code here:
+    }//GEN-LAST:event_tbBASCsMousePressed
 
     /**
      * @param args the command line arguments
@@ -3599,6 +3544,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JButton bProductoLimpiar4;
     private javax.swing.JComboBox<String> cbOrigen;
     private javax.swing.JTextField coditm;
+    private javax.swing.JTextArea desBASCs;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -3726,12 +3672,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JScrollPane spProductoImagenes;
     private javax.swing.JScrollPane spProductoImagenes1;
     private javax.swing.JScrollPane spProductoImagenes2;
-    private javax.swing.JTextField tBASCSBD;
-    private javax.swing.JPasswordField tBASCSClave;
-    private javax.swing.JTextField tBASCSInstancia;
-    private javax.swing.JTextField tBASCSPuerto;
-    private javax.swing.JTextField tBASCSServidor;
-    private javax.swing.JTextField tBASCSUsuario;
     private javax.swing.JTextField tGeneralesEnviosDesde;
     private javax.swing.JTextField tGeneralesEnviosHasta;
     private javax.swing.JTextField tGeneralesEnviosImporte;
@@ -3794,13 +3734,19 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JTextField tProductoPrecioVenta;
     private javax.swing.JTextField tProductoPrecioVentaFinal;
     private javax.swing.JTextField tProductoStock;
+    private javax.swing.JTextField tVictoriaBD;
+    private javax.swing.JTextField tVictoriaInstancia;
+    private javax.swing.JTextField tVictoriaMet;
+    private javax.swing.JTextField tVictoriaPuerto;
+    private javax.swing.JTextField tVictoriaRecurso;
+    private javax.swing.JTextField tVictoriaSServidor;
     private javax.swing.JTextArea taDebug;
     private javax.swing.JTextArea taProductoDescripcionLarga;
     private javax.swing.JTextArea taProductoDescripcionLarga2;
-    private javax.swing.JTextArea taProductoDescripcionLargaBASCs;
     private javax.swing.JLabel taProductoImagen;
     private javax.swing.JLabel taProductoImagen1;
     private javax.swing.JLabel taProductoImagen2;
+    private javax.swing.JTable tbBASCs;
     private javax.swing.JTable tbCPrestashopCargado;
     private javax.swing.JTable tbCPrestashopDefault;
     private javax.swing.JTable tbMaestroProductos;
@@ -3810,7 +3756,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JTable tbProductoImagenes1;
     private javax.swing.JTable tbProductoImagenes2;
     private javax.swing.JTable tbWeb;
-    private javax.swing.JTable tbWeb1;
     private javax.swing.JTabbedPane tpConfiguracion;
     private javax.swing.JTabbedPane tpConsulta;
     private javax.swing.JTabbedPane tpPrincipal;

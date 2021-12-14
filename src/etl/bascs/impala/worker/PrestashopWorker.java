@@ -32,8 +32,8 @@ public class PrestashopWorker extends SwingWorker<Producto[], String> implements
     private String codigosConError;
     
     public Properties propiedades;
-    public MaestroWorker maestroW;
-    public DetalleWorker[] detalleWs;
+    public MaestroWorker maestroW; //clase instanciada
+    public DetalleWorker[] detalleWs; //clase instanciada
     
     public JLabel estado;
     
@@ -62,7 +62,7 @@ public class PrestashopWorker extends SwingWorker<Producto[], String> implements
     @Override
     protected Producto[] doInBackground() throws Exception {
         publish("LOADING");
-        maestroW.execute();
+        maestroW.execute(); //la clase instanciada, el execute hace q se ejecute en un hilo independiente
         hilosACorrer = maestroW.get().length;
         //hilosACorrer = 50; //just for testing
         productos = new Producto[hilosACorrer];

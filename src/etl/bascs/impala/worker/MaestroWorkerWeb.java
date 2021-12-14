@@ -6,7 +6,9 @@
 package etl.bascs.impala.worker;
 
 import etl.bascs.impala.clases.Producto;
+import etl.bascs.impala.clases.ProductosVictoria;
 import etl.bascs.impala.json.ConsultaHttp;
+import etl.bascs.impala.json.ConsultaHttpVictoria;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
@@ -20,35 +22,38 @@ import org.json.JSONObject;
 
 /**
  *
- * @author Juan Bogado
+ * @author User
  */
-public class MaestroWorker extends SwingWorker<Producto[], String> implements PropertyChangeListener{
-    public ConsultaHttp consulta;
+
+
+
+public class MaestroWorkerWeb extends SwingWorker<ProductosVictoria[], String> implements PropertyChangeListener{
+  public ConsultaHttpVictoria consulta;
     private Properties propiedades;
     private Integer cantidad;
     
-    private Producto[] productos;
-    private Producto producto;
-
-    public MaestroWorker(Properties prop) {
-        productos = new Producto[0];
-        propiedades = prop;
-        
-    }  
+    private ProductosVictoria[] productos;
+    private ProductosVictoria producto;
     
+        public MaestroWorkerWeb(Properties prop) {
+        productos = new ProductosVictoria[0];
+        propiedades = prop;
+ 
+}
+        
     @Override
-    protected Producto[] doInBackground() {
+    protected ProductosVictoria[] doInBackground() {
         try {
             setProgress(0);
-            consulta = new ConsultaHttp("http",
-                   propiedades.getProperty("servidor"),
-                    propiedades.getProperty("puerto"),
-                    propiedades.getProperty("metodo"),
-                   propiedades.getProperty("usuario"),
-                     propiedades.getProperty("clave"),
-                    propiedades.getProperty("maestro"),
-                    "user="+propiedades.getProperty("cliente"));
-            //Thread.sleep(5000); //JUST FOR TESTING
+      consulta = new ConsultaHttpVictoria("http", 
+               propiedades.getProperty("servidor"), 
+                propiedades.getProperty("puerto"),
+                propiedades.getProperty("metodo"),          
+                propiedades.getProperty("recursos"));
+                
+      //      propiedades.getProperty("recursos"));
+
+          
             if(!consulta.getError()){
                 if(consulta.getJson().has("count")){
                     cantidad = consulta.getJson().getInt("count");
@@ -56,20 +61,19 @@ public class MaestroWorker extends SwingWorker<Producto[], String> implements Pr
                     publish("No se encontraron productos en el maestro.");
                 }
                 if(cantidad > 0){
-                    if(consulta.getJson().has("data")){
-                        JSONArray respuesta = consulta.getJson().getJSONArray("data");
-                        productos = new Producto[respuesta.length()];
+                    if(consulta.getJson().has("products")){
+                        JSONArray respuesta = consulta.getJson().getJSONArray("products");
+                        productos = new ProductosVictoria[respuesta.length()];
                         
                         for (int i = 0; i < respuesta.length(); i++) {
                             Iterator keys = respuesta.getJSONObject(i).keys();
                             String key = keys.next().toString();
                             JSONObject productoJ = respuesta.getJSONObject(i).getJSONObject(key);
-                            producto = new Producto(propiedades);
+                            producto = new ProductosVictoria(propiedades);
                             producto.loadJSONConsulta(productoJ);
                             productos[i] = producto;
                             setProgress(((i+1)*100)/cantidad);
-                            //Thread.sleep(50); //JUST FOR TESTING
-                            //publish(producto.getCodigo());
+                          
                     
                         }
                     }else{
@@ -86,6 +90,7 @@ public class MaestroWorker extends SwingWorker<Producto[], String> implements Pr
             Logger.getLogger(MaestroWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
         return productos;
+     
     }
     
     @Override
@@ -124,3 +129,4 @@ public class MaestroWorker extends SwingWorker<Producto[], String> implements Pr
       }
     
 }
+

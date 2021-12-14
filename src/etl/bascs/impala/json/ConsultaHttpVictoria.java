@@ -1,5 +1,7 @@
 /*
- * @author junjuis
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package etl.bascs.impala.json;
 
@@ -7,19 +9,22 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.apache.http.HttpHeaders.USER_AGENT;
 import org.json.JSONObject;
 
 /**
  *
- * @author junju
+ * @author User
  */
-public class ConsultaHttp {
+public class ConsultaHttpVictoria {
+    
     private URL url;
     private URLConnection con;
     private DataOutputStream wr;
@@ -35,39 +40,35 @@ public class ConsultaHttp {
     private String servidor;
     private String puerto;
     private String metodo;
-    private String usuario;
-    private String clave;
-    private String recurso;
     private String parametros;
-
+    private String recursos;
     
-    public ConsultaHttp(String protocolo, String servidor, String puerto, String metodo, String usuario, String clave, String recurso, String parametros) {
+    public ConsultaHttpVictoria(String protocolo, String servidor, String puerto, String metodo, String recursos) {
         this.protocolo = protocolo;
         this.servidor = servidor;
         this.puerto = puerto;
+        this.recursos = recursos;
+        this.parametros= parametros;
         this.metodo = metodo;
-        this.usuario = usuario;
-        this.clave = clave;
-        this.recurso = recurso;
-        this.parametros = parametros;
-        
         conectar();
     }
+
     
        
     private void conectar() {
         try {
-            url = new URL(protocolo+"://"+servidor+":"+puerto+recurso);
+            url = new URL(protocolo+"://"+servidor+":"+puerto+recursos);
             con = url.openConnection();
             
-            con.setRequestProperty("Access-Control-Request-Method", metodo);
-            con.setRequestProperty("Authorization", "Basic " + new String(Base64.getEncoder().encode((usuario+":"+clave).getBytes())));
-            con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:27.0) Gecko/20100101 Firefox/27.0.2 Waterfox/27.0");
+            con.setRequestProperty("Method", metodo);
+            con.setRequestProperty("Authorization", "None");
+            con.setRequestProperty("User-Agent", USER_AGENT);
             //con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            con.setRequestProperty( "Accept", "application/json");
             //con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setDoOutput(true); 
-            
+ 
+    
             
             wr = new DataOutputStream(con.getOutputStream());
             wr.writeBytes(parametros);
@@ -82,13 +83,13 @@ public class ConsultaHttp {
              response.append(inputLine);
             }
             in.close();
-            
-            
+            System.out.println("res_ " + response.toString());
             json = new JSONObject(response.toString());
         
             if(json.has("errorCode")){
                 error = false;
                 errorMessage = String.valueOf(json.getInt("errorCode")) +" - "+ json.getString("errorText");
+                
             }else{
                 if(json.has("msgCode")){
                     error = false;
@@ -98,8 +99,9 @@ public class ConsultaHttp {
                     errorMessage = con.getHeaderField(0);
                  
                 }
-            }
-            
+
+            } 
+           
             debugMessage = con.getHeaderField(0);
             
         } catch (MalformedURLException ex) {
@@ -107,7 +109,7 @@ public class ConsultaHttp {
             errorMessage = "Error en el armado de URL";
             debugMessage = ex.getMessage();
             System.out.println("EX: "+ex.getMessage());
-            Logger.getLogger(ConsultaHttp.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConsultaHttpVictoria.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             error = true;
             errorMessage = "Error al abrir la conexion";
@@ -118,8 +120,8 @@ public class ConsultaHttp {
             if(ex.getMessage().contains("HTTP response code: 500")){
                 errorMessage = "Error Interno de Servidor. [500]";
             }
-            //System.out.println("EX: "+ex.getMessage());
-            //Logger.getLogger(ConsultaHttp.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("EX: "+ex.getMessage());
+            Logger.getLogger(ConsultaHttp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -219,30 +221,6 @@ public class ConsultaHttp {
         this.metodo = metodo;
     }
 
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getClave() {
-        return clave;
-    }
-
-    public void setClave(String clave) {
-        this.clave = clave;
-    }
-
-    public String getRecurso() {
-        return recurso;
-    }
-
-    public void setRecurso(String recurso) {
-        this.recurso = recurso;
-    }
-
     public String getParametros() {
         return parametros;
     }
@@ -258,7 +236,18 @@ public class ConsultaHttp {
     public void setDebugMessage(String debugMessage) {
         this.debugMessage = debugMessage;
     }
+
+    public String getRecursos() {
+        return recursos;
+    }
+
+    public void setRecursos(String recursos) {
+        this.recursos = recursos;
+    }
     
       public static void main(String[] args) {
       }
 }
+
+
+ 

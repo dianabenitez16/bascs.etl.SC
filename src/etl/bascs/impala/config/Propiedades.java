@@ -94,6 +94,7 @@ public class Propiedades {
                 propiedades.setProperty("envios_desde", "0");
                 propiedades.setProperty("envios_hasta", "499999");
                 break;
+          /*
             case "victoria":
                 propiedades.setProperty("servidor", "192.168.192.137");
                 propiedades.setProperty("puerto", "8080");
@@ -101,6 +102,7 @@ public class Propiedades {
                 propiedades.setProperty("recurso", "/victoria/webapi/productos");
                
                 break;
+*/
             case "prestashop":
                 propiedades.setProperty("servidor", "192.168.25.5");
                 propiedades.setProperty("puerto", "1433");

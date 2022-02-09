@@ -5,6 +5,7 @@
  */
 package etl.bascs.impala.worker;
 
+import etl.bascs.impala.clases.Marcas;
 import etl.bascs.impala.clases.ProductosVictoria;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
 import java.beans.PropertyChangeEvent;
@@ -18,52 +19,52 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class DetalleWorkerWeb extends SwingWorker<ProductosVictoria, String> implements PropertyChangeListener {
+public class DetalleWorkerWeb extends SwingWorker<Marcas, String> implements PropertyChangeListener {
 public ConsultaHttpVictoria consulta;
 public Integer id;
-public ProductosVictoria producto;
+public Marcas marca;
 public Boolean error;
 public Properties propiedades;
 
-  public DetalleWorkerWeb(ProductosVictoria producto, Properties propVictoria) {
-        this.producto = producto;
-         this.propiedades = propVictoria;
+  public DetalleWorkerWeb(Marcas mar) {
+        this.marca = marca;
+     //   this.propiedades = propVictoria;
          this.error = false;
        
     }  
 
     @Override
-    protected ProductosVictoria doInBackground() throws Exception {
+    protected Marcas doInBackground() throws Exception {
           try {
             setProgress(0);
             consulta = new ConsultaHttpVictoria("http", 
-               propiedades.getProperty("servidor"), 
-               propiedades.getProperty("puerto"),         
-               propiedades.getProperty("metodo"),
-                propiedades.getProperty("recursos"));
+               propiedades.getProperty("192.168.191.137"), 
+               propiedades.getProperty("8080"),         
+               propiedades.getProperty("GET"),
+                propiedades.getProperty("/WS/webapi/victoria/marcas"));
             if(!consulta.getError()){
                 if(!consulta.getJson().isEmpty()){
-                    JSONObject productoJ = consulta.getJson().getJSONObject("products");
-                    producto.loadJSONConsulta(productoJ);
+                    JSONObject productoJ = consulta.getJson().getJSONObject("brand");
+                //    marca.loadJSONConsulta(productoJ);
                     setProgress(100);
                 }else{
                     error = true;
-                    publish("No se obtuvo información al consultar: "+producto.getCodigo());
+                    publish("No se obtuvo información al consultar: "+marca.getCodigo());
                     //System.out.println("_No se obtubo información al consultar: "+producto.getCodigo());
                 }
             }else{
                 error = true;
-                publish(consulta.getErrorMessage()+": "+producto.getCodigo());
+                publish(consulta.getErrorMessage()+": "+marca.getCodigo());
                 //System.out.println("_"+consulta.getErrorMessage()+": "+producto.getCodigo());
             }
             //Thread.sleep(5000); //JUST FOR TESTING
         } catch (Exception e) {
             error = true;
             //System.out.println("_Error desconocido al consultar: "+producto.getCodigo());
-            publish("Error desconocido al consultar: "+producto.getCodigo());
+            publish("Error desconocido al consultar: "+marca.getCodigo());
             //Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
-        return producto; //To change body of generated methods, choose Tools | Templates.
+        return marca; //To change body of generated methods, choose Tools | Templates.
     }
    @Override
     protected void process(List<String> chunks) {

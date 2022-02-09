@@ -123,7 +123,7 @@ public static void main(String[] args) throws Exception {
 
  private void sendGet() throws Exception {
 try{
-        String url = "http://192.168.192.137:8080/victoria/webapi/productos/";
+        String url = "http://www.saracomercial.com/panel/api/loader/productos";
 
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(url);
@@ -132,7 +132,7 @@ try{
         
         request.setHeader("User-Agent", USER_AGENT);
         request.setHeader( "Accept", "application/json");
-        request.setHeader("Authorization", "None ");
+        request.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
         request.setHeader("Method", "GET");
         
         
@@ -156,16 +156,13 @@ try{
 
         System.out.println("ESTE ES EL JSON A UTILIZAR "+result.toString());
  
-        JSONObject productos = new JSONObject(result.toString());
-        System.out.println("coditm " + productos.getString("coditm"));
-        System.out.println("descripcion " + productos.getString("descripcion"));
-        System.out.println("descripcionlarga " + productos.getString("descripcionlarga"));
 
  }catch (Exception ex) {
             Logger.getLogger(ConsultaPrueba.class.getName()).log(Level.SEVERE, null, ex);
 }
  }
- /*
+
+ } /*
  private void sendPost() throws Exception {
 
         String url = "http://www.saracomercial.com/panel/api/loader/productos";
@@ -209,4 +206,3 @@ try{
 
 }  
 */
- }

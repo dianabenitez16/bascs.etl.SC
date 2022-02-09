@@ -18,7 +18,7 @@ import org.json.JSONObject;
 
 public class ConexionDB {
     public static void main(String[] args) throws Exception {
-        test();
+ 
     
     }
     
@@ -42,34 +42,41 @@ public class ConexionDB {
         return con;
     
     }
-    
+    /*
     public static void test(){
         JSONObject jo = new JSONObject();
         JSONArray ja = new JSONArray();
         JSONObject mainObj = new JSONObject();
         
-        
+        String codigo = "EBA"; 
 
-        String sql ="SELECT TOP 10 coditm, descripcion, descripcionlarga  FROM items WHERE itemprefi = 'B' ";
+        String sql ="DECLARE @CODIGO CHAR(3)\n" +
+"SET @CODIGO = '"+codigo+"'\n" +
+"\n" +
+"SELECT A.CODATRVAL, A.DESCRIPCION\n" +
+"FROM ATRIBUTOSVAL AS A \n" +
+"WHERE \n" +
+"A.CODATR IN ('AP1', 'AP2', 'AP3') AND\n" +
+"A.CODATRVAL = @CODIGO";
 		
         try {
             Statement st = conectar().createStatement();
             ResultSet rs = st.executeQuery(sql);
             while(rs.next()) {
                 jo = new JSONObject();
-                Producto pro = new Producto();
+                Marcas mar = new Marcas();
 
-                pro.setCodigo(rs.getString(1));
-                pro.setDescripcion(rs.getString(2));
-                pro.setDescripcionLarga(rs.getString(3));
+                mar.setCodigo(rs.getString(1));
+                mar.setDescripcion(rs.getString(2));
+          
 
-                jo.put("codigo", pro.getCodigo());
-                jo.put("descripcion", pro.getDescripcion());
-                jo.put("descripcionLarga", pro.getDescripcionLarga());
+                jo.put("codigo", mar.getCodigo());
+                jo.put("descripcion", mar.getDescripcion());
+  
                 ja.put(jo);
             }
             
-            mainObj.put("products", ja);
+            mainObj.put("brand", ja);
             mainObj.put("total", ja.length());
             
             System.out.println(mainObj);
@@ -85,7 +92,7 @@ public class ConexionDB {
         }
     }
     
-    
+    */
     }
         
    

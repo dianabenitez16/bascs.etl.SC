@@ -5,6 +5,7 @@
  */
 package etl.bascs.impala.worker;
 
+import etl.bascs.impala.clases.Marcas;
 import etl.bascs.impala.clases.Producto;
 import etl.bascs.impala.clases.ProductosVictoria;
 import etl.bascs.impala.json.ConsultaHttp;
@@ -27,51 +28,49 @@ import org.json.JSONObject;
 
 
 
-public class MaestroWorkerWeb extends SwingWorker<ProductosVictoria[], String> implements PropertyChangeListener{
+public class MaestroWorkerWeb extends SwingWorker<Marcas[], String> implements PropertyChangeListener{
   public ConsultaHttpVictoria consulta;
     private Properties propiedades;
     private Integer cantidad;
     
-    private ProductosVictoria[] productos;
-    private ProductosVictoria producto;
+    private Marcas[] marcas;
+    private Marcas marca;
     
         public MaestroWorkerWeb(Properties prop) {
-        productos = new ProductosVictoria[0];
+        marcas = new Marcas[0];
         propiedades = prop;
  
 }
         
     @Override
-    protected ProductosVictoria[] doInBackground() {
+    protected Marcas[] doInBackground() {
         try {
-            setProgress(0);
-      consulta = new ConsultaHttpVictoria("http", 
-               propiedades.getProperty("servidor"), 
-                propiedades.getProperty("puerto"),
-                propiedades.getProperty("metodo"),          
-                propiedades.getProperty("recursos"));
-                
+           setProgress(0);
+            consulta = new ConsultaHttpVictoria("http", 
+               propiedades.getProperty("192.168.191.137"), 
+               propiedades.getProperty("8080"),         
+               propiedades.getProperty("GET"),
+                propiedades.getProperty("/WS/webapi/victoria/marcas"));
       //      propiedades.getProperty("recursos"));
-
-          
+         
             if(!consulta.getError()){
-                if(consulta.getJson().has("count")){
-                    cantidad = consulta.getJson().getInt("count");
+                if(consulta.getJson().has("total")){
+                    cantidad = consulta.getJson().getInt("total");
                 }else{
                     publish("No se encontraron productos en el maestro.");
                 }
                 if(cantidad > 0){
-                    if(consulta.getJson().has("products")){
-                        JSONArray respuesta = consulta.getJson().getJSONArray("products");
-                        productos = new ProductosVictoria[respuesta.length()];
+                    if(consulta.getJson().has("brand")){
+                        JSONArray respuesta = consulta.getJson().getJSONArray("brand");
+                        marcas = new Marcas[respuesta.length()];
                         
                         for (int i = 0; i < respuesta.length(); i++) {
                             Iterator keys = respuesta.getJSONObject(i).keys();
                             String key = keys.next().toString();
                             JSONObject productoJ = respuesta.getJSONObject(i).getJSONObject(key);
-                            producto = new ProductosVictoria(propiedades);
-                            producto.loadJSONConsulta(productoJ);
-                            productos[i] = producto;
+                            marca = new Marcas(propiedades);
+                 //           marca.loadJSONConsulta(productoJ);
+                            marcas[i] = marca;
                             setProgress(((i+1)*100)/cantidad);
                           
                     
@@ -89,7 +88,7 @@ public class MaestroWorkerWeb extends SwingWorker<ProductosVictoria[], String> i
         } catch (Exception ex) {
             Logger.getLogger(MaestroWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return productos;
+        return marcas;
      
     }
     

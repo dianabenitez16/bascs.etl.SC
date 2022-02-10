@@ -105,6 +105,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public JFileChooser fc;
     public File fPrestashopImport;
     
+    public ProductosVictoria producto = new ProductosVictoria();
+    
     public Integer contadorVolumetrico;
     
    // public String[] tablaHeaderBASCs = new String[] {"Codigo","Descripcion","DesLarga","Cod Alt","Cod2","Minimo","Maximo","Fecha"};
@@ -133,6 +135,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         getSaraMarcas();
         getSaraRubros();
         getSaraComercial();
+        getVictoriaMarcas();
+        getVictoriaRubros();
         contadorVolumetrico = 0;
     }
     
@@ -637,7 +641,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         }
     }
     
-public void getSaraComercial(){
+    public void getSaraComercial(){
         try{
         String url = "http://www.saracomercial.com/panel/api/loader/productos";
 
@@ -697,7 +701,7 @@ public void getSaraComercial(){
                          }
         }
     
-public void getSaraMarcas(){
+    public void getSaraMarcas(){
         try{
         String url = "http://www.saracomercial.com/panel/api/loader/marcas";
         
@@ -742,7 +746,7 @@ public void getSaraMarcas(){
                          }
         }
     
-public void getSaraRubros(){
+    public void getSaraRubros(){
         try{
         String url = "http://www.saracomercial.com/panel/api/loader/rubros";
         
@@ -786,6 +790,161 @@ public void getSaraRubros(){
                          }
         }
 
+    public void getVictoriaMarcas(){
+        try{
+        String url = "http://192.168.192.60:8080/WS/webapi/victoria/marcas";
+        
+        HttpClient client = new DefaultHttpClient();
+        HttpGet request = new HttpGet(url);
+      
+        request.setHeader("User-Agent", USER_AGENT);
+        request.setHeader( "Accept", "application/json");
+        request.setHeader("Method", "GET");     
+        HttpResponse response = client.execute(request);
+        BufferedReader rd = new BufferedReader(
+                            new InputStreamReader(response.getEntity().getContent()));                 
+        StringBuilder result = new StringBuilder();        
+        String line = "";
+        while ((line = rd.readLine()) != null) {
+            result.append(line);
+        }
+            
+        JSONObject data = new JSONObject(result.toString());
+        JSONArray brand = data.getJSONArray("brand");
+        
+   for (int indice = 1; indice < brand.length(); indice++){
+       
+           JSONObject brands = brand.getJSONObject(indice);
+       
+          String codigo_interno_ws = brands.getString("codigo_interno_ws");
+          String nombre = brands.getString("nombre");
+            DefaultTableModel modelo = new DefaultTableModel();
+                    modelo.addColumn("CODIGO");
+                    modelo.addColumn("NOMBRE");
+
+                    tbMarcas.setModel(modelo);  
+                      for (int i = 0; i < brand.length(); i++) {
+                          JSONObject detalles = (JSONObject)brand.get(i);
+                          
+                          Object []ob= new Object[4];
+                          
+                          ob[0]=detalles.get("codigo_interno_ws").toString();
+                          ob[1]=detalles.get("nombre").toString();
+                          modelo.addRow(ob);
+                      }}                      
+                 }catch (Exception ex) {
+            Logger.getLogger(ConsultaPrueba.class.getName()).log(Level.SEVERE, null, ex);
+                         }
+        }
+
+    public void getVictoriaRubros(){
+        try{
+        String url = "http://192.168.192.60:8080/WS/webapi/victoria/rubros";
+        
+        HttpClient client = new DefaultHttpClient();
+        HttpGet request = new HttpGet(url);
+      
+        request.setHeader("User-Agent", USER_AGENT);
+        request.setHeader( "Accept", "application/json");
+        request.setHeader("Method", "GET");     
+        HttpResponse response = client.execute(request);
+        BufferedReader rd = new BufferedReader(
+                            new InputStreamReader(response.getEntity().getContent()));                 
+        StringBuilder result = new StringBuilder();        
+        String line = "";
+        while ((line = rd.readLine()) != null) {
+            result.append(line);
+        }
+          
+        JSONObject data = new JSONObject(result.toString());
+        JSONArray brand = data.getJSONArray("rubros");
+        
+   for (int indice = 0; indice < brand.length(); indice++){
+       
+           JSONObject brands = brand.getJSONObject(indice);
+       
+          String codigo_interno_ws = brands.getString("codigo_interno_ws");
+          String nombre = brands.getString("nombre");
+            DefaultTableModel modelo = new DefaultTableModel();
+                
+                    modelo.addColumn("PARENT");
+                    modelo.addColumn("CODIGO");
+                    modelo.addColumn("NOMBRE");
+
+                    tbRubros.setModel(modelo);  
+                      for (int i = 0; i < brand.length(); i++) {
+                          JSONObject detalles = (JSONObject)brand.get(i);
+                          
+                          Object []ob= new Object[4];
+                          
+                          ob[0]=detalles.get("parent_id").toString();
+                          ob[1]=detalles.get("codigo_interno_ws").toString();
+                          ob[2]=detalles.get("nombre").toString();
+                          modelo.addRow(ob);
+                      }}                      
+                 }catch (Exception ex) {
+            Logger.getLogger(ConsultaPrueba.class.getName()).log(Level.SEVERE, null, ex);
+                         }
+        }
+    
+    public void getVictoriaProductos(){
+        
+         try{
+        String url = "http://192.168.192.60:8080/WS/webapi/victoria/productos";
+        
+        HttpClient client = new DefaultHttpClient();
+        HttpGet request = new HttpGet(url);
+      
+        request.setHeader("User-Agent", USER_AGENT);
+        request.setHeader( "Accept", "application/json");
+        request.setHeader("Method", "GET");     
+        HttpResponse response = client.execute(request);
+        BufferedReader rd = new BufferedReader(
+                            new InputStreamReader(response.getEntity().getContent()));                 
+        StringBuilder result = new StringBuilder();        
+        String line = "";
+        while ((line = rd.readLine()) != null) {
+            result.append(line);
+        }
+        
+        JSONObject data = new JSONObject(result.toString());
+        JSONArray product = data.getJSONArray("products");
+        
+   for (int indice = 0; indice < product.length(); indice++){
+       
+           JSONObject productos = product.getJSONObject(indice);
+       
+          producto.setCodigo( productos.getString("codigo_interno_ws"));
+          producto.setDescripcion(productos.getString("nombre"));
+          producto.setMarca(productos.getString("marca"));
+          producto.setRubro(productos.getString("rubro"));
+//          producto.setCuotas(productos.getJSONArray("cuotas"));
+         
+          
+            DefaultTableModel modelo = new DefaultTableModel();
+                
+                    modelo.addColumn("CODIGO");
+                    modelo.addColumn("NOMBRE");
+                    modelo.addColumn("MARCA");
+                    modelo.addColumn("RUBRO");
+
+                    tbVictoria.setModel(modelo);  
+                      for (int i = 0; i < product.length(); i++) {
+                          JSONObject detalles = (JSONObject)product.get(i);
+                          
+                          Object []ob= new Object[5];
+                          
+                          ob[0]=detalles.get("codigo_interno_ws").toString();
+                          ob[1]=detalles.get("nombre").toString();
+                          ob[2]=detalles.get("marca").toString();
+                          ob[3]=detalles.get("rubro").toString();
+                          modelo.addRow(ob);
+                      }}                      
+                 }catch (Exception ex) {
+            Logger.getLogger(ConsultaPrueba.class.getName()).log(Level.SEVERE, null, ex);
+                         }
+        
+    }
     /* LISTENERS */
     /**********************************************************************************************************/
     
@@ -809,7 +968,7 @@ public void getSaraRubros(){
         tbMaestroProductos.setDefaultEditor(Object.class, null);
         tbMaestroProductos.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         
-        tbBASCs.addMouseListener(new MouseAdapter() {
+        tbVictoria.addMouseListener(new MouseAdapter() {
          
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
@@ -818,9 +977,9 @@ public void getSaraRubros(){
            int fila = table.rowAtPoint(point);
             if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
 
-          String codigo = tbBASCs.getValueAt(fila, 0).toString();
+          String codigo = tbVictoria.getValueAt(fila, 0).toString();
    //      String descripcion = tbBASCs.getValueAt(fila, 1).toString();
-          String deslarga = tbBASCs.getValueAt(fila, 1).toString();
+          String deslarga = tbVictoria.getValueAt(fila, 1).toString();
       /*   String codalt = tbBASCs.getValueAt(fila, 3).toString();
          String cod2 = tbBASCs.getValueAt(fila, 4).toString();
          String minimo = tbBASCs.getValueAt(fila, 5).toString();
@@ -834,8 +993,8 @@ public void getSaraRubros(){
                 }
             }
         });
-        tbBASCs.setDefaultEditor(Object.class, null);
-        tbBASCs.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        tbVictoria.setDefaultEditor(Object.class, null);
+        tbVictoria.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         
         
         // TABLA IMAGENES 
@@ -1060,9 +1219,10 @@ public void getSaraRubros(){
         bMaestroLimpiar1 = new javax.swing.JButton();
         bMaestroBuscar1 = new javax.swing.JButton();
         spMaestroProductos1 = new javax.swing.JScrollPane();
-        tbBASCs = new javax.swing.JTable();
+        tbVictoria = new javax.swing.JTable();
         lMaestroCantidad1 = new javax.swing.JLabel();
         tMaestroCantidad1 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         pConsultaProducto = new javax.swing.JPanel();
         lProductoCodigo1 = new javax.swing.JLabel();
         lProductoDescripcionLarga1 = new javax.swing.JLabel();
@@ -1214,7 +1374,7 @@ public void getSaraRubros(){
                     .addComponent(tPrestashopExportColumnas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(691, Short.MAX_VALUE))
+                .addContainerGap(696, Short.MAX_VALUE))
         );
 
         tpPrincipal.addTab("Prestashop", pPrestashop);
@@ -1940,7 +2100,7 @@ public void getSaraRubros(){
                 .addGroup(pCGeneralesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lBASCSInstancia3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tGeneralesEnviosHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(632, Short.MAX_VALUE))
+                .addContainerGap(644, Short.MAX_VALUE))
         );
 
         tpConfiguracion.addTab("Generales", pCGenerales);
@@ -2066,7 +2226,7 @@ public void getSaraRubros(){
                         .addComponent(tVictoriaMet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(4, 4, 4)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(667, Short.MAX_VALUE))
+                .addContainerGap(680, Short.MAX_VALUE))
         );
 
         tpConfiguracion.addTab("Victoria", pCBASCS);
@@ -2756,7 +2916,7 @@ public void getSaraRubros(){
             pConfiguracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pConfiguracionLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(tpConfiguracion, javax.swing.GroupLayout.DEFAULT_SIZE, 783, Short.MAX_VALUE)
+                .addComponent(tpConfiguracion, javax.swing.GroupLayout.DEFAULT_SIZE, 795, Short.MAX_VALUE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -2783,7 +2943,7 @@ public void getSaraRubros(){
             pDebugLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pDebugLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addComponent(spDebug, javax.swing.GroupLayout.DEFAULT_SIZE, 787, Short.MAX_VALUE)
+                .addComponent(spDebug, javax.swing.GroupLayout.DEFAULT_SIZE, 792, Short.MAX_VALUE)
                 .addGap(5, 5, 5))
         );
 
@@ -2820,8 +2980,8 @@ public void getSaraRubros(){
         spMaestroProductos1.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         spMaestroProductos1.setPreferredSize(new java.awt.Dimension(900, 480));
 
-        tbBASCs.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
-        tbBASCs.setModel(new javax.swing.table.DefaultTableModel(
+        tbVictoria.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
+        tbVictoria.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -2829,15 +2989,15 @@ public void getSaraRubros(){
 
             }
         ));
-        tbBASCs.addMouseListener(new java.awt.event.MouseAdapter() {
+        tbVictoria.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbBASCsMouseClicked(evt);
+                tbVictoriaMouseClicked(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                tbBASCsMousePressed(evt);
+                tbVictoriaMousePressed(evt);
             }
         });
-        spMaestroProductos1.setViewportView(tbBASCs);
+        spMaestroProductos1.setViewportView(tbVictoria);
 
         lMaestroCantidad1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad1.setText("Cantidad");
@@ -2847,6 +3007,16 @@ public void getSaraRubros(){
         tMaestroCantidad1.setText("0");
         tMaestroCantidad1.setEnabled(false);
         tMaestroCantidad1.setPreferredSize(new java.awt.Dimension(100, 20));
+
+        jButton1.setText("Cargar Productos");
+        jButton1.setMaximumSize(new java.awt.Dimension(71, 25));
+        jButton1.setMinimumSize(new java.awt.Dimension(71, 25));
+        jButton1.setPreferredSize(new java.awt.Dimension(80, 20));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pConsultaProductosLayout = new javax.swing.GroupLayout(pConsultaProductos);
         pConsultaProductos.setLayout(pConsultaProductosLayout);
@@ -2861,7 +3031,9 @@ public void getSaraRubros(){
                         .addGap(5, 5, 5)
                         .addComponent(tMaestroCantidad1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(bMaestroLimpiar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bMaestroLimpiar1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bMaestroBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(5, 5, 5))
@@ -2873,16 +3045,17 @@ public void getSaraRubros(){
         pConsultaProductosLayout.setVerticalGroup(
             pConsultaProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pConsultaProductosLayout.createSequentialGroup()
-                .addGap(5, 5, 5)
+                .addContainerGap()
                 .addGroup(pConsultaProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lMaestroCantidad1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tMaestroCantidad1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pConsultaProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(bMaestroLimpiar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(bMaestroBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(5, 5, 5)
+                        .addComponent(bMaestroBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bMaestroLimpiar1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(2, 2, 2)
                 .addComponent(sProductoSeparador5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(spMaestroProductos1, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(93, 93, 93))
         );
@@ -3101,37 +3274,33 @@ public void getSaraRubros(){
         pRubrosLayout.setHorizontalGroup(
             pRubrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pRubrosLayout.createSequentialGroup()
-                .addGroup(pRubrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pRubrosLayout.createSequentialGroup()
-                        .addGap(147, 147, 147)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pRubrosLayout.createSequentialGroup()
-                        .addGap(55, 55, 55)
-                        .addComponent(pRubro, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 156, Short.MAX_VALUE)
-                .addGroup(pRubrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pRubrosLayout.createSequentialGroup()
-                        .addComponent(pRubro1, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(121, 121, 121))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pRubrosLayout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(215, 215, 215))))
+                .addGap(18, 18, 18)
+                .addComponent(pRubro, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addComponent(pRubro1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(pRubrosLayout.createSequentialGroup()
+                .addGap(168, 168, 168)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(217, 217, 217))
         );
         pRubrosLayout.setVerticalGroup(
             pRubrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pRubrosLayout.createSequentialGroup()
-                .addGap(46, 46, 46)
+                .addGap(17, 17, 17)
                 .addGroup(pRubrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(7, 7, 7)
                 .addGroup(pRubrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pRubro, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pRubro1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(273, Short.MAX_VALUE))
+                    .addComponent(pRubro, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pRubro1, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        tpWebsite.addTab("Detalles", pRubros);
+        tpWebsite.addTab("Rubros/Marcas", pRubros);
 
         javax.swing.GroupLayout pBASCsLayout = new javax.swing.GroupLayout(pBASCs);
         pBASCs.setLayout(pBASCsLayout);
@@ -3146,7 +3315,7 @@ public void getSaraRubros(){
             pBASCsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pBASCsLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
+                .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE)
                 .addGap(73, 73, 73))
         );
 
@@ -3474,7 +3643,7 @@ public void getSaraRubros(){
                 .addGroup(pDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pMarcaWS, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
                     .addComponent(pRubroWS, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap(268, Short.MAX_VALUE))
+                .addContainerGap(273, Short.MAX_VALUE))
         );
 
         tpWebsite1.addTab("MARCAS/RUBROS", pDetalles);
@@ -3492,7 +3661,7 @@ public void getSaraRubros(){
             pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pWebsiteLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(tpWebsite1, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
+                .addComponent(tpWebsite1, javax.swing.GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE)
                 .addGap(73, 73, 73))
         );
 
@@ -3508,7 +3677,7 @@ public void getSaraRubros(){
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 824, Short.MAX_VALUE)
+            .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 829, Short.MAX_VALUE)
         );
 
         pack();
@@ -3777,13 +3946,17 @@ public void getSaraRubros(){
         // TODO add your handling code here:
     }//GEN-LAST:event_bProductoLimpiar4ActionPerformed
 
-    private void tbBASCsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBASCsMouseClicked
+    private void tbVictoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbVictoriaMouseClicked
       
-    }//GEN-LAST:event_tbBASCsMouseClicked
+    }//GEN-LAST:event_tbVictoriaMouseClicked
 
-    private void tbBASCsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbBASCsMousePressed
+    private void tbVictoriaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbVictoriaMousePressed
                // TODO add your handling code here:
-    }//GEN-LAST:event_tbBASCsMousePressed
+    }//GEN-LAST:event_tbVictoriaMousePressed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+getVictoriaProductos();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -3834,6 +4007,7 @@ public void getSaraRubros(){
     private javax.swing.JComboBox<String> cbOrigen;
     private javax.swing.JTextField coditm;
     private javax.swing.JTextArea desBASCs;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -4045,7 +4219,6 @@ public void getSaraRubros(){
     private javax.swing.JLabel taProductoImagen;
     private javax.swing.JLabel taProductoImagen1;
     private javax.swing.JLabel taProductoImagen2;
-    private javax.swing.JTable tbBASCs;
     private javax.swing.JTable tbCPrestashopCargado;
     private javax.swing.JTable tbCPrestashopDefault;
     private javax.swing.JTable tbMaestroProductos;
@@ -4058,6 +4231,7 @@ public void getSaraRubros(){
     private javax.swing.JTable tbProductoImagenes2;
     private javax.swing.JTable tbRubros;
     private javax.swing.JTable tbRubrosWS;
+    private javax.swing.JTable tbVictoria;
     private javax.swing.JTable tbWeb;
     private javax.swing.JTabbedPane tpConfiguracion;
     private javax.swing.JTabbedPane tpConsulta;

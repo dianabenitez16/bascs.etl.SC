@@ -57,10 +57,10 @@ public class ConsultaHttpVictoria {
        
     private void conectar() {
         try {
-            url = new URL(protocolo+"://"+servidor+":"+puerto+recursos);
+            url = new URL("http://192.168.192.60:8080/WS/webapi/victoria/productos");
             con = url.openConnection();
             
-            con.setRequestProperty("Method", metodo);
+            con.setRequestProperty("Method", "GET");
             con.setRequestProperty("Authorization", "None");
             con.setRequestProperty("User-Agent", USER_AGENT);
             //con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -81,9 +81,10 @@ public class ConsultaHttpVictoria {
             response = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
              response.append(inputLine);
+          
             }
             in.close();
-            System.out.println("res_ " + response.toString());
+            
             json = new JSONObject(response.toString());
         
             if(json.has("errorCode")){

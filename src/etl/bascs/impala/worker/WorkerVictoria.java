@@ -12,12 +12,19 @@ import etl.bascs.impala.json.ConsultaHttp;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import static org.apache.http.protocol.HTTP.USER_AGENT;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,59 +35,65 @@ import org.json.JSONObject;
 
 
 
-public class MaestroWorkerWeb extends SwingWorker<Marcas[], String> implements PropertyChangeListener{
+public class WorkerVictoria extends SwingWorker<ProductosVictoria[], String> implements PropertyChangeListener{
   public ConsultaHttpVictoria consulta;
     private Properties propiedades;
     private Integer cantidad;
     
-    private Marcas[] marcas;
-    private Marcas marca;
+    private ProductosVictoria[] productos;
+    private ProductosVictoria producto;
     
-        public MaestroWorkerWeb(Properties prop) {
-        marcas = new Marcas[0];
+        public WorkerVictoria(Properties prop) {
+        productos = new ProductosVictoria[0];
         propiedades = prop;
  
 }
         
     @Override
-    protected Marcas[] doInBackground() {
+    protected ProductosVictoria[] doInBackground() {
         try {
            setProgress(0);
-            consulta = new ConsultaHttpVictoria("http", 
-               propiedades.getProperty("192.168.191.137"), 
-               propiedades.getProperty("8080"),         
-               propiedades.getProperty("GET"),
-                propiedades.getProperty("/WS/webapi/victoria/marcas"));
-      //      propiedades.getProperty("recursos"));
-         
-            if(!consulta.getError()){
-                if(consulta.getJson().has("total")){
+           String url = "http://192.168.192.60:8080/WS/webapi/victoria/productos";
+        
+        HttpClient client = new DefaultHttpClient();
+        HttpGet request = new HttpGet(url);
+      
+        request.setHeader("User-Agent", USER_AGENT);
+        request.setHeader( "Accept", "application/json");
+        request.setHeader("Method", "GET");     
+        HttpResponse response = client.execute(request);
+        BufferedReader rd = new BufferedReader(
+                            new InputStreamReader(response.getEntity().getContent()));                 
+        StringBuilder result = new StringBuilder();        
+        String line = "";
+        while ((line = rd.readLine()) != null) {
+            result.append(line);
+        }
+              if(consulta.getJson().has("total")){
                     cantidad = consulta.getJson().getInt("total");
                 }else{
                     publish("No se encontraron productos en el maestro.");
                 }
                 if(cantidad > 0){
-                    if(consulta.getJson().has("brand")){
-                        JSONArray respuesta = consulta.getJson().getJSONArray("brand");
-                        marcas = new Marcas[respuesta.length()];
+                    if(consulta.getJson().has("products")){
+                        JSONArray respuesta = consulta.getJson().getJSONArray("products");
+                        productos = new ProductosVictoria[respuesta.length()];
                         
                         for (int i = 0; i < respuesta.length(); i++) {
                             Iterator keys = respuesta.getJSONObject(i).keys();
                             String key = keys.next().toString();
                             JSONObject productoJ = respuesta.getJSONObject(i).getJSONObject(key);
-                            marca = new Marcas(propiedades);
+                            producto = new ProductosVictoria();
                  //           marca.loadJSONConsulta(productoJ);
-                            marcas[i] = marca;
+                            productos[i] = producto;
                             setProgress(((i+1)*100)/cantidad);
                           
                     
                         }
                     }else{
                         publish("No se encontraron productos en el maestro.");
+                    
                     }
-                }else{
-                    publish("No se encontraron productos en el maestro.");
-                }
             }else{
                 publish("Error");
                 System.out.println("_ERROR");
@@ -88,7 +101,7 @@ public class MaestroWorkerWeb extends SwingWorker<Marcas[], String> implements P
         } catch (Exception ex) {
             Logger.getLogger(MaestroWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return marcas;
+        return productos;
      
     }
     

@@ -19,22 +19,22 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class DetalleWorkerWeb extends SwingWorker<Marcas, String> implements PropertyChangeListener {
+public class DetalleWorkerWeb extends SwingWorker<ProductosVictoria, String> implements PropertyChangeListener {
 public ConsultaHttpVictoria consulta;
 public Integer id;
-public Marcas marca;
+public ProductosVictoria producto;
 public Boolean error;
 public Properties propiedades;
 
-  public DetalleWorkerWeb(Marcas mar) {
-        this.marca = marca;
+  public DetalleWorkerWeb(ProductosVictoria pro) {
+        this.producto = producto;
      //   this.propiedades = propVictoria;
          this.error = false;
        
     }  
 
     @Override
-    protected Marcas doInBackground() throws Exception {
+    protected ProductosVictoria doInBackground() throws Exception {
           try {
             setProgress(0);
             consulta = new ConsultaHttpVictoria("http", 
@@ -49,22 +49,22 @@ public Properties propiedades;
                     setProgress(100);
                 }else{
                     error = true;
-                    publish("No se obtuvo información al consultar: "+marca.getCodigo());
+                    publish("No se obtuvo información al consultar: "+producto.getCodigo());
                     //System.out.println("_No se obtubo información al consultar: "+producto.getCodigo());
                 }
             }else{
                 error = true;
-                publish(consulta.getErrorMessage()+": "+marca.getCodigo());
+                publish(consulta.getErrorMessage()+": "+producto.getCodigo());
                 //System.out.println("_"+consulta.getErrorMessage()+": "+producto.getCodigo());
             }
             //Thread.sleep(5000); //JUST FOR TESTING
         } catch (Exception e) {
             error = true;
             //System.out.println("_Error desconocido al consultar: "+producto.getCodigo());
-            publish("Error desconocido al consultar: "+marca.getCodigo());
+            publish("Error desconocido al consultar: "+producto.getCodigo());
             //Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
-        return marca; //To change body of generated methods, choose Tools | Templates.
+        return producto; //To change body of generated methods, choose Tools | Templates.
     }
    @Override
     protected void process(List<String> chunks) {

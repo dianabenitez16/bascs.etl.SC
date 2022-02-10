@@ -3166,7 +3166,7 @@
             </Container>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="pBASCs">
+        <Container class="javax.swing.JPanel" name="pConsultaVictoria">
           <Properties>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[980, 730]"/>
@@ -3185,7 +3185,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="tpWebsite" max="32767" attributes="0"/>
+                      <Component id="tpVictoria" max="32767" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -3194,14 +3194,14 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="tpWebsite" pref="729" max="32767" attributes="0"/>
+                      <Component id="tpVictoria" pref="729" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JTabbedPane" name="tpWebsite">
+            <Container class="javax.swing.JTabbedPane" name="tpVictoria">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="10" style="0"/>
@@ -3449,7 +3449,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="lProductoCodigo1" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                                      <Component id="coditm" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tProductoIdV" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="tProductoEAN1" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -3479,7 +3479,7 @@
                                   </Group>
                                   <Component id="tProductoDescripcion1" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="tProductoEAN1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="coditm" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tProductoIdV" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lProductoCodigo1" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
@@ -3586,7 +3586,7 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bProductoBuscar1ActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="coditm">
+                    <Component class="javax.swing.JTextField" name="tProductoIdV">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
@@ -3934,7 +3934,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="tpWebsite1" max="32767" attributes="0"/>
+                      <Component id="tpWebsite" max="32767" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -3943,14 +3943,14 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="tpWebsite1" pref="729" max="32767" attributes="0"/>
+                      <Component id="tpWebsite" pref="729" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JTabbedPane" name="tpWebsite1">
+            <Container class="javax.swing.JTabbedPane" name="tpWebsite">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="10" style="0"/>
@@ -3962,7 +3962,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
               <SubComponents>
-                <Container class="javax.swing.JPanel" name="pConsultaProductos1">
+                <Container class="javax.swing.JPanel" name="pConsultaWebsite">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="10" style="0"/>
@@ -4116,7 +4116,7 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JPanel" name="pConsultaProducto1">
+                <Container class="javax.swing.JPanel" name="pConsultaProductoW">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="10" style="0"/>
@@ -4148,11 +4148,11 @@
                                                   <Component id="lProductoCategoria2" alignment="1" min="-2" max="-2" attributes="0"/>
                                               </Group>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="tProductoCategoria2" max="-2" attributes="0"/>
+                                              <Component id="tProductoMarcaW" max="-2" attributes="0"/>
                                               <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
                                               <Component id="lProductoMarca2" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="tProductoMarca2" min="-2" pref="175" max="-2" attributes="0"/>
+                                              <Component id="tProductoRubroW" min="-2" pref="175" max="-2" attributes="0"/>
                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
@@ -4170,11 +4170,11 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="lProductoCodigo2" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                                      <Component id="tProductoID2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tProductoWebsite" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="tProductoEAN2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tProductoCodigo" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="tProductoDescripcion2" min="-2" pref="416" max="-2" attributes="0"/>
+                                      <Component id="tProductoNombreW" min="-2" pref="416" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="bProductoLimpiar4" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
@@ -4198,9 +4198,9 @@
                                       <Component id="bProductoBuscar2" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="bProductoLimpiar4" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="tProductoDescripcion2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tProductoEAN2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tProductoID2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tProductoNombreW" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tProductoCodigo" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tProductoWebsite" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lProductoCodigo2" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
@@ -4222,10 +4222,10 @@
                                       </Group>
                                       <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="tProductoCategoria2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="tProductoMarcaW" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="lProductoCategoria2" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="lProductoMarca2" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="tProductoMarca2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="tProductoRubroW" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="125" max="-2" attributes="0"/>
                                   </Group>
@@ -4307,7 +4307,7 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bProductoBuscar2ActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="tProductoID2">
+                    <Component class="javax.swing.JTextField" name="tProductoWebsite">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
@@ -4319,7 +4319,7 @@
                     </Component>
                     <Component class="javax.swing.JSeparator" name="sProductoSeparador7">
                     </Component>
-                    <Component class="javax.swing.JTextField" name="tProductoDescripcion2">
+                    <Component class="javax.swing.JTextField" name="tProductoNombreW">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -4330,7 +4330,7 @@
                         </Property>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tProductoDescripcion2ActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tProductoNombreWActionPerformed"/>
                       </Events>
                     </Component>
                     <Container class="javax.swing.JScrollPane" name="spProductoDescripcionLarga2">
@@ -4340,7 +4340,7 @@
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                       <SubComponents>
-                        <Component class="javax.swing.JTextArea" name="taProductoDescripcionLarga2">
+                        <Component class="javax.swing.JTextArea" name="taProductoDescripcionLargaW">
                           <Properties>
                             <Property name="editable" type="boolean" value="false"/>
                             <Property name="columns" type="int" value="20"/>
@@ -4353,7 +4353,7 @@
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Component class="javax.swing.JTextField" name="tProductoMarca2">
+                    <Component class="javax.swing.JTextField" name="tProductoRubroW">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -4364,7 +4364,7 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="tProductoCategoria2">
+                    <Component class="javax.swing.JTextField" name="tProductoMarcaW">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -4390,7 +4390,7 @@
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                       <SubComponents>
-                        <Component class="javax.swing.JTable" name="tbProductoImagenes2">
+                        <Component class="javax.swing.JTable" name="tbProductoCuotas">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Tahoma" size="10" style="0"/>
@@ -4449,7 +4449,7 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="tProductoEAN2">
+                    <Component class="javax.swing.JTextField" name="tProductoCodigo">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">

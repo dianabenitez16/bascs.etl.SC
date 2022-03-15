@@ -4697,7 +4697,7 @@ buscarMarcas();
             }else if(value.equals("DONE")){
                 bMaestroBuscar.setEnabled(true);
                 bMaestroLimpiar.setText("Limpiar");
-                tProductoEstado.setText("Cargando maestro...");
+                tProductoEstado.setText("Cargando maestro..."); 
                 
                 appendMensaje("\nCONSULTA: "+maestroW.consulta.getCon().getURL()+"?"+maestroW.consulta.getParametros());
                 try {

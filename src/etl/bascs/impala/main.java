@@ -20,7 +20,7 @@ import etl.bascs.impala.worker.DetalleWorker;
 import etl.bascs.impala.worker.MaestroWorker;
 import bascs.website.clases.MarcasWorkerSC;
 import etl.bascs.impala.worker.PrestashopWorker;
-import etl.bascs.impala.worker.ProductoWorkerDetalle;
+import etl.bascs.victoria.clases.ProductoWorkerDetalle;
 import etl.bascs.victoria.clases.ProductosWorker;
 import etl.bascs.victoria.clases.RubrosWorker;
 import java.awt.Desktop;
@@ -68,12 +68,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
+import org.apache.http.Header;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -4327,48 +4329,87 @@ buscarMarcas();
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         limpiarMaestro();
        
-       try{
         String url = "http://www.saracomercial.com/panel/api/loader/marcas";
+        
+        HttpClient httpClient = new DefaultHttpClient();
+        try {
+            HttpPost request = new HttpPost(url);
+            StringEntity params = new StringEntity("{\n" +"\"codigo_interno_ws\": \"MOT\",\n" +"\"nombre\": \"MOTOROLA\"\n" +"}");
+            //request.addHeader("content-type", "application/x-www-form-urlencoded");
+            //request.addHeader("Content-Type", "application/json");
+            request.setHeader("Content-type", "application/json");
+            request.setEntity(params);
+            
+            
+            System.out.println("\nSending 'POST' request to URL : " + url);
+            System.out.println("Post parameters : " + request.getEntity());
+            for (Header allHeader : request.getAllHeaders()) {
+                System.out.println("Post headers : " + allHeader.getName() + ":"+allHeader.getValue());
+            }
+            
+            
+            HttpResponse response = httpClient.execute(request);
+            System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+            System.out.println("Response Reason :" + response.getStatusLine().getReasonPhrase());
 
-        HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost(url);
-   
-        post.setHeader("User-Agent", USER_AGENT);
-        post.setHeader( "Accept", "application/json");
-        post.setHeader( "Content-Type", "application/json");
-        post.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
-        post.setHeader("Method", "POST");
-        
-          List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        marcasW = new MarcasWorker(getPropiedades());
-        marcasW.get = false;
-        
-        marcasW.addPropertyChangeListener(this);
-        marcasW.execute();
-        urlParameters.add(new BasicNameValuePair("codigo_interno_ws", "ABB"));
-        urlParameters.add(new BasicNameValuePair("nombre", "ABBA"));
-           
-         post.setEntity(new UrlEncodedFormEntity(urlParameters));
- 
-        HttpResponse response = client.execute(post);
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post parameters : " + post.getEntity());
-        System.out.println("Response Code : " +
-                                    response.getStatusLine().getStatusCode());
- 
-        BufferedReader rd = new BufferedReader(
-                        new InputStreamReader(response.getEntity().getContent()));
- 
-        StringBuffer result = new StringBuffer();
-        String line = "";
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
+            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+            StringBuffer result = new StringBuffer();
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+
+        } catch (Exception ex) {
+        } finally {
+            // @Deprecated httpClient.getConnectionManager().shutdown(); 
         }
-       System.out.println(result.toString());
-                          
-                 }catch (Exception ex) {
+        
+        
+        
+        /*
+        try{
+            String url = "http://www.saracomercial.com/panel/api/loader/marcas";
+
+            HttpClient client = new DefaultHttpClient();
+            HttpPost post = new HttpPost(url);
+
+            post.setHeader("User-Agent", USER_AGENT);
+            post.setHeader("Accept", "application/json");
+            post.setHeader("Content-Type", "application/json");
+            post.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+            post.setHeader("Method", "POST");
+
+            List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+            marcasW = new MarcasWorker(getPropiedades());
+            marcasW.get = false;
+
+            marcasW.addPropertyChangeListener(this);
+            marcasW.execute();
+            urlParameters.add(new BasicNameValuePair("codigo_interno_ws", "ABB"));
+            urlParameters.add(new BasicNameValuePair("nombre", "ABBA"));
+
+            post.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+            HttpResponse response = client.execute(post);
+            System.out.println("\nSending 'POST' request to URL : " + url);
+            System.out.println("Post parameters : " + post.getEntity());
+            System.out.println("Response Code : " +
+                                        response.getStatusLine().getStatusCode());
+
+            BufferedReader rd = new BufferedReader(
+                            new InputStreamReader(response.getEntity().getContent()));
+
+            StringBuffer result = new StringBuffer();
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+            System.out.println(result.toString());
+        }catch (Exception ex) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-                         }
+        }
+        */
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -4984,24 +5025,27 @@ buscarMarcas();
                 tProductoEstado.setText("Cargando producto...");
                 
                 appendMensaje("\nCONSULTA: "+productoW.consulta.getCon().getURL());
-                try {System.out.println("ENTRO EN DETALLES ");
-                    if(productoW.isDone()){
-                        if(productoW.isCancelled()){
-                            
-                            tProductoEstado.setText("Busqueda cancelada.");
-                            System.out.println("Proceso de busqueda cancelado.");
+                System.out.println("ENTRO EN DETALLES ");
+                if(productoW.isDone()){
+                    if(productoW.isCancelled()){
                         
-                        }else{
+                        tProductoEstado.setText("Busqueda cancelada.");
+                        System.out.println("Proceso de busqueda cancelado.");
+                        
+                    }else{
+                        try {
                             productoBusquedaV = productoW.get();
                             
-                            cargarProductosdeVictoria(productoBusquedaV); 
+                            cargarProductosdeVictoria(productoBusquedaV);
                             tProductoEstado.setText(productoW.consulta.getErrorMessage());
                             appendMensaje("RESPUESTA: "+productoW.consulta.getDebugMessage()+" | "+productoW.consulta.getJson().toString());
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (ExecutionException ex) {
+                            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    }else{
-                        System.out.println("Error desconocido: "+productoW.consulta.getDebugMessage());
                     }
-                } catch (InterruptedException | ExecutionException ex){
+                }else{
                     System.out.println("Error desconocido: "+productoW.consulta.getDebugMessage());
                 }
             }else{

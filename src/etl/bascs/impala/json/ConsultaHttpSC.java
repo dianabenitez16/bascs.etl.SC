@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * @author junjuis
  */
 package etl.bascs.impala.json;
 
@@ -12,21 +10,24 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
  *
- * @author User
+ * @author junju
  */
-public class ConsultaHttpVictoria {
-     private URL url;
+public class ConsultaHttpSC {
+    private URL url;
     private URLConnection con;
     private DataOutputStream wr;
     private BufferedReader in;
     private StringBuilder response;
-    private JSONObject json ;
+    private JSONArray jason ;
+    private JSONObject jobson;
     
     private Boolean error;
     private String errorMessage;
@@ -34,34 +35,41 @@ public class ConsultaHttpVictoria {
     
     private String protocolo;
     private String servidor;
-    private String puerto;
-    private String metodoGET;
-    private String rubros;
+    private String metodo;
+    private String clave;
     private String productos;
+    private String marcas;
+    private String rubros;
 
-    public ConsultaHttpVictoria(String protocolo, String servidor, String puerto, String metodoGET, String recurso) {
+    
+    public ConsultaHttpSC(String protocolo, String servidor, String metodo, String recurso) {
         this.protocolo = protocolo;
         this.servidor = servidor;
-        this.puerto = puerto;
-        this.metodoGET = metodoGET;
-        this.rubros = recurso;
-        this.productos = recurso;
+        this.metodo = metodo;
+        this.marcas = recurso;
+         
+        
         conectar();
+
     }
-private void conectar() {
+    
+       
+    private void conectar() {
         try {
-            url = new URL(protocolo+"://"+servidor+":"+puerto+productos);
+            url = new URL(protocolo+"://"+servidor+marcas);
             System.out.println("PROT " + protocolo);
             System.out.println("SER " + servidor);
-            System.out.println("PUER " + puerto);
-            System.out.println("RECUR " + productos);
+            System.out.println("RECUR " + marcas);
+            
             con = url.openConnection();
             
-            con.setRequestProperty("Access-Control-Request-Method", metodoGET);
-            con.setRequestProperty("Authorization", "None");
+            con.setRequestProperty("Access-Control-Request-Method", metodo);
+            System.out.println("METODO " + metodo);
+            con.setRequestProperty("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
             con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:27.0) Gecko/20100101 Firefox/27.0.2 Waterfox/27.0");
             //con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("Accept", "application/json");
             //con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setDoOutput(true);
             
@@ -73,25 +81,12 @@ private void conectar() {
              response.append(inputLine);
             }
             in.close();
-        //ENTRA EN RESPONSE
-   //          System.out.println(response.toString());
-        
-            json = new JSONObject(response.toString());
-           
-            if(json.has("errorCode")){
-                error = false;
-                errorMessage = String.valueOf(json.getInt("errorCode")) +" - "+ json.getString("errorText");
-            }else{
-                if(json.has("msgCode")){
-                    error = false;
-                    errorMessage = String.valueOf(json.getInt("msgCode")) +" - "+ json.getString("msgText");
-                }else{
-                    error = true;
-                    errorMessage = con.getHeaderField(0);
-                    
-                }
-            }
             
+            jason = new JSONArray(response.toString());
+           
+            System.out.println("RESPONSE " + response.toString());
+              error = false;
+          
             debugMessage = con.getHeaderField(0);
             
         } catch (MalformedURLException ex) {
@@ -99,7 +94,7 @@ private void conectar() {
             errorMessage = "Error en el armado de URL";
             debugMessage = ex.getMessage();
             System.out.println("EX: "+ex.getMessage());
-            Logger.getLogger(ConsultaHttp.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConsultaHttpSC.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             error = true;
             errorMessage = "Error al abrir la conexion";
@@ -114,7 +109,25 @@ private void conectar() {
             //Logger.getLogger(ConsultaHttp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
- 
+
+    public JSONArray getJason() {
+        return jason;
+    }
+
+    public void setJason(JSONArray jason) {
+        this.jason = jason;
+    }
+
+    public JSONObject getJobson() {
+        return jobson;
+    }
+
+    public void setJobson(JSONObject jobson) {
+        this.jobson = jobson;
+    }
+
+    
+    
     public URL getUrl() {
         return url;
     }
@@ -155,14 +168,6 @@ private void conectar() {
         this.response = response;
     }
 
-    public JSONObject getJson() {
-        return json;
-    }
-
-    public void setJson(JSONObject json) {
-        this.json = json;
-    }
-
     public Boolean getError() {
         return error;
     }
@@ -177,14 +182,6 @@ private void conectar() {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
-    }
-
-    public String getDebugMessage() {
-        return debugMessage;
-    }
-
-    public void setDebugMessage(String debugMessage) {
-        this.debugMessage = debugMessage;
     }
 
     public String getProtocolo() {
@@ -203,43 +200,32 @@ private void conectar() {
         this.servidor = servidor;
     }
 
-    public String getPuerto() {
-        return puerto;
+    public String getMetodo() {
+        return metodo;
     }
 
-    public void setPuerto(String puerto) {
-        this.puerto = puerto;
+    public void setMetodo(String metodo) {
+        this.metodo = metodo;
     }
 
-    public String getMetodoGET() {
-        return metodoGET;
+    public String getMarcas() {
+        return marcas;
     }
 
-    public void setMetodoGET(String metodoGET) {
-        this.metodoGET = metodoGET;
-    }
- public String getRecurso() {
-        return rubros;
+    public void setMarcas(String marcas) {
+        this.marcas = marcas;
     }
 
-    public void setRecurso(String recurso) {
-        this.rubros = recurso;
+
+    public String getDebugMessage() {
+        return debugMessage;
     }
 
-    public String getRubros() {
-        return rubros;
+    public void setDebugMessage(String debugMessage) {
+        this.debugMessage = debugMessage;
     }
-
-    public void setRubros(String rubros) {
-        this.rubros = rubros;
-    }
-
-    public String getProductos() {
-        return productos;
-    }
-
-    public void setProductos(String productos) {
-        this.productos = productos;
-    }
-
+    
+     public static void main(String[] args) {
+         
+     }
 }

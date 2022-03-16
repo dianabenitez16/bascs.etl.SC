@@ -6,8 +6,9 @@
 package etl.bascs.impala;
 
 import com.formdev.flatlaf.IntelliJTheme;
+import etl.bascs.impala.clases.MarcasSC;
 import etl.bascs.impala.clases.MarcasVictoria;
-import etl.bascs.impala.clases.MarcasWorker;
+import etl.bascs.impala.worker.MarcasWorker;
 import etl.bascs.impala.clases.Producto;
 import etl.bascs.impala.clases.ProductosVictoria;
 import etl.bascs.impala.clases.RubrosSaraComer;
@@ -17,6 +18,7 @@ import etl.bascs.impala.config.Propiedades;
 import etl.bascs.impala.json.ConsultaHttp;
 import etl.bascs.impala.worker.DetalleWorker;
 import etl.bascs.impala.worker.MaestroWorker;
+import etl.bascs.impala.worker.MarcasWorkerSC;
 import etl.bascs.impala.worker.PrestashopWorker;
 import etl.bascs.impala.worker.ProductoWorkerDetalle;
 import etl.bascs.impala.worker.ProductosWorker;
@@ -37,8 +39,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -86,6 +90,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public Propiedades propiedades;
     public Properties propGenerales = new Properties();
     public Properties propVictoria = new Properties();
+    public Properties propSC = new Properties();
     public Properties propImpala = new Properties();
     public Properties propJellyfish = new Properties();
     
@@ -97,6 +102,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public RubrosWorker rubrosW;
     public ProductosWorker productosW;
     public MarcasWorker marcasW;
+    
+    public MarcasWorkerSC marcasSC;
     
     public PrestashopWorker prestashopW;
     public MaestroWorker maestroW;
@@ -263,6 +270,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         
         }
     }
+  
     public void cargarTablaCuotasV(Object[][] contenido){
        tbProductoCuotas.setModel(new javax.swing.table.DefaultTableModel(contenido,new String [] {"CUOTA", "PRECIO CUOTA", "PRECIO CREDITO", "PRECIO CONTADO"}));
         tbProductoCuotas.getColumnModel().getColumn(0).setPreferredWidth(130);
@@ -409,7 +417,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         rubrosW.addPropertyChangeListener(this);
         rubrosW.execute();
     }
- 
+ public void buscarMarcasSC(){
+        marcasSC = new MarcasWorkerSC(getPropiedades());
+        marcasSC.addPropertyChangeListener(this);
+        marcasSC.execute();
+    }
      public void buscarMarcas(){
         limpiarMaestro();
         marcasW = new MarcasWorker(getPropiedades());
@@ -699,6 +711,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 return propJellyfish;
             case 2:
                 return propVictoria;
+            case 3:
+                return propSC;
             default:
                 return propImpala;
         }
@@ -1016,6 +1030,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         jScrollPane2 = new javax.swing.JScrollPane();
         tMarcasVictoria = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         pDebugRYM = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         debugRubros = new javax.swing.JTextArea();
@@ -2789,11 +2804,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lProductoCodigo1.setPreferredSize(new java.awt.Dimension(80, 20));
 
         lProductoDescripcionLarga1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lProductoDescripcionLarga1.setText("Más información");
+        lProductoDescripcionLarga1.setText("Más información:");
         lProductoDescripcionLarga1.setPreferredSize(new java.awt.Dimension(80, 20));
 
         lProductoMarca1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lProductoMarca1.setText("Marca");
+        lProductoMarca1.setText("Marca:");
         lProductoMarca1.setPreferredSize(new java.awt.Dimension(80, 20));
 
         lProductoCategoria1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -2863,11 +2878,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoStock1.setPreferredSize(new java.awt.Dimension(40, 20));
 
         lProductoExistencia7.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lProductoExistencia7.setText("Stock superior a");
+        lProductoExistencia7.setText("Stock superior a:");
         lProductoExistencia7.setPreferredSize(new java.awt.Dimension(80, 20));
 
         lProductoDetallesTecnicos3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lProductoDetallesTecnicos3.setText("Cuotas");
+        lProductoDetallesTecnicos3.setText("Cuotas:");
         lProductoDetallesTecnicos3.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tProductoPrecioVentaFinal1.setEditable(false);
@@ -2883,7 +2898,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoRubroV.setPreferredSize(new java.awt.Dimension(150, 20));
 
         lProductoMarca3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lProductoMarca3.setText("Rubrp");
+        lProductoMarca3.setText("Rubro:");
         lProductoMarca3.setPreferredSize(new java.awt.Dimension(80, 20));
 
         javax.swing.GroupLayout pVictoriaDetalleLayout = new javax.swing.GroupLayout(pVictoriaDetalle);
@@ -3204,7 +3219,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jLabel4.setText("MARCAS");
 
-        bRubros.setText("CARGAR RUBROS");
+        bRubros.setText("CARGAR");
         bRubros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bRubrosActionPerformed(evt);
@@ -3223,16 +3238,25 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jLabel5.setText("RUBROS");
 
+        jButton1.setText("POST TEST");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pMyRLayout = new javax.swing.GroupLayout(pMyR);
         pMyR.setLayout(pMyRLayout);
         pMyRLayout.setHorizontalGroup(
             pMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pMyRLayout.createSequentialGroup()
                 .addGap(411, 411, 411)
-                .addComponent(bRubros)
+                .addGroup(pMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                    .addComponent(bRubros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addGap(86, 86, 86))
             .addGroup(pMyRLayout.createSequentialGroup()
                 .addGap(155, 155, 155)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -3253,7 +3277,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addGap(39, 39, 39)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(167, 167, 167)
-                        .addComponent(bRubros))
+                        .addComponent(bRubros)
+                        .addGap(36, 36, 36)
+                        .addComponent(jButton1))
                     .addGroup(pMyRLayout.createSequentialGroup()
                         .addGap(48, 48, 48)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -3931,7 +3957,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         });
 
         cbOrigen.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        cbOrigen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Impala", "Jellyfish", "Victoria" }));
+        cbOrigen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Impala", "Jellyfish", "Victoria", "Sara Comercial", " " }));
         cbOrigen.setPreferredSize(new java.awt.Dimension(60, 20));
         cbOrigen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4223,7 +4249,7 @@ buscarProductoVictoria();        // TODO add your handling code here:
     }//GEN-LAST:event_bMaestroLimpiar2ActionPerformed
 
     private void bMaestroBuscar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMaestroBuscar2ActionPerformed
-        // TODO add your handling code here:
+buscarMarcasSC();        // TODO add your handling code here:
     }//GEN-LAST:event_bMaestroBuscar2ActionPerformed
 
     private void bPrestashopProcesar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPrestashopProcesar2ActionPerformed
@@ -4239,9 +4265,7 @@ buscarProductoVictoria();        // TODO add your handling code here:
     }//GEN-LAST:event_bPrestashopAbrir2ActionPerformed
 
     private void bRubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRubrosActionPerformed
-buscarRubros();
 buscarMarcas();
-      
     }//GEN-LAST:event_bRubrosActionPerformed
 
     private void tVictoriaProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tVictoriaProductosActionPerformed
@@ -4301,6 +4325,10 @@ buscarMarcas();
         // TODO add your handling code here:
     }//GEN-LAST:event_tVictoriaMarcaActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -4355,6 +4383,7 @@ buscarMarcas();
     private javax.swing.JComboBox<String> cbOrigen;
     private javax.swing.JButton debugRubro;
     private javax.swing.JTextArea debugRubros;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

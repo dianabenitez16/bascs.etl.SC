@@ -16,20 +16,29 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class MarcasVictoria {
-    private String codigo;
-    private String nombre;
-    public Boolean cargado;
-    
-      public MarcasVictoria(Properties propiedades) {
+    public class MarcasSC {
+       private Integer id;
+       private String codigo;
+       private String nombre;
+       private Boolean cargado;
+
+    public MarcasSC(Properties propiedades) {
+        this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
     }
 
-    public MarcasVictoria() {
-        
+    
+    
+    public Integer getId() {
+        return id;
     }
-       public String getCodigo() {
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCodigo() {
         return codigo;
     }
 
@@ -45,12 +54,24 @@ public class MarcasVictoria {
         this.nombre = nombre;
     }
 
-   public void loadJSONConsulta(JSONObject marcasJ){
+    public Boolean getCargado() {
+        return cargado;
+    }
+
+    public void setCargado(Boolean cargado) {
+        this.cargado = cargado;
+    }
+    
+    public void loadJSONConsulta(JSONObject marcasJ){
       
        try{
+           System.out.println("got in");
+          setId((getId() == null ? marcasJ.optInt("id"):getId())); 
           setCodigo((getCodigo() == null ? marcasJ.optString("codigo_interno_ws"):getCodigo())); 
           setNombre((getNombre() == null ? marcasJ.optString("nombre"):getNombre())); 
-          
+           System.out.println("ID " +  marcasJ.optInt("id"));
+           System.out.println("NOMBRE " + marcasJ.optString("nombre"));
+           System.out.println("CODIGO " +   marcasJ.optString("codigo_interno_ws"));
           cargado = true;
            
         
@@ -58,6 +79,4 @@ public class MarcasVictoria {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }     
    }
-   
-    
 }

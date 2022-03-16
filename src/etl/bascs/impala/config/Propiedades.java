@@ -48,6 +48,14 @@ public class Propiedades {
         main.appendMensaje(main.propVictoria.toString());
         main.appendMensaje("");
         
+        main.propSC = new Properties();
+        main.propSC.setProperty("config","SaraComercial");
+        cargarPropiedades(main.propSC,"config/SaraComercial.conf");
+        main.appendMensaje("Se cargo archivo de configuraciones de Sara Comercial");
+        main.appendMensaje(main.propSC.toString());
+        main.appendMensaje("");
+        
+        
         main.propImpala = new Properties();
         main.propImpala.setProperty("config","impala");
         cargarPropiedades(main.propImpala,"config/impala.conf");
@@ -106,12 +114,21 @@ public class Propiedades {
                 propiedades.setProperty("servidor", "192.168.192.60");
                 propiedades.setProperty("puerto", "8080");
                 propiedades.setProperty("metodoGET", "GET");
-                propiedades.setProperty("metodoPOST", "POST");
                 propiedades.setProperty("rubros", "/WS/webapi/victoria/rubros");
                 propiedades.setProperty("marcas", "/WS/webapi/victoria/marcas");
                 propiedades.setProperty("productos", "/WS/webapi/victoria/productos");
                 propiedades.setProperty("marcas", "/WS/webapi/victoria/marcas");
                 propiedades.setProperty("detalle", "/WS/webapi/victoria/productos/");
+                propiedades.setProperty("hilos", "10");
+                break;
+            case "SaraComercial":
+                propiedades.setProperty("servidor", "www.saracomercial.com");
+                propiedades.setProperty("metodoGET", "GET");
+                propiedades.setProperty("metodoPOST", "POST");
+                propiedades.setProperty("rubros", "/panel/api/loader/rubros");
+                propiedades.setProperty("marcas", "/panel/api/loader/marcas");
+                propiedades.setProperty("productos", "/api/loader/productos");
+                propiedades.setProperty("detalle", "/api/loader/productos/");
                 propiedades.setProperty("hilos", "10");
                 break;
             case "prestashop":

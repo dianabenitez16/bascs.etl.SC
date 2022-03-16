@@ -79,6 +79,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -706,6 +707,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }
     
     public Properties getOrigen(){
+        if(isClicked){
+            return propVictoria;
+        }
     switch(cbOrigen.getSelectedIndex()){
             case 0:
                 return propImpala;
@@ -4266,6 +4270,7 @@ buscarMarcasSC();        // TODO add your handling code here:
     }//GEN-LAST:event_bPrestashopAbrir2ActionPerformed
 
     private void bRubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRubrosActionPerformed
+isClicked = true;
 buscarMarcas();
     }//GEN-LAST:event_bRubrosActionPerformed
 
@@ -4327,89 +4332,39 @@ buscarMarcas();
     }//GEN-LAST:event_tVictoriaMarcaActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        limpiarMaestro();
-       
-        String url = "http://www.saracomercial.com/panel/api/loader/marcas";
-        
-        HttpClient httpClient = new DefaultHttpClient();
-        try {
-            HttpPost request = new HttpPost(url);
-            StringEntity params = new StringEntity("{\n" +"\"codigo_interno_ws\": \"MOT\",\n" +"\"nombre\": \"MOTOROLA\"\n" +"}");
-            //request.addHeader("content-type", "application/x-www-form-urlencoded");
-            //request.addHeader("Content-Type", "application/json");
-            request.setHeader("Content-type", "application/json");
-            request.setEntity(params);
-            
-            
-            System.out.println("\nSending 'POST' request to URL : " + url);
-            System.out.println("Post parameters : " + request.getEntity());
-            for (Header allHeader : request.getAllHeaders()) {
-                System.out.println("Post headers : " + allHeader.getName() + ":"+allHeader.getValue());
-            }
-            
-            
-            HttpResponse response = httpClient.execute(request);
-            System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
-            System.out.println("Response Reason :" + response.getStatusLine().getReasonPhrase());
-
-            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-            StringBuffer result = new StringBuffer();
-            String line = "";
-            while ((line = rd.readLine()) != null) {
-                result.append(line);
-            }
-
-        } catch (Exception ex) {
-        } finally {
-            // @Deprecated httpClient.getConnectionManager().shutdown(); 
+isClicked = true;  
+boolean result = false;
+   
+   HttpClient hc = new DefaultHttpClient();
+   String message;
+  
+                HttpPost p = new HttpPost("http://www.saracomercial.com/panel/api/loader/marcas");
+                JSONObject object = new JSONObject();
+                  for (int i = 0; i < marcasW.marcasV.length; i++) {
+                    object.put("codigo_interno_ws", marcasW.marcasJ.get("codigo_interno_ws")) ;
+                    System.out.println("CODIGO " +  marcasW.marcasJ.get("codigo_interno_ws"));
+                    object.put("nombre", marcasW.marcasJ.get("nombre"));
+                   
         }
-        
-        
-        
-        /*
-        try{
-            String url = "http://www.saracomercial.com/panel/api/loader/marcas";
+               
+                try {
+                message = object.toString();
+                    System.out.println("MESSAGE " + object.toString());
 
-            HttpClient client = new DefaultHttpClient();
-            HttpPost post = new HttpPost(url);
-
-            post.setHeader("User-Agent", USER_AGENT);
-            post.setHeader("Accept", "application/json");
-            post.setHeader("Content-Type", "application/json");
-            post.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
-            post.setHeader("Method", "POST");
-
-            List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-            marcasW = new MarcasWorker(getPropiedades());
-            marcasW.get = false;
-
-            marcasW.addPropertyChangeListener(this);
-            marcasW.execute();
-            urlParameters.add(new BasicNameValuePair("codigo_interno_ws", "ABB"));
-            urlParameters.add(new BasicNameValuePair("nombre", "ABBA"));
-
-            post.setEntity(new UrlEncodedFormEntity(urlParameters));
-
-            HttpResponse response = client.execute(post);
-            System.out.println("\nSending 'POST' request to URL : " + url);
-            System.out.println("Post parameters : " + post.getEntity());
-            System.out.println("Response Code : " +
-                                        response.getStatusLine().getStatusCode());
-
-            BufferedReader rd = new BufferedReader(
-                            new InputStreamReader(response.getEntity().getContent()));
-
-            StringBuffer result = new StringBuffer();
-            String line = "";
-            while ((line = rd.readLine()) != null) {
-                result.append(line);
-            }
-            System.out.println(result.toString());
-        }catch (Exception ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        */
+                p.setEntity(new StringEntity(message, "UTF8"));
+                p.setHeader("Content-type", "application/json");
+                p.setHeader("Accept", "application/json");
+                p.setHeader("Connection", "keep-alive");
+                p.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+                    HttpResponse resp = hc.execute(p);
+                    if (resp != null) {
+                        System.out.println("RESP " + resp.toString());
+                        if (resp.getStatusLine().getStatusCode() == 204)
+                            result = true;
+                    }
+         } catch (Exception e) {
+                    e.printStackTrace();
+         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

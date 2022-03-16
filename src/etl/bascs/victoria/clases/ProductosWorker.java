@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package etl.bascs.impala.worker;
+package etl.bascs.victoria.clases;
 
 import etl.bascs.impala.clases.Producto;
 import etl.bascs.impala.clases.ProductosVictoria;

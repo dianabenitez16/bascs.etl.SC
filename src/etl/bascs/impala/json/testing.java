@@ -5,14 +5,22 @@
  */
 package etl.bascs.impala.json;
 
+import etl.bascs.impala.clases.MarcasVictoria;
 import etl.bascs.impala.clases.RubrosVictoria;
 import etl.bascs.impala.main;
+import etl.bascs.victoria.clases.MarcasWorker;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,42 +46,32 @@ public class testing {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-  HttpClient httpClient = new DefaultHttpClient();
-HttpPost httpPost = new HttpPost("http://www.saracomercial.com/panel/api/loader/rubros");
-// Request parameters and other properties.
- //       httpPost.setHeader("User-Agent", USER_AGENT);
-        httpPost.setHeader( "Accept", "application/json");
-        httpPost.setHeader( "Content-Type", "application/json");
-        httpPost.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
-        httpPost.setHeader("Method", "POST");
-        
-List<NameValuePair> params = new ArrayList<>();
-params.add(new BasicNameValuePair("codigo_interno_ws", "0"));
-params.add(new BasicNameValuePair("nombre", "No Posee"));
-try {
-    httpPost.setEntity(new UrlEncodedFormEntity(params));
-} catch (UnsupportedEncodingException e) {
-    // writing error to Log
-    e.printStackTrace();
-}
-/*
- * Execute the HTTP Request
- */
-try {
-    HttpResponse response = httpClient.execute(httpPost);
-    HttpEntity respEntity = response.getEntity();
+    try {
+                URL url = new URL("");
+                
+                
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-    if (respEntity != null) {
-        // EntityUtils to get the response content
-        String content =  EntityUtils.toString(respEntity);
-        System.out.println("CONTENT " + content);
-    }
-} catch (ClientProtocolException e) {
-    // writing exception to log
-    e.printStackTrace();
-} catch (IOException e) {
-    // writing exception to log
-    e.printStackTrace();
-}
-    }
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+                connection.setRequestProperty("Accept", "application/json");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setUseCaches(false);
+
+                //Start Content Wrapper
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), "UTF-8"));
+               MarcasVictoria postData = new MarcasVictoria();
+             postData.setCodigo("ABB");
+              
+                bw.flush();
+                bw.close();
+             
+                //Closing Content Wrapper and getting result
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    // OK
+              
+                }}catch (Exception ex) {
+            Logger.getLogger(testing.class.getName()).log(Level.SEVERE, null, ex);
+                         }
+        }
 }

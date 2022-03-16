@@ -5,6 +5,7 @@
  */
 package etl.bascs.impala.json;
 
+import etl.bascs.impala.clases.MarcasVictoria;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -32,23 +34,33 @@ public class ConsultaHttpVictoria {
     private String errorMessage;
     private String debugMessage;
     
+    public Boolean get = true;
+    
     private String protocolo;
     private String servidor;
     private String puerto;
     private String metodoGET;
+    private String metodoPOST;
     private String rubros;
+    private String marcas;
     private String productos;
+    private MarcasVictoria parametros;
 
-    public ConsultaHttpVictoria(String protocolo, String servidor, String puerto, String metodoGET, String recurso) {
+    public ConsultaHttpVictoria(String protocolo, String servidor, String puerto, String metodo, String recurso) {
         this.protocolo = protocolo;
         this.servidor = servidor;
         this.puerto = puerto;
-        this.metodoGET = metodoGET;
-        this.rubros = recurso;
+        this.metodoGET = metodo;
+        this.metodoPOST = metodo;
+        this.marcas = recurso;
         this.productos = recurso;
+        if(!get){
+            this.parametros = parametros;
+        }
         conectar();
     }
 private void conectar() {
+    if(get){
         try {
             url = new URL(protocolo+"://"+servidor+":"+puerto+productos);
             System.out.println("PROT " + protocolo);
@@ -58,6 +70,7 @@ private void conectar() {
             con = url.openConnection();
             
             con.setRequestProperty("Access-Control-Request-Method", metodoGET);
+            System.out.println(" METODO " + metodoGET);
             con.setRequestProperty("Authorization", "None");
             con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:27.0) Gecko/20100101 Firefox/27.0.2 Waterfox/27.0");
             //con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -113,8 +126,63 @@ private void conectar() {
             //System.out.println("EX: "+ex.getMessage());
             //Logger.getLogger(ConsultaHttp.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
- 
+    }else{
+        get = false;
+        try {
+            url = new URL(protocolo+"://"+servidor+marcas);
+            System.out.println("PROT " + protocolo);
+            System.out.println("SER " + servidor);
+            System.out.println("RECUR " + marcas);
+            
+            con = url.openConnection();
+            
+            con.setRequestProperty("Access-Control-Request-Method", metodoPOST);
+            System.out.println("METODO " + metodoPOST);
+            con.setRequestProperty("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+            con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:27.0) Gecko/20100101 Firefox/27.0.2 Waterfox/27.0");
+            //con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("Accept", "application/json");
+            //con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            con.setDoOutput(true);
+         
+            in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            
+            response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+             response.append(inputLine);
+            }
+            in.close();
+            
+           
+           
+            System.out.println("RESPONSE " + response.toString());
+              error = false;
+          
+            debugMessage = con.getHeaderField(0);
+            
+        } catch (MalformedURLException ex) {
+            error = true;
+            errorMessage = "Error en el armado de URL";
+            debugMessage = ex.getMessage();
+            System.out.println("EX: "+ex.getMessage());
+            Logger.getLogger(ConsultaHttpSC.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            error = true;
+            errorMessage = "Error al abrir la conexion";
+            debugMessage = ex.getMessage();
+            if(ex.getMessage().contains("HTTP response code: 401")){
+                errorMessage = "Error de autenticación. Verifique credenciales. [401]";
+            }
+            if(ex.getMessage().contains("HTTP response code: 500")){
+                errorMessage = "Error Interno de Servidor. [500]";
+            }
+            //System.out.println("EX: "+ex.getMessage());
+            //Logger.getLogger(ConsultaHttp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+}
+}
     public URL getUrl() {
         return url;
     }
@@ -240,6 +308,30 @@ private void conectar() {
 
     public void setProductos(String productos) {
         this.productos = productos;
+    }
+
+    public String getMarcas() {
+        return marcas;
+    }
+
+    public void setMarcas(String marcas) {
+        this.marcas = marcas;
+    }
+
+    public Boolean getGet() {
+        return get;
+    }
+
+    public void setGet(Boolean get) {
+        this.get = get;
+    }
+
+    public String getMetodoPOST() {
+        return metodoPOST;
+    }
+
+    public void setMetodoPOST(String metodoPOST) {
+        this.metodoPOST = metodoPOST;
     }
 
 }

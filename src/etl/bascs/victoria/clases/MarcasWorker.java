@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package etl.bascs.impala.worker;
+package etl.bascs.victoria.clases;
 
 import etl.bascs.impala.clases.MarcasVictoria;
+import etl.bascs.impala.json.ConsultaHttpSC;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
-import etl.bascs.impala.worker.RubrosWorker;
+import etl.bascs.victoria.clases.RubrosWorker;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
@@ -25,13 +26,15 @@ import org.json.JSONObject;
  */
     public class MarcasWorker extends SwingWorker<MarcasVictoria[], String> implements PropertyChangeListener {
 
-    public ConsultaHttpVictoria consulta;
-    private Properties propiedades;
+    public ConsultaHttpVictoria consultaV;
+    public ConsultaHttpSC consultaS;
+    public Properties propiedades;
     private Integer cantidad;
+    public Boolean get = true;
     
-    private MarcasVictoria[] marcasV;
+    public MarcasVictoria[] marcasV;
     public MarcasVictoria marcaV;
-    public JSONObject rubroJ;
+    public JSONObject marcasJ;
     
     public MarcasWorker(Properties prop){
        marcasV = new MarcasVictoria[0];
@@ -44,29 +47,30 @@ import org.json.JSONObject;
 
     @Override
     protected MarcasVictoria[] doInBackground() {
-     try{
+    if(get){
+        try{
              setProgress(0);
-             consulta = new ConsultaHttpVictoria("http",
+             consultaV = new ConsultaHttpVictoria("http",
              propiedades.getProperty("servidor"),
              propiedades.getProperty("puerto"),
              propiedades.getProperty("metodoGET"),
              propiedades.getProperty("marcas")
              );
-        if(!consulta.getError()){
-                if(consulta.getJson().has("total")){
-                    cantidad = consulta.getJson().getInt("total");
+        if(!consultaV.getError()){
+                if(consultaV.getJson().has("total")){
+                    cantidad = consultaV.getJson().getInt("total");
                 }else{
                     publish("No se encontraron marcas en el maestro.");
                 }
                 if(cantidad > 0){
-                    if(consulta.getJson().has("items")){
-                        JSONArray respuesta = consulta.getJson().getJSONArray("items");
+                    if(consultaV.getJson().has("items")){
+                        JSONArray respuesta = consultaV.getJson().getJSONArray("items");
                         marcasV = new MarcasVictoria[respuesta.length()];
                         Integer i = 0;
                         Iterator keys = respuesta.getJSONObject(i).keys();
                             while(keys.hasNext()) {
                             String key = keys.next().toString();
-                            JSONObject marcasJ = respuesta.getJSONObject(i).getJSONObject(key);
+                            marcasJ = respuesta.getJSONObject(i).getJSONObject(key);
                             marcaV = new MarcasVictoria(propiedades);
                             marcaV.loadJSONConsulta(marcasJ);
                             marcasV[i] = marcaV;
@@ -75,6 +79,7 @@ import org.json.JSONObject;
                        //     publish(rubroV.getCodigo());
                                 System.out.println("MARCAS " + marcasJ.toString());
                         i++;
+                        get = true;
                             }
                     }else{
                         publish("No se encontraron rubros en el maestro.");
@@ -91,9 +96,26 @@ import org.json.JSONObject;
             System.out.println("_ERROR" + ex);
         }
         return marcasV;
-     
+    }else{
+        get = false;
+        try{
+             setProgress(0);
+             consultaS = new ConsultaHttpSC("http",
+             propiedades.getProperty("servidor"),
+             propiedades.getProperty("metodoPOST"),
+             propiedades.getProperty("marcas")
+             );
+             
+        
+             
+       } catch (Exception ex) {
+            Logger.getLogger(RubrosWorker.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("_ERROR" + ex);
+      
+       }
     }
-
+        return null;
+    }
     @Override
     protected void done() {
         System.out.println("Marcas obtenido. Se encontraron "+marcasV.length+" marcas.");
@@ -112,6 +134,24 @@ import org.json.JSONObject;
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
+
+    public Boolean getGet() {
+        return get;
+    }
+
+    public void setGet(Boolean get) {
+        this.get = get;
+    }
+
+    public JSONObject getMarcasJ() {
+        return marcasJ;
+    }
+
+    public void setMarcasJ(JSONObject marcasJ) {
+        this.marcasJ = marcasJ;
+    }
+
+   
     
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

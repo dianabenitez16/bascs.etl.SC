@@ -8,7 +8,7 @@ package etl.bascs.impala;
 import com.formdev.flatlaf.IntelliJTheme;
 import etl.bascs.impala.clases.MarcasSC;
 import etl.bascs.impala.clases.MarcasVictoria;
-import etl.bascs.impala.worker.MarcasWorker;
+import etl.bascs.victoria.clases.MarcasWorker;
 import etl.bascs.impala.clases.Producto;
 import etl.bascs.impala.clases.ProductosVictoria;
 import etl.bascs.impala.clases.RubrosSaraComer;
@@ -18,11 +18,11 @@ import etl.bascs.impala.config.Propiedades;
 import etl.bascs.impala.json.ConsultaHttp;
 import etl.bascs.impala.worker.DetalleWorker;
 import etl.bascs.impala.worker.MaestroWorker;
-import etl.bascs.impala.worker.MarcasWorkerSC;
+import bascs.website.clases.MarcasWorkerSC;
 import etl.bascs.impala.worker.PrestashopWorker;
 import etl.bascs.impala.worker.ProductoWorkerDetalle;
-import etl.bascs.impala.worker.ProductosWorker;
-import etl.bascs.impala.worker.RubrosWorker;
+import etl.bascs.victoria.clases.ProductosWorker;
+import etl.bascs.victoria.clases.RubrosWorker;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -756,9 +756,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     limpiarProducto(false);
                     tpVictoria.setSelectedIndex(0);
                     tProductoIDV.setText(tablaContenidoProductos[(int) table.getValueAt(row, 0)][2].toString());
-                    System.out.println("VALOR DEL PRIMER SETEO " + tablaContenidoProductos[(int) table.getValueAt(row, 0)][2].toString());
                     buscarProductoVictoria((ProductosVictoria) tablaContenidoProductos[(int) table.getValueAt(row, 0)][0]);
-                }   System.out.println("VALOR DEL SEGUNTO SETEO " + tablaContenidoProductos[(int) table.getValueAt(row, 0)][0]);
+                } 
             }
         });
         tbVictoriaProductos.setDefaultEditor(Object.class, null);
@@ -4326,7 +4325,50 @@ buscarMarcas();
     }//GEN-LAST:event_tVictoriaMarcaActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    // TODO add your handling code here:
+        limpiarMaestro();
+       
+       try{
+        String url = "http://www.saracomercial.com/panel/api/loader/marcas";
+
+        HttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost(url);
+   
+        post.setHeader("User-Agent", USER_AGENT);
+        post.setHeader( "Accept", "application/json");
+        post.setHeader( "Content-Type", "application/json");
+        post.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+        post.setHeader("Method", "POST");
+        
+          List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        marcasW = new MarcasWorker(getPropiedades());
+        marcasW.get = false;
+        
+        marcasW.addPropertyChangeListener(this);
+        marcasW.execute();
+        urlParameters.add(new BasicNameValuePair("codigo_interno_ws", "ABB"));
+        urlParameters.add(new BasicNameValuePair("nombre", "ABBA"));
+           
+         post.setEntity(new UrlEncodedFormEntity(urlParameters));
+ 
+        HttpResponse response = client.execute(post);
+        System.out.println("\nSending 'POST' request to URL : " + url);
+        System.out.println("Post parameters : " + post.getEntity());
+        System.out.println("Response Code : " +
+                                    response.getStatusLine().getStatusCode());
+ 
+        BufferedReader rd = new BufferedReader(
+                        new InputStreamReader(response.getEntity().getContent()));
+ 
+        StringBuffer result = new StringBuffer();
+        String line = "";
+        while ((line = rd.readLine()) != null) {
+            result.append(line);
+        }
+       System.out.println(result.toString());
+                          
+                 }catch (Exception ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+                         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -4896,7 +4938,8 @@ buscarMarcas();
                 bVictoriaLimpiar.setText("Limpiar");
                 tProductoEstado.setText("Cargando maestro...");
                 
-                appendMensaje("\nCONSULTA: "+marcasW.consulta.getCon().getURL());
+                appendMensaje("\nCONSULTA: "+marcasW.consultaV.getCon().getURL());
+              
                 try {
                     if(marcasW.isDone()){
                         if(marcasW.isCancelled()){
@@ -4915,8 +4958,8 @@ buscarMarcas();
                                 i++;
                             }
                             cargarTablaMarcas(tablaContenidoMarcas);
-                            tProductoEstado.setText(marcasW.consulta.getErrorMessage());
-                            appendMensaje("RESPUESTA: "+ marcasW.consulta.getDebugMessage()+ " | "+ marcasW.consulta.getJson().getJSONArray("items").getJSONObject(1)); 
+                            tProductoEstado.setText(marcasW.consultaV.getErrorMessage());
+                            appendMensaje("RESPUESTA: "+ marcasW.consultaV.getDebugMessage()+ " | "+ marcasW.consultaV.getJson().getJSONArray("items").getJSONObject(1)); 
                             appendMensaje("Se obtuvieron "+marcasW.getCantidad()+" registros.");
                         }
                     }else{

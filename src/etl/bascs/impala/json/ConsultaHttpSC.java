@@ -29,6 +29,8 @@ public class ConsultaHttpSC {
     private JSONArray jason ;
     private JSONObject jobson;
     
+    public Boolean get = true;
+    
     private Boolean error;
     private String errorMessage;
     private String debugMessage;
@@ -55,6 +57,7 @@ public class ConsultaHttpSC {
     
        
     private void conectar() {
+        if(get){
         try {
             url = new URL(protocolo+"://"+servidor+marcas);
             System.out.println("PROT " + protocolo);
@@ -107,9 +110,64 @@ public class ConsultaHttpSC {
             }
             //System.out.println("EX: "+ex.getMessage());
             //Logger.getLogger(ConsultaHttp.class.getName()).log(Level.SEVERE, null, ex);
+        }}else{
+    get = false;
+            try {
+            url = new URL(protocolo+"://"+servidor+marcas);
+            System.out.println("PROT " + protocolo);
+            System.out.println("SER " + servidor);
+            System.out.println("RECUR " + marcas);
+            
+            con = url.openConnection();
+            
+            con.setRequestProperty("Access-Control-Request-Method", metodo);
+            System.out.println("METODO " + metodo);
+            con.setRequestProperty("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+            con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:27.0) Gecko/20100101 Firefox/27.0.2 Waterfox/27.0");
+            //con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("Accept", "application/json");
+            //con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            con.setDoOutput(true);
+             
+            in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            
+            
+            response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+             response.append(inputLine);
+            }
+            in.close();
+            
+            jason = new JSONArray(response.toString());
+           
+            System.out.println("RESPONSE " + response.toString());
+              error = false;
+          
+            debugMessage = con.getHeaderField(0);
+            
+        } catch (MalformedURLException ex) {
+            error = true;
+            errorMessage = "Error en el armado de URL";
+            debugMessage = ex.getMessage();
+            System.out.println("EX: "+ex.getMessage());
+            Logger.getLogger(ConsultaHttpSC.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            error = true;
+            errorMessage = "Error al abrir la conexion";
+            debugMessage = ex.getMessage();
+            if(ex.getMessage().contains("HTTP response code: 401")){
+                errorMessage = "Error de autenticación. Verifique credenciales. [401]";
+            }
+            if(ex.getMessage().contains("HTTP response code: 500")){
+                errorMessage = "Error Interno de Servidor. [500]";
+            }
+            //System.out.println("EX: "+ex.getMessage());
+            //Logger.getLogger(ConsultaHttp.class.getName()).log(Level.SEVERE, null, ex);
         }
+}
     }
-
     public JSONArray getJason() {
         return jason;
     }

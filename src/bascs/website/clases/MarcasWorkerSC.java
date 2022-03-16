@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package etl.bascs.impala.worker;
+package bascs.website.clases;
 
+import etl.bascs.victoria.clases.RubrosWorker;
 import etl.bascs.impala.clases.MarcasSC;
-import etl.bascs.impala.clases.MarcasVictoria;
 import etl.bascs.impala.json.ConsultaHttpSC;
-import etl.bascs.impala.json.ConsultaHttpVictoria;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;

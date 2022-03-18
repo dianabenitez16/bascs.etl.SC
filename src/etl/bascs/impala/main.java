@@ -6,19 +6,19 @@
 package etl.bascs.impala;
 
 import com.formdev.flatlaf.IntelliJTheme;
-import etl.bascs.impala.clases.MarcasSC;
 import etl.bascs.impala.clases.MarcasVictoria;
 import etl.bascs.victoria.clases.MarcasWorker;
 import etl.bascs.impala.clases.Producto;
 import etl.bascs.impala.clases.ProductosVictoria;
-import etl.bascs.impala.clases.RubrosSaraComer;
+import bascs.website.clases.RubrosSC;
 import etl.bascs.impala.clases.RubrosVictoria;
 import etl.bascs.impala.clases.Scalr;
 import etl.bascs.impala.config.Propiedades;
-import etl.bascs.impala.json.ConsultaHttp;
 import etl.bascs.impala.worker.DetalleWorker;
 import etl.bascs.impala.worker.MaestroWorker;
 import bascs.website.clases.MarcasWorkerSC;
+import bascs.website.clases.RubrosWorkerSC;
+import etl.bascs.impala.clases.MarcasSC;
 import etl.bascs.impala.worker.PrestashopWorker;
 import etl.bascs.victoria.clases.ProductoWorkerDetalle;
 import etl.bascs.victoria.clases.ProductosWorker;
@@ -39,10 +39,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -57,7 +55,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -68,8 +65,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -108,6 +103,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public MarcasWorker marcasW;
     
     public MarcasWorkerSC marcasSC;
+    public RubrosWorkerSC rubrosSC;
     
     public PrestashopWorker prestashopW;
     public MaestroWorker maestroW;
@@ -115,7 +111,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public ProductoWorkerDetalle productoW;
     
     public RubrosVictoria rubVt;
-    public RubrosSaraComer rubScl;
+    public RubrosSC rubScl;
     
     public JFileChooser fc;
     public File fPrestashopImport;
@@ -138,6 +134,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public Integer[] tablaMarcas = new Integer[] {30,30,30,30};
     public Object[][] tablaContenidoMarcas;
     
+    public String[] tablaHeaderMarcasSC = new String[] {"X","ID","Codigo", "Nombre"};
+    public Integer[] tablaMarcasSC = new Integer[] {30,30,30,30};
+    public Object[][] tablaContenidoMarcasSC;
+   
+    public String[] tablaHeaderRubrosSC = new String[] {"X","ID","Codigo", "Nombre"};
+    public Integer[] tablaRubrosSC = new Integer[] {30,30,30,30};
+    public Object[][] tablaContenidoRubrosSC;
+  
     public String[] tablaHeaderPrestashop;
     
     public Producto productoBusqueda;
@@ -421,12 +425,17 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         rubrosW.addPropertyChangeListener(this);
         rubrosW.execute();
     }
- public void buscarMarcasSC(){
+    public void buscarRubrosSC(){
+        rubrosSC = new RubrosWorkerSC(getPropiedades());
+        rubrosSC.addPropertyChangeListener(this);
+        rubrosSC.execute();
+    }
+    public void buscarMarcasSC(){
         marcasSC = new MarcasWorkerSC(getPropiedades());
         marcasSC.addPropertyChangeListener(this);
         marcasSC.execute();
     }
-     public void buscarMarcas(){
+    public void buscarMarcas(){
         limpiarMaestro();
         marcasW = new MarcasWorker(getPropiedades());
         marcasW.addPropertyChangeListener(this);
@@ -445,7 +454,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         productosW.execute();
     }
     
-    //CARGAR TABLAS//
+    //CARGAR TABLAS DEL MAIN //
     /*******************************************************/
     public void cargarTablaMaestro(Object[][] contenido){
         tbMaestroProductos.setModel(new javax.swing.table.DefaultTableModel(contenido,tablaHeaderMaestro));
@@ -468,13 +477,30 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             tRubrosVictoria.getColumnModel().getColumn(i).setPreferredWidth(tablaRubros[i]);
         }
     }
+     public void cargarTablaRubrosSC(Object[][] contenidos){
+        tRubroSC.setModel(new javax.swing.table.DefaultTableModel(contenidos,tablaHeaderRubrosSC));
+        tRubroSC.getColumnModel().removeColumn(tRubroSC.getColumnModel().getColumn(0));
+        for (int i = 0; i < tRubroSC.getColumnCount(); i++) {
+            tRubroSC.getColumnModel().getColumn(i).setPreferredWidth(tablaRubrosSC[i]);
+        }
+    }
     public void cargarTablaMarcas(Object[][] contenidos){
         tMarcasVictoria.setModel(new javax.swing.table.DefaultTableModel(contenidos,tablaHeaderMarcas));
         tMarcasVictoria.getColumnModel().removeColumn(tMarcasVictoria.getColumnModel().getColumn(0));
         for (int i = 0; i < tMarcasVictoria.getColumnCount(); i++) {
             tMarcasVictoria.getColumnModel().getColumn(i).setPreferredWidth(tablaMarcas[i]);
         }
-    } 
+    }
+   public void cargarTablaMarcasSC(Object[][] contenidos){
+        tMarcaSC.setModel(new javax.swing.table.DefaultTableModel(contenidos,tablaHeaderMarcasSC));
+        tMarcaSC.getColumnModel().removeColumn(tMarcaSC.getColumnModel().getColumn(0));
+        for (int i = 0; i < tMarcaSC.getColumnCount(); i++) {
+            tMarcaSC.getColumnModel().getColumn(i).setPreferredWidth(tablaMarcasSC[i]);
+        }
+       
+   }
+        
+     
     public void generarArchivoContenido(Object[] headers, Object[][] contenido, String filename){
         File carpeta = new File("export/");
         Writer out;
@@ -1108,6 +1134,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lMaestroCantidad15 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         tPrestashopWorkerEstado2 = new javax.swing.JLabel();
+        pMyRSC = new javax.swing.JPanel();
+        tRubrosSC = new javax.swing.JScrollPane();
+        tRubroSC = new javax.swing.JTable();
+        jLabel6 = new javax.swing.JLabel();
+        bRubrosSC = new javax.swing.JButton();
+        tMarcasSC = new javax.swing.JScrollPane();
+        tMarcaSC = new javax.swing.JTable();
+        jLabel7 = new javax.swing.JLabel();
         tProductoEstado = new javax.swing.JTextField();
         cbOrigen = new javax.swing.JComboBox<>();
 
@@ -3935,6 +3969,83 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         tpWebsite.addTab("Prestashop", pWebsitePrestashop);
 
+        tRubroSC.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Codigo", "Nombre"
+            }
+        ));
+        tRubrosSC.setViewportView(tRubroSC);
+
+        jLabel6.setText("MARCAS");
+
+        bRubrosSC.setText("CARGAR");
+        bRubrosSC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bRubrosSCActionPerformed(evt);
+            }
+        });
+
+        tMarcaSC.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Codigo", "Nombre"
+            }
+        ));
+        tMarcasSC.setViewportView(tMarcaSC);
+
+        jLabel7.setText("RUBROS");
+
+        javax.swing.GroupLayout pMyRSCLayout = new javax.swing.GroupLayout(pMyRSC);
+        pMyRSC.setLayout(pMyRSCLayout);
+        pMyRSCLayout.setHorizontalGroup(
+            pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pMyRSCLayout.createSequentialGroup()
+                .addGap(411, 411, 411)
+                .addComponent(bRubrosSC, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tRubrosSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(86, 86, 86))
+            .addGroup(pMyRSCLayout.createSequentialGroup()
+                .addGap(155, 155, 155)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(232, 232, 232))
+            .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pMyRSCLayout.createSequentialGroup()
+                    .addGap(30, 30, 30)
+                    .addComponent(tMarcasSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(606, Short.MAX_VALUE)))
+        );
+        pMyRSCLayout.setVerticalGroup(
+            pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pMyRSCLayout.createSequentialGroup()
+                .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pMyRSCLayout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(167, 167, 167)
+                        .addComponent(bRubrosSC))
+                    .addGroup(pMyRSCLayout.createSequentialGroup()
+                        .addGap(48, 48, 48)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(tRubrosSC, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(78, Short.MAX_VALUE))
+            .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pMyRSCLayout.createSequentialGroup()
+                    .addGap(97, 97, 97)
+                    .addComponent(tMarcasSC, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(77, Short.MAX_VALUE)))
+        );
+
+        tpWebsite.addTab("Marcas/Rubros", pMyRSC);
+
         javax.swing.GroupLayout pWebsiteLayout = new javax.swing.GroupLayout(pWebsite);
         pWebsite.setLayout(pWebsiteLayout);
         pWebsiteLayout.setHorizontalGroup(
@@ -4256,7 +4367,7 @@ buscarProductoVictoria();        // TODO add your handling code here:
     }//GEN-LAST:event_bMaestroLimpiar2ActionPerformed
 
     private void bMaestroBuscar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMaestroBuscar2ActionPerformed
-buscarMarcasSC();        // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_bMaestroBuscar2ActionPerformed
 
     private void bPrestashopProcesar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPrestashopProcesar2ActionPerformed
@@ -4375,6 +4486,11 @@ Integer i = 0;
               
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void bRubrosSCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRubrosSCActionPerformed
+buscarMarcasSC();
+buscarRubrosSC();
+    }//GEN-LAST:event_bRubrosSCActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -4424,6 +4540,7 @@ Integer i = 0;
     private javax.swing.JButton bProductoLimpiar2;
     private javax.swing.JButton bProductoLimpiarV;
     private javax.swing.JButton bRubros;
+    private javax.swing.JButton bRubrosSC;
     private javax.swing.JButton bVictoriaBuscar;
     private javax.swing.JButton bVictoriaLimpiar;
     private javax.swing.JComboBox<String> cbOrigen;
@@ -4435,6 +4552,8 @@ Integer i = 0;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -4561,6 +4680,7 @@ Integer i = 0;
     private javax.swing.JPanel pDebug;
     private javax.swing.JPanel pDebugRYM;
     private javax.swing.JPanel pMyR;
+    private javax.swing.JPanel pMyRSC;
     private javax.swing.JPanel pPrestashop;
     private javax.swing.JPanel pVictoria;
     private javax.swing.JPanel pVictoriaDetalle;
@@ -4625,6 +4745,8 @@ Integer i = 0;
     private javax.swing.JTextField tJellyfishUsuario;
     private javax.swing.JTextField tMaestroCantidad;
     private javax.swing.JTextField tMaestroCantidad2;
+    private javax.swing.JTable tMarcaSC;
+    private javax.swing.JScrollPane tMarcasSC;
     private javax.swing.JTable tMarcasVictoria;
     private javax.swing.JTextField tPrestashopExportColumnas;
     private javax.swing.JTextField tPrestashopExportLineas;
@@ -4674,6 +4796,8 @@ Integer i = 0;
     private javax.swing.JTextField tProductoStock;
     private javax.swing.JTextField tProductoStock1;
     private javax.swing.JTextField tProductoStock2;
+    private javax.swing.JTable tRubroSC;
+    private javax.swing.JScrollPane tRubrosSC;
     private javax.swing.JTable tRubrosVictoria;
     private javax.swing.JTextField tVictoriaCantidad;
     private javax.swing.JTextField tVictoriaMarca;
@@ -5013,9 +5137,84 @@ Integer i = 0;
                 tProductoEstado.setText("Cargando producto "+value+"%");
             }
                 tProductoEstado.setText("Cargando maestro "+value+"%");
+            }else if("MarcasWorkerSC".equals(source)){
+            if(value.equals("STARTED")){
+                 tProductoEstado.setText("Descargando maestro...");
+            }else if(value.equals("DONE")){
+                 tProductoEstado.setText("Cargando maestro...");
+                
+                appendMensaje("\nCONSULTA: "+marcasSC.consulta.getCon().getURL());
+              
+                try {
+                    if(marcasSC.isDone()){
+                        if(marcasSC.isCancelled()){
+                            System.out.println("Proceso de busqueda cancelado.");
+                        }else{
+                            tVictoriaCantidad.setText(marcasSC.getCantidad().toString()); //WORKER SARAA
+                            tablaContenidoMarcasSC = new Object[marcasSC.getCantidad()][tablaHeaderMarcasSC.length];
+
+                            int i = 0;
+                            for (MarcasSC marcas : marcasSC.get()) {
+                                tablaContenidoMarcasSC[i][0] = marcas; //Se utiliza para pasar despues a la consulta.
+                                tablaContenidoMarcasSC[i][1] = i; //Se utiliza para asociar desde el Modelo al array de contenidos.
+                                tablaContenidoMarcasSC[i][2] = marcas.getCodigo();
+                                tablaContenidoMarcasSC[i][3] = marcas.getNombre();
+                                i++;
+                            }  
+                            
+                            cargarTablaMarcasSC(tablaContenidoMarcasSC);
+                            tProductoEstado.setText(marcasSC.consulta.getErrorMessage());
+                            appendMensaje("RESPUESTA: "+ marcasSC.consulta.getDebugMessage()+ " | "+ marcasSC.consulta.getJason()); 
+                            appendMensaje("Se obtuvieron "+marcasSC.getCantidad()+" registros.");
+                            }
+                    }else{
+                        System.out.println("Proceso no terminado: "+marcasSC.consulta.getDebugMessage());
+                    }
+                } catch (InterruptedException | ExecutionException | JSONException ex){
+                    System.out.println("Error desconocido: "+marcasSC.consulta.getDebugMessage());
+                    System.err.println(ex.getMessage());
+                }
             }
-        
-    }
+            }else if("RubrosWorkerSC".equals(source)){
+            if(value.equals("STARTED")){
+                 tProductoEstado.setText("Descargando maestro...");
+            }else if(value.equals("DONE")){
+                 tProductoEstado.setText("Cargando maestro...");
+                
+                appendMensaje("\nCONSULTA: "+rubrosSC.consulta.getCon().getURL());
+              
+                try {
+                    if(rubrosSC.isDone()){
+                        if(rubrosSC.isCancelled()){
+                            System.out.println("Proceso de busqueda cancelado.");
+                        }else{
+                            tVictoriaCantidad.setText(rubrosSC.getCantidad().toString()); //WORKER SARAA
+                            tablaContenidoMarcasSC = new Object[rubrosSC.getCantidad()][tablaHeaderMarcasSC.length];
+
+                            int i = 0;
+                            for (RubrosSC rubros : rubrosSC.get()) {
+                                tablaContenidoMarcasSC[i][0] = rubros; //Se utiliza para pasar despues a la consulta.
+                                tablaContenidoMarcasSC[i][1] = i; //Se utiliza para asociar desde el Modelo al array de contenidos.
+                                tablaContenidoMarcasSC[i][2] = rubros.getCodigo();
+                                tablaContenidoMarcasSC[i][3] = rubros.getNombre();
+                                i++;
+                            }  
+                            
+                            cargarTablaRubrosSC(tablaContenidoMarcasSC);
+                            tProductoEstado.setText(rubrosSC.consulta.getErrorMessage());
+                            appendMensaje("RESPUESTA: "+ rubrosSC.consulta.getDebugMessage()+ " | "+ rubrosSC.consulta.getJason()); 
+                            appendMensaje("Se obtuvieron "+rubrosSC.getCantidad()+" registros.");
+                            }
+                    }else{
+                        System.out.println("Proceso no terminado: "+rubrosSC.consulta.getDebugMessage());
+                    }
+                } catch (InterruptedException | ExecutionException | JSONException ex){
+                    System.out.println("Error desconocido: "+rubrosSC.consulta.getDebugMessage());
+                    System.err.println(ex.getMessage());
+                }
+            }
+            }
+     }
     public Integer extraeEntero(String cadena){
         System.out.println("ORIG: "+cadena);
         String numeros = "0";

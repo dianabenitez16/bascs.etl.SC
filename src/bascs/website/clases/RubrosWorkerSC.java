@@ -5,9 +5,10 @@
  */
 package bascs.website.clases;
 
-import etl.bascs.victoria.clases.RubrosWorker;
-import etl.bascs.impala.clases.MarcasSC;
+import etl.bascs.impala.clases.RubrosVictoria;
 import etl.bascs.impala.json.ConsultaHttpSC;
+import etl.bascs.impala.json.ConsultaHttpVictoria;
+import etl.bascs.victoria.clases.RubrosWorker;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
@@ -17,62 +18,58 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  *
  * @author User
  */
-public class MarcasWorkerSC extends SwingWorker<MarcasSC[], String> implements PropertyChangeListener{
-
+public class RubrosWorkerSC extends SwingWorker<RubrosSC[], String> implements PropertyChangeListener {
     public ConsultaHttpSC consulta;
     private Properties propiedades;
     private Integer cantidad;
     
-    private MarcasSC[] marcasSC;
-    public MarcasSC marcaSC; 
-   
+    private RubrosSC[] rubrosSC;
+    public RubrosSC rubroSC;
+    public JSONObject rubroJ;
     
-    public MarcasWorkerSC(Properties prop){
-        marcasSC = new MarcasSC[0];
-        propiedades = prop;
+    public RubrosWorkerSC(Properties prop){
+       rubrosSC = new RubrosSC[0];
+       propiedades = prop;
     }
-
-   
+     
     @Override
-    protected MarcasSC[] doInBackground(){
-  try{
+    protected RubrosSC[] doInBackground(){
+        try{
              setProgress(0);
              consulta = new ConsultaHttpSC("http",
              propiedades.getProperty("servidor"),
              propiedades.getProperty("metodoGET"),
-             propiedades.getProperty("marcas")
+             propiedades.getProperty("rubros")
              );
-        
-                JSONArray respuesta = consulta.getJason();
+          JSONArray respuesta = consulta.getJason();
                 cantidad = consulta.getJason().length();
-               marcasSC = new MarcasSC[respuesta.length()];
+               rubrosSC = new RubrosSC[respuesta.length()];
                          for (int i = 0; i < respuesta.length(); i++) {
                             JSONObject object = respuesta.getJSONObject(i);
-                            marcaSC = new MarcasSC(propiedades);
-                            marcaSC.loadJSONConsulta(object);
-                            marcasSC[i] = marcaSC;
+                            rubroSC = new RubrosSC(propiedades);
+                            rubroSC.loadJSONConsulta(object);
+                            rubrosSC[i] = rubroSC;
                             setProgress(((i+1)*100)/cantidad);
                             //Thread.sleep(50); //JUST FOR TESTING
                             //publish(producto.getCodigo());
-                        }
-                         
-                } catch (Exception ex) {
+                        
+                         }
+        } catch (Exception ex) {
             Logger.getLogger(RubrosWorker.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("_ERROR" + ex);
         }
-        return marcasSC;
+        return rubrosSC;
     
     }
- @Override
+   @Override
     protected void done() {
-        System.out.println("Marcas obtenido. Se encontraron "+marcasSC.length+" marcas.");
+        System.out.println("_Rubros obtenido. Se encontraron "+rubrosSC.length+" rubros.");
     }
     
     @Override
@@ -89,6 +86,13 @@ public class MarcasWorkerSC extends SwingWorker<MarcasSC[], String> implements P
         this.cantidad = cantidad;
     }
 
+    public ConsultaHttpSC getConsulta() {
+        return consulta;
+    }
+
+    public void setConsulta(ConsultaHttpSC consulta) {
+        this.consulta = consulta;
+    }
     
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -102,5 +106,4 @@ public class MarcasWorkerSC extends SwingWorker<MarcasSC[], String> implements P
     
     
     
-
 }

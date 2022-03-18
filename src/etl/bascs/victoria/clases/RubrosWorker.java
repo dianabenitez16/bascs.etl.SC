@@ -62,20 +62,17 @@ public class RubrosWorker extends SwingWorker<RubrosVictoria[], String> implemen
                     if(consulta.getJson().has("items")){
                         JSONArray respuesta = consulta.getJson().getJSONArray("items");
                         rubrosV = new RubrosVictoria[respuesta.length()];
-                        Integer i = 0;
-                        Iterator keys = respuesta.getJSONObject(i).keys();
-                            while(keys.hasNext()) {
+                         for (int i = 0; i < respuesta.length(); i++) {
+                            Iterator keys = respuesta.getJSONObject(i).keys();
                             String key = keys.next().toString();
-                            JSONObject rubroJ = respuesta.getJSONObject(i).getJSONObject(key);
+                            JSONObject productoJ = respuesta.getJSONObject(i).getJSONObject(key);
                             rubroV = new RubrosVictoria(propiedades);
-                            rubroV.loadJSONConsulta(rubroJ);
+                            rubroV.loadJSONConsulta(productoJ);
                             rubrosV[i] = rubroV;
                             setProgress(((i+1)*100)/cantidad);
                             //Thread.sleep(50); //JUST FOR TESTING
-                       //     publish(rubroV.getCodigo());
-                    
-                        i++;
-                            }
+                            //publish(producto.getCodigo());
+                        }
                     }else{
                         publish("No se encontraron rubros en el maestro.");
                     }

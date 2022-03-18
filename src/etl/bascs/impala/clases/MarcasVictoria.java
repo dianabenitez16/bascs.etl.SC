@@ -19,6 +19,7 @@ import org.json.JSONObject;
 public class MarcasVictoria {
     private String codigo;
     private String nombre;
+    public Integer cantidad;
     public Boolean cargado;
     
       public MarcasVictoria(Properties propiedades) {
@@ -45,6 +46,14 @@ public class MarcasVictoria {
         this.nombre = nombre;
     }
 
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
    public void loadJSONConsulta(JSONObject marcasJ){
       
        try{
@@ -52,7 +61,7 @@ public class MarcasVictoria {
           setNombre((getNombre() == null ? marcasJ.optString("nombre"):getNombre())); 
           
           cargado = true;
-           
+          cantidad = marcasJ.length();
         
           } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);

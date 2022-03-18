@@ -8,7 +8,6 @@ package etl.bascs.victoria.clases;
 import etl.bascs.impala.clases.MarcasVictoria;
 import etl.bascs.impala.json.ConsultaHttpSC;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
-import etl.bascs.victoria.clases.RubrosWorker;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
@@ -29,7 +28,7 @@ import org.json.JSONObject;
     public ConsultaHttpVictoria consultaV;
     public ConsultaHttpSC consultaS;
     public Properties propiedades;
-    private Integer cantidad;
+    public Integer cantidad;
     public Boolean get = true;
     
     public MarcasVictoria[] marcasV;
@@ -47,7 +46,7 @@ import org.json.JSONObject;
 
     @Override
     protected MarcasVictoria[] doInBackground() {
-    if(get){
+  
         try{
              setProgress(0);
              consultaV = new ConsultaHttpVictoria("http",
@@ -66,26 +65,22 @@ import org.json.JSONObject;
                     if(consultaV.getJson().has("items")){
                         JSONArray respuesta = consultaV.getJson().getJSONArray("items");
                         marcasV = new MarcasVictoria[respuesta.length()];
-                        Integer i = 0;
-                        Iterator keys = respuesta.getJSONObject(i).keys();
-                            while(keys.hasNext()) {
+                         for (int i = 0; i < respuesta.length(); i++) {
+                            Iterator keys = respuesta.getJSONObject(i).keys();
                             String key = keys.next().toString();
-                            marcasJ = respuesta.getJSONObject(i).getJSONObject(key);
+                            JSONObject productoJ = respuesta.getJSONObject(i).getJSONObject(key);
                             marcaV = new MarcasVictoria(propiedades);
-                            marcaV.loadJSONConsulta(marcasJ);
+                            marcaV.loadJSONConsulta(productoJ);
                             marcasV[i] = marcaV;
                             setProgress(((i+1)*100)/cantidad);
                             //Thread.sleep(50); //JUST FOR TESTING
-                       //     publish(rubroV.getCodigo());
-                                System.out.println("MARCAS " + marcasJ.toString());
-                        i++;
-                        get = true;
-                            }
+                            //publish(producto.getCodigo());
+                        }
                     }else{
-                        publish("No se encontraron rubros en el maestro.");
+                        publish("No se encontraron marcas en el maestro.");
                     }
                 }else{
-                    publish("No se encontraron rubros en el maestro.");
+                    publish("No se encontraron marcas en el maestro.");
                 }
             }else{
                 publish("Error");
@@ -96,25 +91,7 @@ import org.json.JSONObject;
             System.out.println("_ERROR" + ex);
         }
         return marcasV;
-    }else{
-        get = false;
-        try{
-             setProgress(0);
-             consultaS = new ConsultaHttpSC("http",
-             propiedades.getProperty("servidor"),
-             propiedades.getProperty("metodoPOST"),
-             propiedades.getProperty("marcas")
-             );
-             
-        
-             
-       } catch (Exception ex) {
-            Logger.getLogger(RubrosWorker.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("_ERROR" + ex);
-      
-       }
-    }
-        return null;
+    
     }
     @Override
     protected void done() {
@@ -127,6 +104,7 @@ import org.json.JSONObject;
             System.out.println(prod);
         }
     }
+
     public Integer getCantidad() {
         return cantidad;
     }

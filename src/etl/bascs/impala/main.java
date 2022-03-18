@@ -69,6 +69,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -408,7 +409,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         return new Dimension((int) (imageSize.width  * ratio),(int) (imageSize.height * ratio));
     }
     
-    /* MAESTRO */
+    /*BUSCAR REGISTROS MAESTRO*/
     
     public void limpiarMaestro(){
         tMaestroCantidad.setText("0");
@@ -443,6 +444,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         productosW.addPropertyChangeListener(this);
         productosW.execute();
     }
+    
+    //CARGAR TABLAS//
+    /*******************************************************/
     public void cargarTablaMaestro(Object[][] contenido){
         tbMaestroProductos.setModel(new javax.swing.table.DefaultTableModel(contenido,tablaHeaderMaestro));
         tbMaestroProductos.getColumnModel().removeColumn(tbMaestroProductos.getColumnModel().getColumn(0));
@@ -618,7 +622,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         return productos;
     }
-
+    
 
 
     
@@ -725,9 +729,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         
         
     }
-    
-
-    /* LISTENERS */
+  /* LISTENERS */
     /**********************************************************************************************************/
     
     private void iniciarListeners(){
@@ -4271,6 +4273,7 @@ buscarMarcasSC();        // TODO add your handling code here:
 
     private void bRubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRubrosActionPerformed
 isClicked = true;
+buscarRubros();
 buscarMarcas();
     }//GEN-LAST:event_bRubrosActionPerformed
 
@@ -4334,37 +4337,42 @@ buscarMarcas();
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 isClicked = true;  
 boolean result = false;
-   
+Integer i = 0;
+
    HttpClient hc = new DefaultHttpClient();
    String message;
   
                 HttpPost p = new HttpPost("http://www.saracomercial.com/panel/api/loader/marcas");
-                JSONObject object = new JSONObject();
-                  for (int i = 0; i < marcasW.marcasV.length; i++) {
-                    object.put("codigo_interno_ws", marcasW.marcasJ.get("codigo_interno_ws")) ;
-                    System.out.println("CODIGO " +  marcasW.marcasJ.get("codigo_interno_ws"));
-                    object.put("nombre", marcasW.marcasJ.get("nombre"));
-                   
-        }
+                 JSONObject object = new JSONObject();
+                
+              try {
+                  for (MarcasVictoria mar : marcasW.marcasV) {
+            object.put("codigo_interno_ws", mar.getCodigo());
+            object.put("nombre", mar.getNombre());
                
-                try {
                 message = object.toString();
-                    System.out.println("MESSAGE " + object.toString());
+                JSONObject json = new JSONObject(message); // Convert text to object
+                System.out.println(json.toString(8));
 
-                p.setEntity(new StringEntity(message, "UTF8"));
+                p.setEntity(new StringEntity(message));
                 p.setHeader("Content-type", "application/json");
                 p.setHeader("Accept", "application/json");
                 p.setHeader("Connection", "keep-alive");
                 p.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
-                    HttpResponse resp = hc.execute(p);
-                    if (resp != null) {
+                            
+                HttpResponse resp = hc.execute(p);
+                  resp.getEntity().consumeContent();
+                      if (resp != null) {
                         System.out.println("RESP " + resp.toString());
                         if (resp.getStatusLine().getStatusCode() == 204)
                             result = true;
-                    }
+                    }  
+                      
+              }            
          } catch (Exception e) {
                     e.printStackTrace();
          }
+              
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -4908,17 +4916,15 @@ boolean result = false;
                                 tablaContenidoRubros[i][1] = i; 
                                 tablaContenidoRubros[i][2] = rubros.getCodigo();
                                 tablaContenidoRubros[i][3] = rubros.getNombre();
-                                
-                               i++;  
-                                
-                             
+                              i++;
+                            }   
                             cargarTablaRubros(tablaContenidoRubros);
                             tProductoEstado.setText(rubrosW.consulta.getErrorMessage());
                             appendMensaje("RESPUESTA: "+ rubrosW.consulta.getDebugMessage()+ " | "+ rubrosW.consulta.getJson().getJSONArray("items").getJSONObject(1)); 
                             appendMensaje("Se obtuvieron "+rubrosW.getCantidad()+" registros.");
                         
                         
-                        }}
+                            }
                         }} catch (InterruptedException | ExecutionException | JSONException ex){
                     System.out.println("Error desconocido: "+rubrosW.consulta.getDebugMessage());
                     System.err.println(ex.getMessage());
@@ -4950,14 +4956,14 @@ boolean result = false;
                                 tablaContenidoMarcas[i][1] = i; //Se utiliza para asociar desde el Modelo al array de contenidos.
                                 tablaContenidoMarcas[i][2] = marcas.getCodigo();
                                 tablaContenidoMarcas[i][3] = marcas.getNombre();
-                                
                                 i++;
-                            }
+                            }  
+                            
                             cargarTablaMarcas(tablaContenidoMarcas);
                             tProductoEstado.setText(marcasW.consultaV.getErrorMessage());
                             appendMensaje("RESPUESTA: "+ marcasW.consultaV.getDebugMessage()+ " | "+ marcasW.consultaV.getJson().getJSONArray("items").getJSONObject(1)); 
                             appendMensaje("Se obtuvieron "+marcasW.getCantidad()+" registros.");
-                        }
+                            }
                     }else{
                         System.out.println("Proceso no terminado: "+maestroW.consulta.getDebugMessage());
                     }

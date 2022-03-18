@@ -55,24 +55,21 @@ public class ProductosWorker extends SwingWorker<ProductosVictoria[], String>imp
                 }else{
                     publish("No se encontraron productos en el maestro.");
                 }
-                if(cantidad > 0){
+               if(cantidad > 0){
                     if(consulta.getJson().has("items")){
                         JSONArray respuesta = consulta.getJson().getJSONArray("items");
                         productos = new ProductosVictoria[respuesta.length()];
-                       Integer i = 0;
-                        Iterator keys = respuesta.getJSONObject(i).keys();
-                             while(keys.hasNext()) {
-                            String key =  (String)keys.next();
+                       for (int i = 0; i < respuesta.length(); i++) {
+                            Iterator keys = respuesta.getJSONObject(i).keys();
+                            String key = keys.next().toString();
                             JSONObject productoJ = respuesta.getJSONObject(i).getJSONObject(key);
-               //            System.out.println("JSONObject Worker " + productoJ);
                             producto = new ProductosVictoria(propiedades);
                             producto.loadJSONConsulta(productoJ);
                             productos[i] = producto;
-                            
                             setProgress(((i+1)*100)/cantidad);
                             //Thread.sleep(50); //JUST FOR TESTING
-                     //       publish(producto.getCodigo());
-                      i++;
+                            //publish(producto.getCodigo());
+                        
                              }
                     }else{
                         publish("No se encontraron productos en el maestro.");

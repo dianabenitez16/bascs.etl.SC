@@ -73,6 +73,7 @@ public class RubrosSC {
      public void loadJSONConsulta(JSONObject rubrosJ){
       
        try{
+          setId((getId() == null ? rubrosJ.optInt("id"):getId()));
           setCodigo((getCodigo() == null ? rubrosJ.optString("codigo_interno_ws"):getCodigo())); 
           setNombre((getNombre() == null ? rubrosJ.optString("nombre"):getNombre())); 
           

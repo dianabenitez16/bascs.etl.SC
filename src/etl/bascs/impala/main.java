@@ -17,6 +17,8 @@ import etl.bascs.impala.config.Propiedades;
 import etl.bascs.impala.worker.DetalleWorker;
 import etl.bascs.impala.worker.MaestroWorker;
 import bascs.website.clases.MarcasWorkerSC;
+import bascs.website.clases.ProductoSC;
+import bascs.website.clases.ProductoWorkerSC;
 import bascs.website.clases.RubrosWorkerSC;
 import etl.bascs.impala.clases.MarcasSC;
 import etl.bascs.impala.worker.PrestashopWorker;
@@ -104,6 +106,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     
     public MarcasWorkerSC marcasSC;
     public RubrosWorkerSC rubrosSC;
+    public ProductoWorkerSC productosSC;
     
     public PrestashopWorker prestashopW;
     public MaestroWorker maestroW;
@@ -126,8 +129,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public Integer[] tablaWithProductos = new Integer[] {5,90,150,500,150,150,150};
     public Object[][] tablaContenidoProductos;
     
-    public String[] tablaHeaderRubros = new String[] {"X","ID","Codigo", "Nombre"};
-    public Integer[] tablaRubros = new Integer[] {30,30,30,30};
+    public String[] tablaHeaderProductosSC = new String[] {"X","ID","Codigo", "Nombre", "Descripción", "Rubro", "Marca"};
+    public Integer[] tablaWithProductosSC = new Integer[] {5,90,150,500,150,150,150};
+    public Object[][] tablaContenidoProductosSC;
+   
+    public String[] tablaHeaderRubros = new String[] {"X","ID","Codigo", "Nombre", "Parent ID"};
+    public Integer[] tablaRubros = new Integer[] {30,30,30,30,30};
     public Object[][] tablaContenidoRubros;
     
     public String[] tablaHeaderMarcas = new String[] {"X","ID","Codigo", "Nombre"};
@@ -453,7 +460,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         productosW.addPropertyChangeListener(this);
         productosW.execute();
     }
-    
+    public void buscarProductoWebsite(){
+        limpiarMaestro();
+        productosSC = new ProductoWorkerSC(getPropiedades());
+        productosSC.addPropertyChangeListener(this);
+        productosSC.execute();
+    }
     //CARGAR TABLAS DEL MAIN //
     /*******************************************************/
     public void cargarTablaMaestro(Object[][] contenido){
@@ -482,6 +494,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tRubroSC.getColumnModel().removeColumn(tRubroSC.getColumnModel().getColumn(0));
         for (int i = 0; i < tRubroSC.getColumnCount(); i++) {
             tRubroSC.getColumnModel().getColumn(i).setPreferredWidth(tablaRubrosSC[i]);
+        }
+    }
+    public void cargarTablaProductoSC(Object[][] contenidos){
+        tbProductosSC.setModel(new javax.swing.table.DefaultTableModel(contenidos,tablaHeaderProductosSC));
+        tbProductosSC.getColumnModel().removeColumn(tbProductosSC.getColumnModel().getColumn(0));
+        for (int i = 0; i < tbProductosSC.getColumnCount(); i++) {
+            tbProductosSC.getColumnModel().getColumn(i).setPreferredWidth(tablaWithProductosSC[i]);
         }
     }
     public void cargarTablaMarcas(Object[][] contenidos){
@@ -1119,7 +1138,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         bMaestroLimpiar2 = new javax.swing.JButton();
         bMaestroBuscar2 = new javax.swing.JButton();
         spMaestroProductos2 = new javax.swing.JScrollPane();
-        tbMaestroProductos2 = new javax.swing.JTable();
+        tbProductosSC = new javax.swing.JTable();
         lMaestroCantidad8 = new javax.swing.JLabel();
         tMaestroCantidad2 = new javax.swing.JTextField();
         pWebsitePrestashop = new javax.swing.JPanel();
@@ -3787,14 +3806,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         spMaestroProductos2.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         spMaestroProductos2.setPreferredSize(new java.awt.Dimension(900, 480));
 
-        tbMaestroProductos2.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
-        tbMaestroProductos2.setModel(new javax.swing.table.DefaultTableModel(
+        tbProductosSC.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
+        tbProductosSC.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             tablaHeaderMaestro
         ));
-        spMaestroProductos2.setViewportView(tbMaestroProductos2);
+        spMaestroProductos2.setViewportView(tbProductosSC);
 
         lMaestroCantidad8.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad8.setText("Cantidad");
@@ -3841,7 +3860,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addContainerGap())
         );
 
-        tpWebsite.addTab("Maestro", pWebsiteMaestro);
+        tpWebsite.addTab("Productos", pWebsiteMaestro);
 
         pWebsitePrestashop.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         pWebsitePrestashop.setPreferredSize(new java.awt.Dimension(960, 710));
@@ -4367,7 +4386,7 @@ buscarProductoVictoria();        // TODO add your handling code here:
     }//GEN-LAST:event_bMaestroLimpiar2ActionPerformed
 
     private void bMaestroBuscar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMaestroBuscar2ActionPerformed
-        // TODO add your handling code here:
+buscarProductoWebsite();        // TODO add your handling code here:
     }//GEN-LAST:event_bMaestroBuscar2ActionPerformed
 
     private void bPrestashopProcesar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPrestashopProcesar2ActionPerformed
@@ -4453,13 +4472,14 @@ Integer i = 0;
    HttpClient hc = new DefaultHttpClient();
    String message;
   
-                HttpPost p = new HttpPost("http://www.saracomercial.com/panel/api/loader/marcas");
+                HttpPost p = new HttpPost("http://www.saracomercial.com/panel/api/loader/rubros");
                  JSONObject object = new JSONObject();
                 
               try {
-                  for (MarcasVictoria mar : marcasW.marcasV) {
-            object.put("codigo_interno_ws", mar.getCodigo());
-            object.put("nombre", mar.getNombre());
+                  for (RubrosVictoria rub : rubrosW.rubrosV) {
+            object.put("codigo_interno_ws", rub.getCodigo());
+            object.put("nombre", rub.getNombre());
+            object.put("parent_id", rub.getParent_id());
                
                 message = object.toString();
                 JSONObject json = new JSONObject(message); // Convert text to object
@@ -4483,7 +4503,7 @@ Integer i = 0;
          } catch (Exception e) {
                     e.printStackTrace();
          }
-              
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void bRubrosSCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRubrosSCActionPerformed
@@ -4816,7 +4836,6 @@ buscarRubrosSC();
     private javax.swing.JTable tbCPrestashopCargado;
     private javax.swing.JTable tbCPrestashopDefault;
     private javax.swing.JTable tbMaestroProductos;
-    private javax.swing.JTable tbMaestroProductos2;
     private javax.swing.JTable tbPrestashop;
     private javax.swing.JTable tbPrestashop1;
     private javax.swing.JTable tbPrestashop2;
@@ -4825,6 +4844,7 @@ buscarRubrosSC();
     private javax.swing.JTable tbProductoDetallesTecnicos2;
     private javax.swing.JTable tbProductoImagenes;
     private javax.swing.JTable tbProductoImagenes2;
+    private javax.swing.JTable tbProductosSC;
     private javax.swing.JTable tbVictoriaProductos;
     private javax.swing.JTabbedPane tpConfiguracion;
     private javax.swing.JTabbedPane tpConsulta;
@@ -5036,10 +5056,11 @@ buscarRubrosSC();
                             for (RubrosVictoria rubros : rubrosW.get()) {
                              
                                 tablaContenidoRubros[i][0] = rubros; 
-//                                System.out.println("RUBROS : " + rubros.getCodigo());//Se utiliza para pasar despues a la consulta.
                                 tablaContenidoRubros[i][1] = i; 
                                 tablaContenidoRubros[i][2] = rubros.getCodigo();
                                 tablaContenidoRubros[i][3] = rubros.getNombre();
+                                tablaContenidoRubros[i][4] = rubros.getParent_id();
+                                
                               i++;
                             }   
                             cargarTablaRubros(tablaContenidoRubros);
@@ -5156,7 +5177,8 @@ buscarRubrosSC();
                             int i = 0;
                             for (MarcasSC marcas : marcasSC.get()) {
                                 tablaContenidoMarcasSC[i][0] = marcas; //Se utiliza para pasar despues a la consulta.
-                                tablaContenidoMarcasSC[i][1] = i; //Se utiliza para asociar desde el Modelo al array de contenidos.
+                                //Se utiliza para asociar desde el Modelo al array de contenidos.
+                                tablaContenidoMarcasSC[i][1] = marcas.getId(); //Se utiliza para asociar desde el Modelo al array de contenidos.
                                 tablaContenidoMarcasSC[i][2] = marcas.getCodigo();
                                 tablaContenidoMarcasSC[i][3] = marcas.getNombre();
                                 i++;
@@ -5174,8 +5196,7 @@ buscarRubrosSC();
                     System.out.println("Error desconocido: "+marcasSC.consulta.getDebugMessage());
                     System.err.println(ex.getMessage());
                 }
-            }
-            }else if("RubrosWorkerSC".equals(source)){
+            } }else if("RubrosWorkerSC".equals(source)){
             if(value.equals("STARTED")){
                  tProductoEstado.setText("Descargando maestro...");
             }else if(value.equals("DONE")){
@@ -5189,18 +5210,19 @@ buscarRubrosSC();
                             System.out.println("Proceso de busqueda cancelado.");
                         }else{
                             tVictoriaCantidad.setText(rubrosSC.getCantidad().toString()); //WORKER SARAA
-                            tablaContenidoMarcasSC = new Object[rubrosSC.getCantidad()][tablaHeaderMarcasSC.length];
+                            tablaContenidoRubrosSC = new Object[rubrosSC.getCantidad()][tablaHeaderRubrosSC.length];
 
                             int i = 0;
                             for (RubrosSC rubros : rubrosSC.get()) {
-                                tablaContenidoMarcasSC[i][0] = rubros; //Se utiliza para pasar despues a la consulta.
-                                tablaContenidoMarcasSC[i][1] = i; //Se utiliza para asociar desde el Modelo al array de contenidos.
-                                tablaContenidoMarcasSC[i][2] = rubros.getCodigo();
-                                tablaContenidoMarcasSC[i][3] = rubros.getNombre();
+                                tablaContenidoRubrosSC[i][0] = rubros; //Se utiliza para pasar despues a la consulta.
+                                //Se utiliza para asociar desde el Modelo al array de contenidos.
+                                tablaContenidoRubrosSC[i][1] = rubros.getId(); //Se utiliza para asociar desde el Modelo al array de contenidos.
+                                tablaContenidoRubrosSC[i][2] = rubros.getCodigo();
+                                tablaContenidoRubrosSC[i][3] = rubros.getNombre();
                                 i++;
                             }  
                             
-                            cargarTablaRubrosSC(tablaContenidoMarcasSC);
+                            cargarTablaRubrosSC(tablaContenidoRubrosSC);
                             tProductoEstado.setText(rubrosSC.consulta.getErrorMessage());
                             appendMensaje("RESPUESTA: "+ rubrosSC.consulta.getDebugMessage()+ " | "+ rubrosSC.consulta.getJason()); 
                             appendMensaje("Se obtuvieron "+rubrosSC.getCantidad()+" registros.");
@@ -5212,9 +5234,53 @@ buscarRubrosSC();
                     System.out.println("Error desconocido: "+rubrosSC.consulta.getDebugMessage());
                     System.err.println(ex.getMessage());
                 }
+            }else if("ProductoWorkerSC".equals(source)){
+            if(value.equals("STARTED")){
+                 tProductoEstado.setText("Descargando maestro...");
+            }else if(value.equals("DONE")){
+                 tProductoEstado.setText("Cargando maestro...");
+                
+                appendMensaje("\nCONSULTA: "+productosSC.consulta.getCon().getURL());
+              
+                try { 
+                    if(productosSC.isDone()){
+                    if(productosSC.isCancelled()){
+                            System.out.println("Proceso de busqueda cancelado.");
+                        }else{
+                         
+                    
+                          tVictoriaCantidad.setText(productosSC.getCantidad().toString()); //WORKER SARAA
+                            tablaContenidoProductosSC = new Object[productosSC.getCantidad()][tablaHeaderProductosSC.length];
+
+                            int i = 0;
+                            for (ProductoSC productos : productosSC.get()) {
+                                tablaContenidoProductosSC[i][0] = productos; //Se utiliza para pasar despues a la consulta.
+                                tablaContenidoProductosSC[i][1] = i; //Se utiliza para asociar desde el Modelo al array de contenidos.
+                                tablaContenidoProductosSC[i][2] = productos.getId(); //Se utiliza para asociar desde el Modelo al array de contenidos.
+                                tablaContenidoProductosSC[i][3] = productos.getCodigo();
+                                tablaContenidoProductosSC[i][4] = productos.getMarca();
+                                tablaContenidoProductosSC[i][5] = productos.getRubro();
+                                 i++;
+                            
+                            
+                             }  
+                            
+                            cargarTablaProductoSC(tablaContenidoProductosSC);
+                            tProductoEstado.setText(productosSC.consulta.getErrorMessage());
+                            appendMensaje("RESPUESTA: "+ productosSC.consulta.getDebugMessage()+ " | "+ productosSC.consulta.getJason()); 
+                            appendMensaje("Se obtuvieron "+productosSC.getCantidad()+" registros.");
+                            }
+                    }else{
+                        System.out.println("Proceso no terminado: "+productosSC.consulta.getDebugMessage());
+                    }
+                } catch (InterruptedException | ExecutionException | JSONException ex){
+                    System.out.println("Error desconocido: "+productosSC.consulta.getDebugMessage());
+                    System.err.println(ex.getMessage());
+                }
             }
             }
      }
+    }
     public Integer extraeEntero(String cadena){
         System.out.println("ORIG: "+cadena);
         String numeros = "0";

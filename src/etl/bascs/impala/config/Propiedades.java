@@ -127,7 +127,7 @@ public class Propiedades {
                 propiedades.setProperty("metodoPOST", "POST");
                 propiedades.setProperty("rubros", "/panel/api/loader/rubros");
                 propiedades.setProperty("marcas", "/panel/api/loader/marcas");
-                propiedades.setProperty("productos", "/api/loader/productos");
+                propiedades.setProperty("productos", "/panel/api/loader/productos");
                 propiedades.setProperty("detalle", "/api/loader/productos/");
                 propiedades.setProperty("hilos", "10");
                 break;

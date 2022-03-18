@@ -25,19 +25,18 @@ import org.json.JSONObject;
 public class RubrosVictoria {
     private String codigo;
     private String nombre;
+    private String parent_id;
     public Boolean cargado;
     public RubrosVictoria(Properties propiedades) {
         this.codigo = codigo;
         this.nombre = nombre;
+        this.nombre = parent_id;
     }
 
     public RubrosVictoria() {
       
     }
-    
-    
-    
-
+  
     public String getCodigo() {
         return codigo;
     }
@@ -54,11 +53,20 @@ public class RubrosVictoria {
         this.nombre = nombre;
     }
 
+    public String getParent_id() {
+        return parent_id;
+    }
+
+    public void setParent_id(String parent_id) {
+        this.parent_id = parent_id;
+    }
+
    public void loadJSONConsulta(JSONObject rubroJ){
       
        try{
           setCodigo((getCodigo() == null ? rubroJ.optString("codigo_interno_ws"):getCodigo())); 
           setNombre((getNombre() == null ? rubroJ.optString("nombre"):getNombre())); 
+          setParent_id((getParent_id() == null ? rubroJ.optString("parent_id"):getParent_id())); 
           
           cargado = true;
            

@@ -29,7 +29,7 @@ public class RubrosWorker extends SwingWorker<RubrosVictoria[], String> implemen
     private Properties propiedades;
     private Integer cantidad;
     
-    private RubrosVictoria[] rubrosV;
+    public RubrosVictoria[] rubrosV;
     public RubrosVictoria rubroV;
     public JSONObject rubroJ;
     

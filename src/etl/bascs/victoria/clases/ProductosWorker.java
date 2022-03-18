@@ -88,7 +88,7 @@ public class ProductosWorker extends SwingWorker<ProductosVictoria[], String>imp
     }
  @Override
     protected void done() {
-        System.out.println("_Rubros obtenido. Se encontraron "+productos.length+" rubros.");
+        System.out.println("_Productos obtenido. Se encontraron "+productos.length+" productos de Victoria.");
     }
     
     @Override

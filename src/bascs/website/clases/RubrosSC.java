@@ -30,6 +30,10 @@ public class RubrosSC {
         this.nombre = nombre;
     }
 
+    public RubrosSC() {
+         //To change body of generated methods, choose Tools | Templates.
+    }
+
     public Integer getId() {
         return id;
     }

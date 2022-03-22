@@ -21,6 +21,7 @@ import org.json.JSONObject;
        private String codigo;
        private String nombre;
        private Boolean cargado;
+       public Boolean hasid;
 
     public MarcasSC(Properties propiedades) {
         this.id = id;
@@ -61,17 +62,16 @@ import org.json.JSONObject;
     public void setCargado(Boolean cargado) {
         this.cargado = cargado;
     }
+
     
     public void loadJSONConsulta(JSONObject marcasJ){
       
        try{
-           System.out.println("got in");
+          
           setId((getId() == null ? marcasJ.optInt("id"):getId())); 
           setCodigo((getCodigo() == null ? marcasJ.optString("codigo_interno_ws"):getCodigo())); 
           setNombre((getNombre() == null ? marcasJ.optString("nombre"):getNombre())); 
-           System.out.println("ID " +  marcasJ.optInt("id"));
-           System.out.println("NOMBRE " + marcasJ.optString("nombre"));
-           System.out.println("CODIGO " +   marcasJ.optString("codigo_interno_ws"));
+    
           cargado = true;
            
         

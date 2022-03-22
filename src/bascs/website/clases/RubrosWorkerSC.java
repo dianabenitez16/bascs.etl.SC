@@ -29,7 +29,7 @@ public class RubrosWorkerSC extends SwingWorker<RubrosSC[], String> implements P
     private Properties propiedades;
     private Integer cantidad;
     
-    private RubrosSC[] rubrosSC;
+    public RubrosSC[] rubrosSC;
     public RubrosSC rubroSC;
     public JSONObject rubroJ;
     
@@ -58,7 +58,7 @@ public class RubrosWorkerSC extends SwingWorker<RubrosSC[], String> implements P
                             setProgress(((i+1)*100)/cantidad);
                             //Thread.sleep(50); //JUST FOR TESTING
                             //publish(producto.getCodigo());
-                        
+                           
                          }
         } catch (Exception ex) {
             Logger.getLogger(RubrosWorker.class.getName()).log(Level.SEVERE, null, ex);

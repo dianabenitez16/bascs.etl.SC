@@ -756,17 +756,15 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }
     
     public Properties getOrigen(){
-        if(isClicked){
-            return propVictoria;
-        }
-    switch(cbOrigen.getSelectedIndex()){
+       
+    switch(tpPrincipal.getSelectedIndex()){
             case 0:
                 return propImpala;
             case 1:
                 return propJellyfish;
-            case 2:
+            case 4:
                 return propVictoria;
-            case 3:
+            case 5:
                 return propSC;
             default:
                 return propImpala;
@@ -1161,6 +1159,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tMarcasSC = new javax.swing.JScrollPane();
         tMarcaSC = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         tProductoEstado = new javax.swing.JTextField();
         cbOrigen = new javax.swing.JComboBox<>();
 
@@ -3298,7 +3297,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jLabel5.setText("RUBROS");
 
-        jButton1.setText("POST TEST");
+        jButton1.setText("POST TEST R");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -4019,13 +4018,22 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jLabel7.setText("RUBROS");
 
+        jButton2.setText("POST TEST M");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pMyRSCLayout = new javax.swing.GroupLayout(pMyRSC);
         pMyRSC.setLayout(pMyRSCLayout);
         pMyRSCLayout.setHorizontalGroup(
             pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pMyRSCLayout.createSequentialGroup()
                 .addGap(411, 411, 411)
-                .addComponent(bRubrosSC, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bRubrosSC, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tRubrosSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(86, 86, 86))
@@ -4049,7 +4057,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addGap(39, 39, 39)
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(167, 167, 167)
-                        .addComponent(bRubrosSC))
+                        .addComponent(bRubrosSC)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2))
                     .addGroup(pMyRSCLayout.createSequentialGroup()
                         .addGap(48, 48, 48)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -4416,48 +4426,7 @@ buscarMarcas();
     }//GEN-LAST:event_tVictoriaProductosDetallesActionPerformed
 
     private void debugRubroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugRubroActionPerformed
-    try{
-        String url = "http://www.saracomercial.com/panel/api/loader/rubros";
-
-        HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost(url);
    
-        post.setHeader("User-Agent", USER_AGENT);
-        post.setHeader( "Accept", "application/json");
-        post.setHeader( "Content-Type", "application/json");
-        post.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
-        post.setHeader("Method", "GET");
-        
-          List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        RubrosVictoria rubros = new RubrosVictoria();
-        urlParameters.add(new BasicNameValuePair("codigo_interno_ws", "0"));
-        urlParameters.add(new BasicNameValuePair("nombre", "No Posee"));
-            System.out.println("NOMBRE: " +rubros.getCodigo());
-           
- 
-
-        
-          post.setEntity(new UrlEncodedFormEntity(urlParameters));
- 
-        HttpResponse response = client.execute(post);
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post parameters : " + post.getEntity());
-        System.out.println("Response Code : " +
-                                    response.getStatusLine().getStatusCode());
- 
-        BufferedReader rd = new BufferedReader(
-                        new InputStreamReader(response.getEntity().getContent()));
- 
-        StringBuffer result = new StringBuffer();
-        String line = "";
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }
-       System.out.println(result.toString());
-                          
-                 }catch (Exception ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-                         } 
     }//GEN-LAST:event_debugRubroActionPerformed
 
     private void tVictoriaMarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tVictoriaMarcaActionPerformed
@@ -4468,41 +4437,45 @@ buscarMarcas();
 isClicked = true;  
 boolean result = false;
 Integer i = 0;
-
+List<RubrosVictoria> rubrosVv = new ArrayList();
+List<RubrosSC> rubrosSCs = new ArrayList();
    HttpClient hc = new DefaultHttpClient();
    String message;
-  
+   String message1;
                 HttpPost p = new HttpPost("http://www.saracomercial.com/panel/api/loader/rubros");
                  JSONObject object = new JSONObject();
-                
-              try {
-                  for (RubrosVictoria rub : rubrosW.rubrosV) {
-            object.put("codigo_interno_ws", rub.getCodigo());
-            object.put("nombre", rub.getNombre());
-            object.put("parent_id", rub.getParent_id());
-               
+                 JSONObject object1 = new JSONObject();
+             try{  
+                 for (RubrosVictoria rubs : rubrosW.get()) {
+                     for (RubrosSC rub : rubrosSC.get()) {
+                         if(!rubs.getCodigo().equals(rub.getCodigo()) && !rubs.getNombre().equals(rub.getNombre()) || rubs.getParent_id().equals(rubs.getParent_id())){
+                             
+                        object.put("codigo_interno_ws", rubs.getCodigo());
+                        object.put("nombre", rubs.getNombre());
+                        object.put("parent_id", rubs.getParent_id());
+                  /*      
                 message = object.toString();
-                JSONObject json = new JSONObject(message); // Convert text to object
-                System.out.println(json.toString(8));
-
-                p.setEntity(new StringEntity(message));
-                p.setHeader("Content-type", "application/json");
-                p.setHeader("Accept", "application/json");
-                p.setHeader("Connection", "keep-alive");
-                p.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
-                            
-                HttpResponse resp = hc.execute(p);
-                  resp.getEntity().consumeContent();
-                      if (resp != null) {
-                        System.out.println("RESP " + resp.toString());
-                        if (resp.getStatusLine().getStatusCode() == 204)
-                            result = true;
-                    }  
-                      
-              }            
-         } catch (Exception e) {
-                    e.printStackTrace();
-         }
+                             
+                  p.setEntity(new StringEntity(message));
+                 p.setHeader("Content-type", "application/json");
+                 p.setHeader("Accept", "application/json");
+                 p.setHeader("Connection", "keep-alive");
+                 p.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+                 
+                 HttpResponse resp = hc.execute(p);
+                 resp.getEntity().consumeContent();
+                 if (resp != null) {
+                 System.out.println("RESP " + resp.toString());
+                 if (resp.getStatusLine().getStatusCode() == 204)
+                 result = true;
+                   System.out.println("A INSERTAR " + message);     
+                 } */
+                 
+                    break;
+                         }}}} catch (Exception e) {
+                 e.printStackTrace();
+                    
+                        }       
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -4510,6 +4483,58 @@ Integer i = 0;
 buscarMarcasSC();
 buscarRubrosSC();
     }//GEN-LAST:event_bRubrosSCActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+HttpClient hc = new DefaultHttpClient();
+Boolean result = true;
+String message;
+String message1;
+                HttpPost p = new HttpPost("http://www.saracomercial.com/panel/api/loader/marcas");
+                 JSONObject object = new JSONObject();
+                 JSONObject object1 = new JSONObject();
+                 MarcasVictoria marcas= new MarcasVictoria();
+                 MarcasVictoria marcasV= new MarcasVictoria();
+             try{  
+                 for (MarcasVictoria mar : marcasW.get()) {
+                     for (MarcasSC mars : marcasSC.get()) {
+                      if(!mar.getCodigo().equals(mars.getCodigo()) && !mar.getNombre().equals(mars.getNombre())){
+                          
+                          marcas.setCodigo(mar.getCodigo());
+                          marcas.setNombre(mar.getNombre());
+                          object1.put("codigo_interno_ws", marcas.getCodigo());
+                          object1.put("nombre", marcas.getNombre());
+                          message1 = object1.toString();
+                        
+                             
+              
+                      if(object1.has("codigo_interno_ws")){
+                         if(!object1.get("codigo_interno_ws").equals(mars.getCodigo())) ;
+                          System.out.println("no es igual" + mars.getCodigo());
+                         
+                       
+                      }
+                 /*
+                 p.setHeader("USER_AGENT",USER_AGENT);
+                 p.setHeader("Content-type", "application/json");
+                 p.setHeader("Accept-Encoding", "gzip, deflate, br");
+                 p.setHeader("Accept", "application/json");
+                 p.setHeader("Connection", "keep-alive");
+                 p.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+                 
+                 HttpResponse resp = hc.execute(p);
+                 resp.getEntity().consumeContent();
+                 if (resp != null) {
+                 System.out.println("RESP " + resp.toString());
+                 if (resp.getStatusLine().getStatusCode() == 204)
+                 result = true;
+                     
+                 } */                
+                       
+                      }}}} catch (Exception e) {
+                 e.printStackTrace();
+                         }         
+  buscarMarcasSC();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -4567,6 +4592,7 @@ buscarRubrosSC();
     private javax.swing.JButton debugRubro;
     private javax.swing.JTextArea debugRubros;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

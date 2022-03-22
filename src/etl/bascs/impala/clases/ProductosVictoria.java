@@ -44,8 +44,8 @@ public class ProductosVictoria {
             setRubro((getRubro() == null ? productoJ.optString("rubro") : getRubro()));
             
             cuotas = new ProductoCuotasVictoria[0];
-            if(productoJ.has("cuotas")){
-                JSONArray cuota = productoJ.optJSONArray("cuotas");
+            if(productoJ.has("cuota")){
+                JSONArray cuota = productoJ.optJSONArray("cuota");
                 cuotas = new ProductoCuotasVictoria[cuota.length()];
                 for (int i = 0; i < cuotas.length; i++) {
                     
@@ -53,7 +53,7 @@ public class ProductosVictoria {
                     cuota.optJSONObject(i).getDouble("precio_contado"),
                     cuota.optJSONObject(i).getDouble("precio_cuota"),
                     cuota.optJSONObject(i).getDouble("precio_credito"));
-     //               System.out.println("CUOTAS " + cuotas[i]);
+                    System.out.println("CUOTAS " + cuotas[i]);
                 }
             }
             

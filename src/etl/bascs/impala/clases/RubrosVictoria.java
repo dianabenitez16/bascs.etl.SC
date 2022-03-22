@@ -8,6 +8,7 @@ package etl.bascs.impala.clases;
 import etl.bascs.impala.main;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -50,7 +51,7 @@ public class RubrosVictoria {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = decodeUFT(nombre);
     }
 
     public String getParent_id() {
@@ -66,7 +67,7 @@ public class RubrosVictoria {
        try{
           setCodigo((getCodigo() == null ? rubroJ.optString("codigo_interno_ws"):getCodigo())); 
           setNombre((getNombre() == null ? rubroJ.optString("nombre"):getNombre())); 
-          setParent_id((getParent_id() == null ? rubroJ.optString("parent_id"):getParent_id())); 
+   //       setParent_id((getParent_id() == null ? rubroJ.optString("parent_id"):getParent_id())); 
           
           cargado = true;
            
@@ -76,5 +77,18 @@ public class RubrosVictoria {
         }     
    }
    
-    
+    public String decodeUFT(String rawString){
+        if(rawString == null || rawString.isEmpty()) {
+            return "";
+        }
+        
+        String stringLegible = rawString;
+        try {
+            stringLegible = new String(rawString.getBytes("UTF-8"));
+                       
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stringLegible;
+    }
 }

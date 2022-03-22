@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -50,6 +51,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -67,6 +70,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -145,8 +149,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public Integer[] tablaMarcasSC = new Integer[] {30,30,30,30};
     public Object[][] tablaContenidoMarcasSC;
    
-    public String[] tablaHeaderRubrosSC = new String[] {"X","ID","Codigo", "Nombre"};
-    public Integer[] tablaRubrosSC = new Integer[] {30,30,30,30};
+    public String[] tablaHeaderRubrosSC = new String[] {"X","ID","Codigo", "Nombre", "Parent ID"};
+    public Integer[] tablaRubrosSC = new Integer[] {30,30,30,30,30};
     public Object[][] tablaContenidoRubrosSC;
   
     public String[] tablaHeaderPrestashop;
@@ -786,11 +790,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
                     limpiarProducto(false);
                     tpConsulta.setSelectedIndex(0);
+                    
                     tProductoID.setText(tablaContenidoMaestro[(int) table.getValueAt(row, 0)][2].toString());
-                    System.out.println("EL VALOR DEL DETALLE ES " + tablaContenidoMaestro[(int) table.getValueAt(row, 0)][2].toString());
+           //         System.out.println("EL VALOR DEL DETALLE ES " + tablaContenidoMaestro[(int) table.getValueAt(row, 0)][2].toString());
                     
                     buscarProducto((Producto) tablaContenidoMaestro[(int) table.getValueAt(row, 0)][0]);
                 }
+                
             }
         });
         tbMaestroProductos.setDefaultEditor(Object.class, null);
@@ -809,11 +815,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     tProductoIDV.setText(tablaContenidoProductos[(int) table.getValueAt(row, 0)][2].toString());
                     buscarProductoVictoria((ProductosVictoria) tablaContenidoProductos[(int) table.getValueAt(row, 0)][0]);
                 } 
+               
             }
         });
         tbVictoriaProductos.setDefaultEditor(Object.class, null);
         tbVictoriaProductos.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-        
         // TABLA IMAGENES 
         tbProductoImagenes.addMouseListener(new MouseAdapter() {
             @Override
@@ -1160,6 +1166,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tMarcaSC = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         tProductoEstado = new javax.swing.JTextField();
         cbOrigen = new javax.swing.JComboBox<>();
 
@@ -4025,6 +4032,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
+        jButton3.setText("DELETE");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pMyRSCLayout = new javax.swing.GroupLayout(pMyRSC);
         pMyRSC.setLayout(pMyRSCLayout);
         pMyRSCLayout.setHorizontalGroup(
@@ -4033,7 +4047,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGap(411, 411, 411)
                 .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(bRubrosSC, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tRubrosSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(86, 86, 86))
@@ -4059,7 +4074,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addGap(167, 167, 167)
                         .addComponent(bRubrosSC)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2))
+                        .addComponent(jButton2)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton3))
                     .addGroup(pMyRSCLayout.createSequentialGroup()
                         .addGap(48, 48, 48)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -4453,12 +4470,15 @@ List<RubrosSC> rubrosSCs = new ArrayList();
                         object.put("codigo_interno_ws", rubs.getCodigo());
                         object.put("nombre", rubs.getNombre());
                         object.put("parent_id", rubs.getParent_id());
-                  /*      
-                message = object.toString();
+                          
+                        
+                        message = object.toString();
+                       
                              
-                  p.setEntity(new StringEntity(message));
-                 p.setHeader("Content-type", "application/json");
+                 p.setEntity(new StringEntity(message, "UTF-8"));
+                 p.setHeader("Content-type", "application/json;charset=UTF-8");
                  p.setHeader("Accept", "application/json");
+                 p.setHeader("Accept-enconding", "gzip,deflate,sdch");
                  p.setHeader("Connection", "keep-alive");
                  p.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
                  
@@ -4469,7 +4489,7 @@ List<RubrosSC> rubrosSCs = new ArrayList();
                  if (resp.getStatusLine().getStatusCode() == 204)
                  result = true;
                    System.out.println("A INSERTAR " + message);     
-                 } */
+                 } 
                  
                     break;
                          }}}} catch (Exception e) {
@@ -4501,18 +4521,14 @@ String message1;
                           
                           marcas.setCodigo(mar.getCodigo());
                           marcas.setNombre(mar.getNombre());
+                          
                           object1.put("codigo_interno_ws", marcas.getCodigo());
                           object1.put("nombre", marcas.getNombre());
                           message1 = object1.toString();
                         
+                          
                              
               
-                      if(object1.has("codigo_interno_ws")){
-                         if(!object1.get("codigo_interno_ws").equals(mars.getCodigo())) ;
-                          System.out.println("no es igual" + mars.getCodigo());
-                         
-                       
-                      }
                  /*
                  p.setHeader("USER_AGENT",USER_AGENT);
                  p.setHeader("Content-type", "application/json");
@@ -4535,6 +4551,31 @@ String message1;
                          }         
   buscarMarcasSC();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    int row = tRubroSC.getSelectedRow();
+    String selected = tRubroSC.getValueAt(row, 0).toString();
+             if (row > 0) {
+             try{                      
+                
+               URL url = new URL("http://www.saracomercial.com/panel/api/loader/rubros/"+selected+"");
+                 System.out.println(" url " + url.toString());
+                HttpURLConnection http = (HttpURLConnection)url.openConnection();
+                http.setRequestMethod("DELETE");
+                http.setRequestProperty("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+                System.out.println(http.getResponseCode() + " " + http.getResponseMessage());
+                http.disconnect();
+                
+              } catch (Exception e) {
+                 e.printStackTrace();
+                    
+                        
+                }
+                    
+                }
+   buscarRubrosSC();        
+                
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -4593,6 +4634,7 @@ String message1;
     private javax.swing.JTextArea debugRubros;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -5245,6 +5287,7 @@ String message1;
                                 tablaContenidoRubrosSC[i][1] = rubros.getId(); //Se utiliza para asociar desde el Modelo al array de contenidos.
                                 tablaContenidoRubrosSC[i][2] = rubros.getCodigo();
                                 tablaContenidoRubrosSC[i][3] = rubros.getNombre();
+                                tablaContenidoRubrosSC[i][4] = rubros.getParent_id();
                                 i++;
                             }  
                             

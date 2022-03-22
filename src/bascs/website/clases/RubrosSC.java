@@ -74,12 +74,21 @@ public class RubrosSC {
         this.cargado = cargado;
     }
 
+    public String getParent_id() {
+        return parent_id;
+    }
+
+    public void setParent_id(String parent_id) {
+        this.parent_id = parent_id;
+    }
+
      public void loadJSONConsulta(JSONObject rubrosJ){
       
        try{
           setId((getId() == null ? rubrosJ.optInt("id"):getId()));
           setCodigo((getCodigo() == null ? rubrosJ.optString("codigo_interno_ws"):getCodigo())); 
           setNombre((getNombre() == null ? rubrosJ.optString("nombre"):getNombre())); 
+          setParent_id((getParent_id() == null ? rubrosJ.optString("parent_id"):getParent_id())); 
           
           cargado = true;
           cantidad = rubrosJ.length();

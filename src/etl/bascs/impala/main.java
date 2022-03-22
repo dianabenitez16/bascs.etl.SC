@@ -77,6 +77,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -437,6 +438,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         rubrosW.execute();
     }
     public void buscarRubrosSC(){
+        cargarTablaRubrosSC(new Object[0][0]);
         rubrosSC = new RubrosWorkerSC(getPropiedades());
         rubrosSC.addPropertyChangeListener(this);
         rubrosSC.execute();
@@ -470,6 +472,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         productosSC.addPropertyChangeListener(this);
         productosSC.execute();
     }
+    
+    
+    
     //CARGAR TABLAS DEL MAIN //
     /*******************************************************/
     public void cargarTablaMaestro(Object[][] contenido){
@@ -522,6 +527,61 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         }
        
    }
+   
+   
+   
+    /**/
+   
+    public void rubrosWSPUT(Integer id, RubrosVictoria rubroVT){
+        //ACTUALIZAR EN EL WS
+        try {
+            HttpClient hc = new DefaultHttpClient();
+            HttpPut hp = new HttpPut("http://www.saracomercial.com/panel/api/loader/rubros/"+ id);
+            
+            System.out.println("PUT: "+"http://www.saracomercial.com/panel/api/loader/rubros/"+ id);
+            System.out.println("OBJETO: "+rubroVT.getJSON().toString());
+            
+            hp.setEntity(new StringEntity(rubroVT.getJSON().toString(), "UTF-8"));
+            hp.setHeader("Content-type", "application/json;charset=UTF-8");
+            hp.setHeader("Accept", "application/json");
+            hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
+            hp.setHeader("Connection", "keep-alive");
+            hp.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+            
+            HttpResponse resp = hc.execute(hp);
+            
+            resp.getEntity().consumeContent();
+            
+            if (resp != null) {
+                switch (resp.getStatusLine().getStatusCode()){
+                    case 200: // INGRESADO CORRECTAMENTE
+                        break;
+                    case 422: //SUPUESTAMENTE YA EXISTE
+                        break;
+                    default: // CODIGO DESCONOCIDO
+                        break;
+                        
+                        
+                }
+                System.out.println("RESPUESTA: " + resp.toString());
+                
+            }else{
+                debugRubros.append("Respuesta NULL");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void rubrosWSPOST(RubrosVictoria rubroVT){
+        // INSERTAR EN EL WS
+    }
+    
+    public void rubrosWSDELETE(RubrosSC rubroWS){
+        // ELIMINAR DEL WS
+    }
+   
+    /**/
         
      
     public void generarArchivoContenido(Object[] headers, Object[][] contenido, String filename){
@@ -1082,11 +1142,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         jScrollPane1 = new javax.swing.JScrollPane();
         tRubrosVictoria = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
-        bRubros = new javax.swing.JButton();
+        btRubrosVTCargar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tMarcasVictoria = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btRubrosVTPost = new javax.swing.JButton();
         pDebugRYM = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         debugRubros = new javax.swing.JTextArea();
@@ -1161,12 +1221,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tRubrosSC = new javax.swing.JScrollPane();
         tRubroSC = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
-        bRubrosSC = new javax.swing.JButton();
+        btRubrosSCCargar = new javax.swing.JButton();
         tMarcasSC = new javax.swing.JScrollPane();
         tMarcaSC = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btRubrosSCPost = new javax.swing.JButton();
+        btRubrosSCDelete = new javax.swing.JButton();
         tProductoEstado = new javax.swing.JTextField();
         cbOrigen = new javax.swing.JComboBox<>();
 
@@ -1854,7 +1914,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             pConsultaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pConsultaLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(tpConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE)
+                .addComponent(tpConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 555, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -3285,10 +3345,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jLabel4.setText("MARCAS");
 
-        bRubros.setText("CARGAR");
-        bRubros.addActionListener(new java.awt.event.ActionListener() {
+        btRubrosVTCargar.setText("CARGAR");
+        btRubrosVTCargar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bRubrosActionPerformed(evt);
+                btRubrosVTCargarActionPerformed(evt);
             }
         });
 
@@ -3304,10 +3364,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jLabel5.setText("RUBROS");
 
-        jButton1.setText("POST TEST R");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btRubrosVTPost.setText("POST TEST R");
+        btRubrosVTPost.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btRubrosVTPostActionPerformed(evt);
             }
         });
 
@@ -3318,8 +3378,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             .addGroup(pMyRLayout.createSequentialGroup()
                 .addGap(411, 411, 411)
                 .addGroup(pMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-                    .addComponent(bRubros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btRubrosVTPost, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                    .addComponent(btRubrosVTCargar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(86, 86, 86))
@@ -3343,9 +3403,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addGap(39, 39, 39)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(167, 167, 167)
-                        .addComponent(bRubros)
+                        .addComponent(btRubrosVTCargar)
                         .addGap(36, 36, 36)
-                        .addComponent(jButton1))
+                        .addComponent(btRubrosVTPost))
                     .addGroup(pMyRLayout.createSequentialGroup()
                         .addGap(48, 48, 48)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -3408,7 +3468,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             pVictoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pVictoriaLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(tpVictoria, javax.swing.GroupLayout.DEFAULT_SIZE, 660, Short.MAX_VALUE)
+                .addComponent(tpVictoria, javax.swing.GroupLayout.PREFERRED_SIZE, 660, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -4006,10 +4066,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jLabel6.setText("MARCAS");
 
-        bRubrosSC.setText("CARGAR");
-        bRubrosSC.addActionListener(new java.awt.event.ActionListener() {
+        btRubrosSCCargar.setText("CARGAR");
+        btRubrosSCCargar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bRubrosSCActionPerformed(evt);
+                btRubrosSCCargarActionPerformed(evt);
             }
         });
 
@@ -4025,17 +4085,17 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jLabel7.setText("RUBROS");
 
-        jButton2.setText("POST TEST M");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btRubrosSCPost.setText("POST TEST M");
+        btRubrosSCPost.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btRubrosSCPostActionPerformed(evt);
             }
         });
 
-        jButton3.setText("DELETE");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btRubrosSCDelete.setText("DELETE");
+        btRubrosSCDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btRubrosSCDeleteActionPerformed(evt);
             }
         });
 
@@ -4046,9 +4106,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             .addGroup(pMyRSCLayout.createSequentialGroup()
                 .addGap(411, 411, 411)
                 .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bRubrosSC, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btRubrosSCCargar, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                    .addComponent(btRubrosSCPost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btRubrosSCDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tRubrosSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(86, 86, 86))
@@ -4072,11 +4132,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addGap(39, 39, 39)
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(167, 167, 167)
-                        .addComponent(bRubrosSC)
+                        .addComponent(btRubrosSCCargar)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2)
+                        .addComponent(btRubrosSCPost)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3))
+                        .addComponent(btRubrosSCDelete))
                     .addGroup(pMyRSCLayout.createSequentialGroup()
                         .addGap(48, 48, 48)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -4105,7 +4165,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pWebsiteLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE)
+                .addComponent(tpWebsite, javax.swing.GroupLayout.PREFERRED_SIZE, 555, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -4136,7 +4196,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 1009, Short.MAX_VALUE)
+                    .addComponent(tpPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 1009, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(tProductoEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -4428,11 +4488,11 @@ buscarProductoWebsite();        // TODO add your handling code here:
         // TODO add your handling code here:
     }//GEN-LAST:event_bPrestashopAbrir2ActionPerformed
 
-    private void bRubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRubrosActionPerformed
-isClicked = true;
-buscarRubros();
-buscarMarcas();
-    }//GEN-LAST:event_bRubrosActionPerformed
+    private void btRubrosVTCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRubrosVTCargarActionPerformed
+        isClicked = true;
+        buscarRubros();
+        buscarMarcas();
+    }//GEN-LAST:event_btRubrosVTCargarActionPerformed
 
     private void tVictoriaProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tVictoriaProductosActionPerformed
         // TODO add your handling code here:
@@ -4450,61 +4510,83 @@ buscarMarcas();
         // TODO add your handling code here:
     }//GEN-LAST:event_tVictoriaMarcaActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-isClicked = true;  
-boolean result = false;
-Integer i = 0;
-List<RubrosVictoria> rubrosVv = new ArrayList();
-List<RubrosSC> rubrosSCs = new ArrayList();
-   HttpClient hc = new DefaultHttpClient();
-   String message;
-   String message1;
-                HttpPost p = new HttpPost("http://www.saracomercial.com/panel/api/loader/rubros");
-                 JSONObject object = new JSONObject();
-                 JSONObject object1 = new JSONObject();
-             try{  
-                 for (RubrosVictoria rubs : rubrosW.get()) {
-                     for (RubrosSC rub : rubrosSC.get()) {
-                         if(!rubs.getCodigo().equals(rub.getCodigo()) && !rubs.getNombre().equals(rub.getNombre()) || rubs.getParent_id().equals(rubs.getParent_id())){
-                             
-                        object.put("codigo_interno_ws", rubs.getCodigo());
-                        object.put("nombre", rubs.getNombre());
-                        object.put("parent_id", rubs.getParent_id());
-                          
-                        
-                        message = object.toString();
-                       
-                             
-                 p.setEntity(new StringEntity(message, "UTF-8"));
-                 p.setHeader("Content-type", "application/json;charset=UTF-8");
-                 p.setHeader("Accept", "application/json");
-                 p.setHeader("Accept-enconding", "gzip,deflate,sdch");
-                 p.setHeader("Connection", "keep-alive");
-                 p.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
-                 
-                 HttpResponse resp = hc.execute(p);
-                 resp.getEntity().consumeContent();
-                 if (resp != null) {
-                 System.out.println("RESP " + resp.toString());
-                 if (resp.getStatusLine().getStatusCode() == 204)
-                 result = true;
-                   System.out.println("A INSERTAR " + message);     
-                 } 
-                 
-                    break;
-                         }}}} catch (Exception e) {
-                 e.printStackTrace();
-                    
-                        }       
+    private void btRubrosVTPostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRubrosVTPostActionPerformed
+        isClicked = true;  
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+        Boolean rubroNuevo;
+        Boolean rubroEliminar;
+        
+        Integer rubrosOmitidos = 0;
+        
+        // PUT - ACTUALIZA
+        // POST - CREA
+        
+        try{  
+            //RECORRIDO VICTORIA
+            for (RubrosVictoria rubVictoria : rubrosW.get()) {
+                rubroNuevo = true;
+                for (RubrosSC rubSC : rubrosSC.get()) {
+                    if(rubVictoria.getCodigo().equals(rubSC.getCodigo())){
+                        rubroNuevo = false;
+                        if(!rubVictoria.getNombre().equals(rubSC.getNombre())){
+                            System.out.println("VT: "+rubVictoria.getNombre()+"|"+"SC: "+rubSC.getNombre());
+                            rubrosWSPUT(rubSC.getId(), rubVictoria);
+                        }else{
+                            rubrosOmitidos++;
+                        }
+                    }
+                }
+                
+                if(rubroNuevo){
+                    rubrosWSPOST(rubVictoria);
+                }
+            }
+            
+            //RECORRIDO WEBSERVICE
+            for (RubrosSC rubSC : rubrosSC.get()) {
+                rubroEliminar = true;
+                for (RubrosVictoria rubVictoria : rubrosW.get()) {
+                    if(rubVictoria.getCodigo().equals(rubSC.getCodigo())){
+                        rubroEliminar = false;
+                    }
+                }
+                
+                if(rubroEliminar){
+                    rubrosWSDELETE(rubSC);
+                }
+            }
+            
+            //RECORRIDO VICTORIA PARENT ID
+            for (RubrosVictoria rubVictoria : rubrosW.get()) {
+                for (RubrosSC rubSC : rubrosSC.get()) {
+                    if(rubVictoria.getCodigo().equals(rubSC.getCodigo())){
+                        if(rubVictoria.getParent_codigo() != null){
+                            if(rubrosSC.obtenerRubro(rubVictoria.getParent_codigo()) != null){
+                                rubVictoria.setParent_id(rubrosSC.obtenerRubro(rubVictoria.getParent_codigo()).getId());
+                            }else{
+                                System.out.println("PARENT ID: No se encuentra el RUBRO "+rubVictoria.getParent_codigo()+ "en el WS.");
+                                rubVictoria.setParent_id(null);
+                            }
+                            rubrosWSPUT(rubSC.getId(), rubVictoria);
+                            
+                        }
+                    }
+                }
+            }
+                
+            System.out.println("RUBROS OMITIDOS: "+rubrosOmitidos);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }       
+    }//GEN-LAST:event_btRubrosVTPostActionPerformed
 
-    private void bRubrosSCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRubrosSCActionPerformed
+    private void btRubrosSCCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRubrosSCCargarActionPerformed
 buscarMarcasSC();
 buscarRubrosSC();
-    }//GEN-LAST:event_bRubrosSCActionPerformed
+    }//GEN-LAST:event_btRubrosSCCargarActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btRubrosSCPostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRubrosSCPostActionPerformed
 HttpClient hc = new DefaultHttpClient();
 Boolean result = true;
 String message;
@@ -4550,32 +4632,43 @@ String message1;
                  e.printStackTrace();
                          }         
   buscarMarcasSC();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btRubrosSCPostActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btRubrosSCDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRubrosSCDeleteActionPerformed
     int row = tRubroSC.getSelectedRow();
     String selected = tRubroSC.getValueAt(row, 0).toString();
-             if (row > 0) {
-             try{                      
+    
+    if (row >= 0) {
+        try{
+            URL url = new URL("http://www.saracomercial.com/panel/api/loader/rubros/"+selected+"");
+            //System.out.println(" url " + url.toString());
+            HttpURLConnection http = (HttpURLConnection)url.openConnection();
+            http.setRequestMethod("DELETE");
+            http.setRequestProperty("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+            
+            
+            
+            switch(http.getResponseCode()){
+                case 200:
+                    System.out.println("DELETE: Solicitud procesada correctamente.");
+                    // FALTA DETERMINAR SI EFECTIVAMETNE FUE ELIMINADO O NO
+                    break;
+                default:
+                    break;
+            }
+            
+            http.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }else{
+        System.out.println("ELIMINAR. Error al eliminar, no se selecciono ninguna linea.");
+    }
+
+    buscarRubrosSC();        
                 
-               URL url = new URL("http://www.saracomercial.com/panel/api/loader/rubros/"+selected+"");
-                 System.out.println(" url " + url.toString());
-                HttpURLConnection http = (HttpURLConnection)url.openConnection();
-                http.setRequestMethod("DELETE");
-                http.setRequestProperty("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
-                System.out.println(http.getResponseCode() + " " + http.getResponseMessage());
-                http.disconnect();
-                
-              } catch (Exception e) {
-                 e.printStackTrace();
-                    
-                        
-                }
-                    
-                }
-   buscarRubrosSC();        
-                
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btRubrosSCDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -4625,16 +4718,16 @@ String message1;
     private javax.swing.JButton bProductoLimpiar;
     private javax.swing.JButton bProductoLimpiar2;
     private javax.swing.JButton bProductoLimpiarV;
-    private javax.swing.JButton bRubros;
-    private javax.swing.JButton bRubrosSC;
     private javax.swing.JButton bVictoriaBuscar;
     private javax.swing.JButton bVictoriaLimpiar;
+    private javax.swing.JButton btRubrosSCCargar;
+    private javax.swing.JButton btRubrosSCDelete;
+    private javax.swing.JButton btRubrosSCPost;
+    private javax.swing.JButton btRubrosVTCargar;
+    private javax.swing.JButton btRubrosVTPost;
     private javax.swing.JComboBox<String> cbOrigen;
     private javax.swing.JButton debugRubro;
     private javax.swing.JTextArea debugRubros;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -5127,7 +5220,7 @@ String message1;
                                 tablaContenidoRubros[i][1] = i; 
                                 tablaContenidoRubros[i][2] = rubros.getCodigo();
                                 tablaContenidoRubros[i][3] = rubros.getNombre();
-                                tablaContenidoRubros[i][4] = rubros.getParent_id();
+                                tablaContenidoRubros[i][4] = rubros.getParent_codigo();
                                 
                               i++;
                             }   

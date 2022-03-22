@@ -20,7 +20,7 @@ public class RubrosSC {
     private Integer id;
     private String codigo;
     private String nombre;
-    private String parent_id;
+    private Integer parent_id;
     public Integer cantidad;
     public Boolean cargado;
 
@@ -74,11 +74,11 @@ public class RubrosSC {
         this.cargado = cargado;
     }
 
-    public String getParent_id() {
+    public Integer getParent_id() {
         return parent_id;
     }
 
-    public void setParent_id(String parent_id) {
+    public void setParent_id(Integer parent_id) {
         this.parent_id = parent_id;
     }
 
@@ -88,7 +88,7 @@ public class RubrosSC {
           setId((getId() == null ? rubrosJ.optInt("id"):getId()));
           setCodigo((getCodigo() == null ? rubrosJ.optString("codigo_interno_ws"):getCodigo())); 
           setNombre((getNombre() == null ? rubrosJ.optString("nombre"):getNombre())); 
-          setParent_id((getParent_id() == null ? rubrosJ.optString("parent_id"):getParent_id())); 
+          setParent_id((getParent_id() == null ? rubrosJ.optInt("parent_id"):getParent_id())); 
           
           cargado = true;
           cantidad = rubrosJ.length();

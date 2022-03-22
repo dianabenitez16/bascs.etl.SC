@@ -94,6 +94,15 @@ public class RubrosWorkerSC extends SwingWorker<RubrosSC[], String> implements P
         this.consulta = consulta;
     }
     
+    public RubrosSC obtenerRubro(String codigo){
+        for (RubrosSC rubrosSC1 : rubrosSC) {
+            if(rubrosSC1.getCodigo().equals(codigo)){
+                return rubrosSC1;
+            }
+        }
+        return null;
+    }
+    
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String clase = getClass().getName().substring(getClass().getName().lastIndexOf(".")+1, getClass().getName().length()).toUpperCase();

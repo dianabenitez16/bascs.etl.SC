@@ -26,12 +26,13 @@ import org.json.JSONObject;
 public class RubrosVictoria {
     private String codigo;
     private String nombre;
-    private String parent_id;
+    private Integer parent_id;
+    private String parent_codigo;
     public Boolean cargado;
     public RubrosVictoria(Properties propiedades) {
         this.codigo = codigo;
         this.nombre = nombre;
-        this.nombre = parent_id;
+        //this.nombre = parent_id;
     }
 
     public RubrosVictoria() {
@@ -54,25 +55,31 @@ public class RubrosVictoria {
         this.nombre = decodeUFT(nombre);
     }
 
-    public String getParent_id() {
+    public Integer getParent_id() {
         return parent_id;
     }
 
-    public void setParent_id(String parent_id) {
+    public void setParent_id(Integer parent_id) {
         this.parent_id = parent_id;
     }
 
-   public void loadJSONConsulta(JSONObject rubroJ){
-      
-       try{
-          setCodigo((getCodigo() == null ? rubroJ.optString("codigo_interno_ws"):getCodigo())); 
-          setNombre((getNombre() == null ? rubroJ.optString("nombre"):getNombre())); 
-   //       setParent_id((getParent_id() == null ? rubroJ.optString("parent_id"):getParent_id())); 
-          
-          cargado = true;
+    public String getParent_codigo() {
+        return parent_codigo;
+    }
+
+    public void setParent_codigo(String parent_codigo) {
+        this.parent_codigo = parent_codigo;
+    }
+    
+    
+    public void loadJSONConsulta(JSONObject rubroJ){
+        try{
+            setCodigo((getCodigo() == null ? rubroJ.optString("codigo_interno_ws"):getCodigo())); 
+            setNombre((getNombre() == null ? rubroJ.optString("nombre"):getNombre())); 
+            setParent_codigo((getParent_codigo() == null ? rubroJ.optString("parent_id"):getParent_codigo())); 
            
-        
-          } catch (JSONException e) {
+            cargado = true;
+        } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }     
    }
@@ -91,4 +98,14 @@ public class RubrosVictoria {
         }
         return stringLegible;
     }
+    
+    public JSONObject getJSON(){
+        JSONObject object;
+        object = new JSONObject();
+        object.put("codigo_interno_ws", getCodigo());
+        object.put("nombre", getNombre());
+        object.put("parent_id", getParent_id());
+        return object;
+    }
+    
 }

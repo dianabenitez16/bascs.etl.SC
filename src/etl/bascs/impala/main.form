@@ -4116,8 +4116,8 @@
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="411" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jButton1" pref="133" max="32767" attributes="0"/>
-                                  <Component id="bRubros" max="32767" attributes="0"/>
+                                  <Component id="btRubrosVTPost" pref="133" max="32767" attributes="0"/>
+                                  <Component id="btRubrosVTCargar" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jScrollPane1" min="-2" pref="373" max="-2" attributes="0"/>
@@ -4147,9 +4147,9 @@
                                       <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
                                       <Component id="jLabel4" min="-2" pref="30" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="167" max="-2" attributes="0"/>
-                                      <Component id="bRubros" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btRubrosVTCargar" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btRubrosVTPost" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
@@ -4192,12 +4192,12 @@
                         <Property name="text" type="java.lang.String" value="MARCAS"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JButton" name="bRubros">
+                    <Component class="javax.swing.JButton" name="btRubrosVTCargar">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="CARGAR"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bRubrosActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRubrosVTCargarActionPerformed"/>
                       </Events>
                     </Component>
                     <Container class="javax.swing.JScrollPane" name="jScrollPane2">
@@ -4221,12 +4221,12 @@
                         <Property name="text" type="java.lang.String" value="RUBROS"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JButton" name="jButton1">
+                    <Component class="javax.swing.JButton" name="btRubrosVTPost">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="POST TEST R"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRubrosVTPostActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>
@@ -5503,9 +5503,9 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="411" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="bRubrosSC" pref="133" max="32767" attributes="0"/>
-                                  <Component id="jButton2" max="32767" attributes="0"/>
-                                  <Component id="jButton3" max="32767" attributes="0"/>
+                                  <Component id="btRubrosSCCargar" pref="133" max="32767" attributes="0"/>
+                                  <Component id="btRubrosSCPost" max="32767" attributes="0"/>
+                                  <Component id="btRubrosSCDelete" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="tRubrosSC" min="-2" pref="373" max="-2" attributes="0"/>
@@ -5535,11 +5535,11 @@
                                       <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
                                       <Component id="jLabel6" min="-2" pref="30" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="167" max="-2" attributes="0"/>
-                                      <Component id="bRubrosSC" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btRubrosSCCargar" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btRubrosSCPost" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btRubrosSCDelete" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
@@ -5582,12 +5582,12 @@
                         <Property name="text" type="java.lang.String" value="MARCAS"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JButton" name="bRubrosSC">
+                    <Component class="javax.swing.JButton" name="btRubrosSCCargar">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="CARGAR"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bRubrosSCActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRubrosSCCargarActionPerformed"/>
                       </Events>
                     </Component>
                     <Container class="javax.swing.JScrollPane" name="tMarcasSC">
@@ -5611,20 +5611,20 @@
                         <Property name="text" type="java.lang.String" value="RUBROS"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JButton" name="jButton2">
+                    <Component class="javax.swing.JButton" name="btRubrosSCPost">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="POST TEST M"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRubrosSCPostActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JButton" name="jButton3">
+                    <Component class="javax.swing.JButton" name="btRubrosSCDelete">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="DELETE"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRubrosSCDeleteActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>

@@ -15,6 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Properties;
 import javax.swing.SwingWorker;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -24,11 +25,13 @@ import org.json.JSONObject;
 
 public class ProductoWorkerDetalle extends SwingWorker<ProductosVictoria, String> implements PropertyChangeListener{
     public ConsultaHttpVictoria consulta;
+    public ProductosVictoria productosV;
     public Properties propiedades;
     public String codigo;
+    public Integer id;
     public ProductosVictoria producto;
     public Boolean error;
-
+    public JSONObject productoJ;
     public ProductoWorkerDetalle(ProductosVictoria producto,Properties propVictoria) {
         this.producto = producto;
         this.propiedades = propVictoria;
@@ -46,13 +49,10 @@ public class ProductoWorkerDetalle extends SwingWorker<ProductosVictoria, String
                     propiedades.getProperty("puerto"),
                   propiedades.getProperty("metodoGET"),
                     propiedades.getProperty("detalle")+producto.getCodigo());
-            System.out.println("SERVIDOR DT " +propiedades.getProperty("servidor"));
-            System.out.println("PUERTO DT " +propiedades.getProperty("puerto"));
-            System.out.println("METODO DT " + propiedades.getProperty("metodoGET"));
-            System.out.println("DETALLE DT " + propiedades.getProperty("detalle")+producto.getCodigo());
+             System.out.println("DETALLE DT " + propiedades.getProperty("detalle")+producto.getCodigo());
                       if(!consulta.getError()){
                 if(consulta.getJson().has("items")){ 
-                    JSONObject productoJ = consulta.getJson().getJSONObject("items");
+                     productoJ = consulta.getJson().getJSONObject("items");
                     producto.loadJSONConsulta(productoJ);
                     System.out.println("productoJ " + productoJ.toString());
                     setProgress(100);
@@ -97,6 +97,14 @@ public class ProductoWorkerDetalle extends SwingWorker<ProductosVictoria, String
         this.codigo = codigo;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Boolean getError() {
         return error;
     }
@@ -113,7 +121,28 @@ public class ProductoWorkerDetalle extends SwingWorker<ProductosVictoria, String
         
         System.out.println(clase+">> "+source+" > "+value);
     }
-    
+    public JSONObject getJSON(){
+        JSONObject object;
+        object = new JSONObject();
+      ProductosVictoria  pro = new ProductosVictoria();
+        for (int i = 0; i < productoJ.length(); i++) {
+        
+        object.put("codigo_interno_ws", getCodigo());
+            System.out.println("CODIGO DE WORKER " + getCodigo());
+        object.put("nombre", pro.getNombre());
+        object.put("marca_id", pro.getMarca_id());
+        object.put("rubro_id", pro.getRubro_id());
+        if(productoJ.has("cuotas")){
+            JSONArray cuota = productoJ.optJSONArray("cuotas");
+        object.put("cuotas", cuota.optJSONObject(i).getInt("precio_contado"));
+        }
+        System.out.println("rubro_id del jason " + pro.getRubro_id());
+        System.out.println("marca_id del jason " + pro.getMarca_id());
+       
+        }
+        
+        return object;
+    }
 }
  
   

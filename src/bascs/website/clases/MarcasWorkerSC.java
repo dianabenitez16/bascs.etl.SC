@@ -88,7 +88,15 @@ public class MarcasWorkerSC extends SwingWorker<MarcasSC[], String> implements P
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
-
+    public MarcasSC obtenerMarca(String codigo){
+        for (MarcasSC marcasSC1 : marcasSC) {
+            if(marcasSC1.getCodigo().equals(codigo)){
+       //         System.out.println("CODIGO " + codigo);
+                return marcasSC1;
+            }
+        }
+        return null;
+    }
     
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

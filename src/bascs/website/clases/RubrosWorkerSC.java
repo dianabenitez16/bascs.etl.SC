@@ -97,6 +97,7 @@ public class RubrosWorkerSC extends SwingWorker<RubrosSC[], String> implements P
     public RubrosSC obtenerRubro(String codigo){
         for (RubrosSC rubrosSC1 : rubrosSC) {
             if(rubrosSC1.getCodigo().equals(codigo)){
+        //        System.out.println("RUBROS " + codigo); 
                 return rubrosSC1;
             }
         }

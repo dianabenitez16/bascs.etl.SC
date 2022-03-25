@@ -76,7 +76,7 @@ public class RubrosVictoria {
         try{
             setCodigo((getCodigo() == null ? rubroJ.optString("codigo_interno_ws"):getCodigo())); 
             setNombre((getNombre() == null ? rubroJ.optString("nombre"):getNombre())); 
-            setParent_codigo((getParent_codigo() == null ? rubroJ.optString("parent_id"):getParent_codigo())); 
+            setParent_codigo((getParent_codigo() == null ? rubroJ.optString("parent_codigo"):getParent_codigo())); 
            
             cargado = true;
         } catch (JSONException e) {
@@ -94,7 +94,7 @@ public class RubrosVictoria {
             stringLegible = new String(rawString.getBytes("UTF-8"));
                        
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RubrosVictoria.class.getName()).log(Level.SEVERE, null, ex);
         }
         return stringLegible;
     }
@@ -104,7 +104,8 @@ public class RubrosVictoria {
         object = new JSONObject();
         object.put("codigo_interno_ws", getCodigo());
         object.put("nombre", getNombre());
-        object.put("parent_id", getParent_id());
+        object.put("parent_codigo", getParent_id());
+  //      System.out.println("parent_id del jason " + getParent_id());
         return object;
     }
     

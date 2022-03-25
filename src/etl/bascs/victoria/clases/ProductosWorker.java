@@ -5,6 +5,7 @@
  */
 package etl.bascs.victoria.clases;
 
+import bascs.website.clases.RubrosSC;
 import etl.bascs.impala.clases.Producto;
 import etl.bascs.impala.clases.ProductosVictoria;
 import etl.bascs.impala.json.ConsultaHttp;
@@ -29,6 +30,7 @@ public class ProductosWorker extends SwingWorker<ProductosVictoria[], String>imp
     private Properties propiedades;
     private Integer cantidad;
 
+    
     private ProductosVictoria[] productos;
     private ProductosVictoria producto;
 
@@ -104,7 +106,7 @@ public class ProductosWorker extends SwingWorker<ProductosVictoria[], String>imp
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
-    @Override
+     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String clase = getClass().getName().substring(getClass().getName().lastIndexOf(".")+1, getClass().getName().length()).toUpperCase();
         String source = evt.getSource().toString().substring(evt.getSource().toString().lastIndexOf(".")+1, evt.getSource().toString().indexOf("@"));

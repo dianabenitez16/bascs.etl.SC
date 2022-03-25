@@ -10,23 +10,18 @@ package etl.bascs.impala.clases;
  * @author User
  */
 public class CuotasVictoria {
-    private Integer cuota;
+    private Integer numero;
     private Integer precio_cuota;
     private Integer precio_contado;
     private Integer precio_credito;
 
-    public CuotasVictoria(Integer cuota, Integer precio_cuota, Integer precio_contado, Integer precio_credito) {
-        this.cuota = cuota;
-        this.precio_cuota = precio_cuota;
-        this.precio_contado = precio_contado;
-        this.precio_credito = precio_credito;
-    }
+    
 
-    public CuotasVictoria(String cuota, String precio_cuota, String precio_contado, String precio_credito) {
+    public CuotasVictoria(Integer numero, Integer precio_cuota, Integer precio_contado, Integer precio_credito) {
         try{
-            this.cuota = Integer.valueOf(cuota);
-            this.precio_contado = Integer.valueOf(precio_cuota);
-            this.precio_credito = Integer.valueOf(precio_contado);
+            this.numero = Integer.valueOf(numero);
+            this.precio_cuota = Integer.valueOf(precio_cuota);
+            this.precio_contado = Integer.valueOf(precio_contado);
             this.precio_credito = Integer.valueOf(precio_credito);
         }catch (NumberFormatException ex){
             System.out.println("E R R O R");
@@ -36,12 +31,12 @@ public class CuotasVictoria {
 
     
     
-    public Integer getCuota() {
-        return cuota;
+    public Integer getNumero() {
+        return numero;
     }
 
-    public void setCuota(Integer cuota) {
-        this.cuota = cuota;
+    public void setNumero(Integer numero) {
+        this.numero = numero;
     }
 
     public Integer getPrecio_cuota() {

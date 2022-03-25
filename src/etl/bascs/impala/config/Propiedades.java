@@ -119,7 +119,8 @@ public class Propiedades {
                 propiedades.setProperty("productos", "/WS/webapi/victoria/productos");
                 propiedades.setProperty("marcas", "/WS/webapi/victoria/marcas");
                 propiedades.setProperty("detalle", "/WS/webapi/victoria/productos/");
-                propiedades.setProperty("hilos", "10");
+                propiedades.setProperty("cuotas", "/WS/webapi/victoria/cuotas/");
+                propiedades.setProperty("hilos", "60");
                 break;
             case "SaraComercial":
                 propiedades.setProperty("servidor", "www.saracomercial.com");

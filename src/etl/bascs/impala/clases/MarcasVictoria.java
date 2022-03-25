@@ -21,6 +21,7 @@ public class MarcasVictoria {
     private String nombre;
     public Integer cantidad;
     public Boolean cargado;
+    private Integer marca_id;
     
       public MarcasVictoria(Properties propiedades) {
         this.codigo = codigo;
@@ -54,6 +55,14 @@ public class MarcasVictoria {
         this.cantidad = cantidad;
     }
 
+    public Integer getMarca_id() {
+        return marca_id;
+    }
+
+    public void setMarca_id(Integer marca_id) {
+        this.marca_id = marca_id;
+    }
+
    public void loadJSONConsulta(JSONObject marcasJ){
       
        try{
@@ -67,6 +76,14 @@ public class MarcasVictoria {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }     
    }
-   
+    public JSONObject getJSON(){
+        JSONObject object;
+        object = new JSONObject();
+        object.put("codigo_interno_ws", getCodigo());
+        object.put("nombre", getNombre());
+        object.put("marca_id", getMarca_id());
+        System.out.println("marca_id " + getMarca_id());
+        return object;
+    }
     
 }

@@ -1,6 +1,7 @@
 package bascs.website.clases;
 
 import bascs.website.clases.CuotasSC;
+import etl.bascs.impala.clases.MarcasSC;
 import etl.bascs.impala.main;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -29,6 +30,8 @@ public class ProductoSC{
     
     private String rubro;
     private CuotasSC[] cuotas;
+    private MarcasSC[] marcasSC;
+    private RubrosSC[] rubrosSC;
     
      public ProductoSC(Properties propiedades) {
         this.id = id;
@@ -45,8 +48,12 @@ public class ProductoSC{
             setCodigo((getCodigo() == null ? productoJ.optString("codigo_interno_ws"):getCodigo()));
             setNombre((getNombre() == null ? productoJ.optString("nombre") : getNombre()));
             setDescripcion((getDescripcion() == null ? productoJ.optString("descripcion") : getDescripcion()));
-            setMarca((getMarca() == null ? productoJ.optString("marca") : getMarca()));
-            setRubro((getRubro() == null ? productoJ.optString("rubro") : getRubro()));
+            JSONObject marcaJ = new JSONObject();
+            marcaJ = productoJ.getJSONObject("marca");
+            setMarca((getMarca() == null ? marcaJ.optString("nombre") : getMarca()));
+            JSONObject rubroJ = new JSONObject();
+            rubroJ = productoJ.getJSONObject("rubro");
+            setRubro((getRubro() == null ? rubroJ.optString("nombre") : getRubro()));
               
             cargado = true;
             } catch (JSONException e) {
@@ -68,6 +75,16 @@ public class ProductoSC{
         }
         
     }
+     public MarcasSC obtenerMarca(String codigo){
+        for (MarcasSC marcasSC1 : marcasSC) {
+            if(marcasSC1.getCodigo().equals(codigo)){
+           
+                return marcasSC1;
+            }
+        }
+        return null;
+    }
+     
     public String getCodigo() {
         return codigo;
     }

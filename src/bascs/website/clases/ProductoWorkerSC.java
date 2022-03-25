@@ -67,6 +67,7 @@ public class ProductoWorkerSC extends SwingWorker<ProductoSC[], String> implemen
         return productosSC;
     
     }
+  
 @Override
     protected void done() {
         System.out.println("Productos obtenidos. Se encontraron "+productosSC.length+" producto de la website.");
@@ -86,7 +87,22 @@ public class ProductoWorkerSC extends SwingWorker<ProductoSC[], String> implemen
         this.cantidad = cantidad;
     }
 
-    
+      public ProductoSC obtenerRubro(String codigo){
+        for (ProductoSC productoRubro : productosSC) {
+            if(productoRubro.getCodigo().equals(codigo)){
+                return productoRubro;
+            }
+        }
+        return null;
+    }
+      public ProductoSC obtenerMarca(String codigo){
+        for (ProductoSC productoMarca : productosSC) {
+            if(productoMarca.getCodigo().equals(codigo)){
+                return productoMarca;
+            }
+        }
+        return null;
+    }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String clase = getClass().getName().substring(getClass().getName().lastIndexOf(".")+1, getClass().getName().length()).toUpperCase();

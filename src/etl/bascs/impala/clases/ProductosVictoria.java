@@ -5,8 +5,11 @@
  */
 package etl.bascs.impala.clases;
 
+import bascs.website.clases.RubrosSC;
 import etl.bascs.impala.main;
+import etl.bascs.victoria.clases.ProductoWorkerDetalle;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONArray;
@@ -22,10 +25,20 @@ public class ProductosVictoria {
     private String descripcion;
     private String nombre;
     private String marca;
+    private Double precio_contado;
+    private Integer marca_id;
+    private Integer rubro_id;
+   
     public Boolean cargado;
     
+    public ProductoWorkerDetalle[] cuotad;
     private String rubro;
-    private ProductoCuotasVictoria[] cuotas;
+    public CuotasVictoria[] cuotas;
+
+    public ProductosVictoria() {
+    }
+    
+   
      public ProductosVictoria(Properties propiedades) {
         this.codigo = codigo;
         this.nombre = nombre;
@@ -43,18 +56,19 @@ public class ProductosVictoria {
             setMarca((getMarca() == null ? productoJ.optString("marca") : getMarca()));
             setRubro((getRubro() == null ? productoJ.optString("rubro") : getRubro()));
             
-            cuotas = new ProductoCuotasVictoria[0];
-            if(productoJ.has("cuota")){
-                JSONArray cuota = productoJ.optJSONArray("cuota");
-                cuotas = new ProductoCuotasVictoria[cuota.length()];
+            cuotas = new CuotasVictoria[0];
+            if(productoJ.has("cuotas")){
+                JSONArray cuota = productoJ.optJSONArray("cuotas");
+                cuotas = new CuotasVictoria[cuota.length()];
                 for (int i = 0; i < cuotas.length; i++) {
-                    
-            cuotas[i] = new ProductoCuotasVictoria(cuota.optJSONObject(i).getInt("cuota"),
-                    cuota.optJSONObject(i).getDouble("precio_contado"),
-                    cuota.optJSONObject(i).getDouble("precio_cuota"),
-                    cuota.optJSONObject(i).getDouble("precio_credito"));
+                    System.out.println("ENTRO");
+            cuotas[i] = new CuotasVictoria(cuota.optJSONObject(i).getInt("cuota"),
+                    cuota.optJSONObject(i).getInt("precio_cuota"),
+                    cuota.optJSONObject(i).getInt("precio_contado"),
+                    cuota.optJSONObject(i).getInt("precio_credito"));
                     System.out.println("CUOTAS " + cuotas[i]);
                 }
+                
             }
             
            cargado = true;
@@ -68,8 +82,8 @@ public class ProductosVictoria {
             System.out.println("CODIGO DEL MAESTRO "  + productoJ.optString("codigo_interno_ws"));
             setNombre(productoJ.optString("nombre"));
             setDescripcion(productoJ.optString("descripcion"));
-            setMarca(productoJ.optString("marca"));
-            setRubro(productoJ.optString("rubro"));
+            setMarca_id(productoJ.optInt("marca"));
+            setRubro_id(productoJ.optInt("rubro"));
             cargado = true;
             System.out.println(" " + cargado);
         } catch (JSONException e) {
@@ -117,14 +131,51 @@ public class ProductosVictoria {
         this.rubro = rubro;
     }
 
-    public ProductoCuotasVictoria[] getCuotas() {
+    public CuotasVictoria[] getCuotas() {
         return cuotas;
     }
 
-    public void setCuotas(ProductoCuotasVictoria[] cuotas) {
+    public void setCuotas(CuotasVictoria[] cuotas) {
         this.cuotas = cuotas;
     }
-    
+
+    public Double getPrecio_contado() {
+        return precio_contado;
+    }
+
+    public void setPrecio_contado(Double precio_contado) {
+        this.precio_contado = precio_contado;
+    }
+
+    public Integer getMarca_id() {
+        return marca_id;
+    }
+
+    public void setMarca_id(Integer marca_id) {
+        this.marca_id = marca_id;
+    }
+
+    public Integer getRubro_id() {
+        return rubro_id;
+    }
+
+    public void setRubro_id(Integer rubro_id) {
+        this.rubro_id = rubro_id;
+    }
+   
+    public JSONObject getJSON(){
+        JSONObject object;
+        object = new JSONObject();
+        object.put("codigo_interno_ws", getCodigo());
+        object.put("nombre", getNombre());
+        object.put("marca_id", getMarca_id());
+        object.put("rubro_id", getRubro_id());
+        
+        object.put("precio", getPrecio_contado());
+        System.out.println("rubro_id del jason " + getRubro_id());
+        System.out.println("marca_id del jason " + getMarca_id());
+        return object;
+    }
     
            
 }

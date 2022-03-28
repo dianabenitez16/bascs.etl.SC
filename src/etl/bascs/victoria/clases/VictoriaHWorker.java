@@ -40,7 +40,7 @@ public class VictoriaHWorker extends SwingWorker<ProductosVictoria[], String> im
     public ProductosWorker productoW;
    
     public JLabel estado;
-    public JLabel progess;
+    public JLabel progress;
    
     public VictoriaHWorker(Properties prop){
         productos = new ProductosVictoria[0];
@@ -75,7 +75,7 @@ public class VictoriaHWorker extends SwingWorker<ProductosVictoria[], String> im
         while (hilosIniciados < hilosACorrer) {   
             
             if(hilosCorriendo < hilosMaximo){
-                publish("RUNING");
+                publish("RUNNING");
                 
                 detalleV[hilosIniciados] = new ProductoWorkerDetalle(productoW.get()[hilosIniciados],propiedades);
                 detalleV[hilosIniciados].addPropertyChangeListener(this);
@@ -145,7 +145,7 @@ public class VictoriaHWorker extends SwingWorker<ProductosVictoria[], String> im
                         hilosCorriendo --;
                         setProgress(((hilosFinalizados+1)*100)/hilosACorrer);
                        Integer progress = ((hilosFinalizados+1)*100)/hilosACorrer;
-                        progess.setText("Cargando " + (progress).toString()+"%");
+                        this.progress.setText("Cargando " + (progress).toString()+"%");
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     System.out.println("EX:"+ex.getLocalizedMessage());

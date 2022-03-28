@@ -218,7 +218,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         prendido = true;
         victoriaW = new VictoriaHWorker(getPropiedades());
         victoriaW.estado = lVictoriaEstado;
-        victoriaW.progess = lVictoriaEstado1;
+        victoriaW.progress = lVictoriaEstado1;
         victoriaW.addPropertyChangeListener(this);
         victoriaW.iniciar();
         victoriaW.execute(); 
@@ -546,8 +546,132 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         }
        
    }
+   /*********************RECORRIDOS**************************************/
+   public void rubrosRecorrido(){
+         isClicked = true;        
+        Boolean rubroEliminar;      
+        Integer rubrosOmitidos = 0;
+        
+        // PUT - ACTUALIZA
+        // POST - CREA
+        
+        try{  
+            //RECORRIDO VICTORIA
+            for (RubrosVictoria rubVictoria : rubrosW.get()) {
+                rubroNuevo = true;
+                for (RubrosSC rubSC : rubrosSC.get()) {
+                    if(rubVictoria.getCodigo().equals(rubSC.getCodigo())){
+                        rubroNuevo = false;
+                        if(!rubVictoria.getNombre().equals(rubSC.getNombre())){
+                            System.out.println("VT: "+rubVictoria.getNombre()+"|"+"SC: "+rubSC.getNombre());
+      //                      rubrosWSPUT(rubSC.getId(), rubSC);
+                            
+                        }else{
+                            rubrosOmitidos++;
+                        }
+                    }
+                }
+                
+                if(rubroNuevo){
+                   rubrosWSPOST(rubVictoria);
+                   buscarRubros();
+                   
+                }
+                
+            }
+            
+            //RECORRIDO WEBSERVICE
+            for (RubrosSC rubSC : rubrosSC.get()) {
+                rubroEliminar = true;
+                for (RubrosVictoria rubVictoria : rubrosW.get()) {
+                    if(rubVictoria.getCodigo().equals(rubSC.getCodigo())){
+                        rubroEliminar = false;
+                    }
+                }
+                
+                if(rubroEliminar){
+                    rubrosWSDELETE(rubSC);
+                }
+            }
+            
+            //RECORRIDO VICTORIA PARENT ID
+            for (RubrosVictoria rubVictoria : rubrosW.get()) {
+                for (RubrosSC rubSC : rubrosSC.get()) {
+                    if(rubVictoria.getCodigo().equals(rubSC.getCodigo()) && rubSC.getParent_id() == 0 || rubSC.getParent_id() == null){
+                        if(rubVictoria.getParent_codigo() != null){
+                            if(rubrosSC.obtenerRubro(rubVictoria.getParent_codigo()) != null){
+                                rubVictoria.setParent_id(rubrosSC.obtenerRubro(rubVictoria.getParent_codigo()).getId());
+                                
+                            }else{
+                                System.out.println("PARENT ID: No se encuentra el RUBRO "+rubVictoria.getParent_codigo()+ "en el WS.");
+                                rubVictoria.setParent_id(null);
+                                
+                            }
+                            
+                   //         rubrosWSPUT(rubSC.getId(), rubSC);
+                            
+                        }
+                    }
+                }
+            }
+                
+            System.out.println("RUBROS OMITIDOS: "+rubrosOmitidos);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } 
+   }
    
-   
+   public void marcasRecorrido(){
+        Boolean marcaEliminar;      
+        Integer marcasOmitidos = 0;
+        Boolean marcaNueva = false;
+        // PUT - ACTUALIZA
+        // POST - CREA
+        
+        try{  
+            //RECORRIDO VICTORIA
+            for (MarcasVictoria marVictoria : marcasW.get()) {
+                marcaNueva = true;
+                for (MarcasSC marSC : marcasSC.get()) {
+                    if(marVictoria.getCodigo().equals(marSC.getCodigo())){
+                        marcaNueva = false;
+                        if(!marVictoria.getNombre().equals(marSC.getNombre())){
+                            System.out.println("VT: "+marVictoria.getNombre()+"|"+"SC: "+marSC.getNombre());
+                           }else{
+                            marcasOmitidos++;
+                        }
+                    }
+                }
+                
+                if(marcaNueva){
+                   marcasWSPOST(marVictoria);
+              //     System.out.println("Se insertara a marcas : "+marVictoria.getNombre());
+                   buscarMarcas();
+                }
+                
+            }
+            
+            //RECORRIDO WEBSERVICE ESTO DEBE SER PARA ELIMINAR MARCAS
+            for (MarcasSC marSC : marcasSC.get()) {
+                marcaEliminar = true;
+                for (MarcasVictoria marVictoria : marcasW.get()) {
+                    if(marVictoria.getCodigo().equals(marSC.getCodigo())){
+                        marcaEliminar = false;
+                    }
+                }
+                
+                if(marcaEliminar){
+                    marcasWSDELETE(marSC);
+                }
+            }
+            
+            System.out.println("MARCAS OMITIDAS: "+marcasOmitidos);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }    
+   }
    
     /**/
    public void marcasWSPOST(MarcasVictoria marcasVT){
@@ -564,7 +688,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             hp.setHeader("Retry-After", "120");
             hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
             hp.setHeader("Connection", "keep-alive");
-            hp.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+            hp.setHeader("Authorization", propSC.getProperty("clave"));
             
             HttpResponse resp = hc.execute(hp);
             
@@ -590,22 +714,23 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         } 
    }
-    public void rubrosWSPUT(Integer id, RubrosVictoria rubroVT){
+    public void rubrosWSPUT(Integer id, RubrosSC rubroSC){
+        
         //ACTUALIZAR EN EL WS
         try {
             HttpClient hc = new DefaultHttpClient();
             HttpPut hp = new HttpPut("http://www.saracomercial.com/panel/api/loader/rubros/"+ id);
             
   //          System.out.println("PUT: "+"http://www.saracomercial.com/panel/api/loader/rubros/"+ id);
-            System.out.println("OBJETO PUT: "+rubroVT.getJSON().toString());
+            System.out.println("OBJETO PUT: "+rubroSC.getJSON().toString());
             
-            hp.setEntity(new StringEntity(rubroVT.getJSON().toString(), "UTF-8"));
+            hp.setEntity(new StringEntity(rubroSC.getJSON().toString(), "UTF-8"));
             hp.setHeader("Content-type", "application/json;charset=UTF-8");
             hp.setHeader("Accept", "application/json");
             hp.setHeader("Retry-After", "120");
             hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
             hp.setHeader("Connection", "keep-alive");
-            hp.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+            hp.setHeader("Authorization", propSC.getProperty("clave"));
             
             HttpResponse resp = hc.execute(hp);
             
@@ -645,7 +770,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             hp.setHeader("Retry-After", "120");
             hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
             hp.setHeader("Connection", "keep-alive");
-            hp.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+            hp.setHeader("Authorization", propSC.getProperty("clave"));
             
             HttpResponse resp = hc.execute(hp);
             
@@ -685,7 +810,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             hp.setHeader("Retry-After", "120");
             hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
             hp.setHeader("Connection", "keep-alive");
-            hp.setHeader("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+            hp.setHeader("Authorization", propSC.getProperty("clave"));
             
             HttpResponse resp = hc.execute(hp);
             
@@ -716,6 +841,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         // ELIMINAR DEL WS
     }
    
+    public void marcasWSDELETE(MarcasSC marcaWS){
+        //ELIMINAR DEL WS
+    }
     /**/
         
      
@@ -991,6 +1119,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
            //         System.out.println("EL VALOR DEL DETALLE ES " + tablaContenidoMaestro[(int) table.getValueAt(row, 0)][2].toString());
                     
                     buscarProducto((Producto) tablaContenidoMaestro[(int) table.getValueAt(row, 0)][0]);
+           //         System.out.println("EL VALOR DEL TABLACONTENIDO ES " + tablaContenidoMaestro[(int) table.getValueAt(row, 0)][0].toString());
                 }
                 
             }
@@ -1368,6 +1497,18 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         jLabel7 = new javax.swing.JLabel();
         btRubrosSCPost = new javax.swing.JButton();
         btRubrosSCDelete = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        tCodigoM = new javax.swing.JTextField();
+        tNombreM = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        tCodigoR = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        tNombreR = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         tProductoEstado = new javax.swing.JTextField();
         cbOrigen = new javax.swing.JComboBox<>();
 
@@ -1885,7 +2026,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaMaestroLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addGroup(pConsultaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(sProductoSeparador2, javax.swing.GroupLayout.DEFAULT_SIZE, 995, Short.MAX_VALUE)
+                    .addComponent(sProductoSeparador2, javax.swing.GroupLayout.DEFAULT_SIZE, 999, Short.MAX_VALUE)
                     .addGroup(pConsultaMaestroLayout.createSequentialGroup()
                         .addComponent(lMaestroCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(5, 5, 5)
@@ -1992,7 +2133,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                 .addComponent(tPrestashopFileExport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(tPrestashopWorkerEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
                                 .addComponent(bPrestashopAbrir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(5, 5, 5)
                                 .addComponent(bPrestashopLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2004,10 +2145,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGroup(pConsultaPrestashopLayout.createSequentialGroup()
                     .addGap(628, 628, 628)
                     .addComponent(lMaestroCantidad2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(277, Short.MAX_VALUE)))
+                    .addContainerGap(281, Short.MAX_VALUE)))
             .addGroup(pConsultaPrestashopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaPrestashopLayout.createSequentialGroup()
-                    .addContainerGap(287, Short.MAX_VALUE)
+                    .addContainerGap(291, Short.MAX_VALUE)
                     .addComponent(lMaestroCantidad7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(618, 618, 618)))
         );
@@ -2131,7 +2272,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                             .addComponent(tGeneralesEnviosDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tGeneralesEnviosSumar, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(lBASCSServidor2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(660, Short.MAX_VALUE))
+                .addContainerGap(662, Short.MAX_VALUE))
         );
         pCGeneralesLayout.setVerticalGroup(
             pCGeneralesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2241,7 +2382,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(lImpalaUsuario7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(tVictoriaProductosDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(179, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2300,28 +2441,23 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tVictoriaMet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tVictoriaSServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(33, 33, 33)
                         .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pCBASCSLayout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addComponent(lBASCSPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pCBASCSLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lBASCSBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lBASCSBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lBASCSPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pCBASCSLayout.createSequentialGroup()
-                                .addComponent(tVictoriaPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(43, 43, 43)
-                                .addComponent(lBASCSPuerto1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pCBASCSLayout.createSequentialGroup()
-                                .addComponent(tVictoriaRubro, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lBASCSPuerto2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(tVictoriaPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tVictoriaRubro, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(42, 42, 42)
+                        .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lBASCSPuerto2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lBASCSPuerto1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tVictoriaHilos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tVictoriaMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 301, Short.MAX_VALUE))
+                        .addGap(0, 327, Short.MAX_VALUE))
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(10, 10, 10))
             .addGroup(pCBASCSLayout.createSequentialGroup()
@@ -2335,22 +2471,20 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGap(5, 5, 5)
                 .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lBASCSServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tVictoriaSServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lBASCSPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tVictoriaSServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lBASCSPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(tVictoriaPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lBASCSPuerto1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(tVictoriaMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(22, 22, 22)
-                .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tVictoriaRubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lBASCSBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lBASCSPuerto2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(tVictoriaHilos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tVictoriaMet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lBASCSInstancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(pCBASCSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tVictoriaMet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lBASCSInstancia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lBASCSBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tVictoriaRubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lBASCSPuerto2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tVictoriaHilos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -2778,7 +2912,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(lImpalaUsuario5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(tJellyfishRecursoProductoMaestro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(490, Short.MAX_VALUE))
+                .addContainerGap(497, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2856,7 +2990,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(lImpalaUsuario9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(tJellyfishOpcionesRecargo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(840, Short.MAX_VALUE))
+                .addContainerGap(847, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3065,7 +3199,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             pDebugLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pDebugLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addComponent(spDebug, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
+                .addComponent(spDebug, javax.swing.GroupLayout.DEFAULT_SIZE, 999, Short.MAX_VALUE)
                 .addGap(5, 5, 5))
         );
         pDebugLayout.setVerticalGroup(
@@ -3352,9 +3486,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addGap(5, 5, 5)
                         .addComponent(tVictoriaCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
-                        .addComponent(lVictoriaEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(38, 38, 38)
-                        .addComponent(lVictoriaEstado1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lVictoriaEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(lVictoriaEstado1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(bVictoriaLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -4279,55 +4413,115 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
+        jLabel8.setText("Marca: ");
+
+        jLabel9.setText("Codigo:");
+
+        jLabel10.setText("Codigo:");
+
+        jLabel11.setText("Rubro:");
+
+        jButton1.setText("Buscar");
+
+        jButton2.setText("Actualizar");
+
+        jButton3.setText("Buscar");
+
+        jButton4.setText("Actualizar");
+
         javax.swing.GroupLayout pMyRSCLayout = new javax.swing.GroupLayout(pMyRSC);
         pMyRSC.setLayout(pMyRSCLayout);
         pMyRSCLayout.setHorizontalGroup(
             pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pMyRSCLayout.createSequentialGroup()
-                .addGap(411, 411, 411)
-                .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btRubrosSCCargar, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-                    .addComponent(btRubrosSCPost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btRubrosSCDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tRubrosSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(86, 86, 86))
-            .addGroup(pMyRSCLayout.createSequentialGroup()
-                .addGap(155, 155, 155)
+                .addGap(158, 158, 158)
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(232, 232, 232))
-            .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pMyRSCLayout.createSequentialGroup()
-                    .addGap(30, 30, 30)
-                    .addComponent(tMarcasSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(606, Short.MAX_VALUE)))
+                .addGap(234, 234, 234))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pMyRSCLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pMyRSCLayout.createSequentialGroup()
+                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tCodigoM, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                            .addComponent(tNombreM))
+                        .addGap(18, 18, 18)
+                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 298, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pMyRSCLayout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(tMarcasSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(btRubrosSCPost, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                                .addComponent(btRubrosSCDelete, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btRubrosSCCargar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(27, 27, 27)))
+                .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tRubrosSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pMyRSCLayout.createSequentialGroup()
+                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tCodigoR)
+                            .addComponent(tNombreR, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(60, 60, 60)))
+                .addGap(37, 37, 37))
         );
         pMyRSCLayout.setVerticalGroup(
             pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pMyRSCLayout.createSequentialGroup()
                 .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pMyRSCLayout.createSequentialGroup()
-                        .addGap(39, 39, 39)
+                        .addContainerGap()
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(167, 167, 167)
-                        .addComponent(btRubrosSCCargar)
-                        .addGap(18, 18, 18)
-                        .addComponent(btRubrosSCPost)
-                        .addGap(18, 18, 18)
-                        .addComponent(btRubrosSCDelete))
+                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pMyRSCLayout.createSequentialGroup()
+                                .addGap(116, 116, 116)
+                                .addComponent(btRubrosSCCargar)
+                                .addGap(31, 31, 31)
+                                .addComponent(btRubrosSCPost)
+                                .addGap(31, 31, 31)
+                                .addComponent(btRubrosSCDelete))
+                            .addGroup(pMyRSCLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tRubrosSC, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tMarcasSC, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(pMyRSCLayout.createSequentialGroup()
-                        .addGap(48, 48, 48)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(tRubrosSC, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(78, Short.MAX_VALUE))
-            .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pMyRSCLayout.createSequentialGroup()
-                    .addGap(97, 97, 97)
-                    .addComponent(tMarcasSC, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(77, Short.MAX_VALUE)))
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(tCodigoM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)
+                    .addComponent(tCodigoR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tNombreM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel11)
+                    .addComponent(tNombreR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton4))
+                .addGap(28, 28, 28))
         );
 
         tpWebsite.addTab("Marcas/Rubros", pMyRSC);
@@ -4696,78 +4890,7 @@ buscarProductoWebsite();        // TODO add your handling code here:
     }//GEN-LAST:event_tVictoriaMarcaActionPerformed
 
     private void btRubrosVTPostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRubrosVTPostActionPerformed
-        isClicked = true;        
-        Boolean rubroEliminar;      
-        Integer rubrosOmitidos = 0;
-        
-        // PUT - ACTUALIZA
-        // POST - CREA
-        
-        try{  
-            //RECORRIDO VICTORIA
-            for (RubrosVictoria rubVictoria : rubrosW.get()) {
-                rubroNuevo = true;
-                for (RubrosSC rubSC : rubrosSC.get()) {
-                    if(rubVictoria.getCodigo().equals(rubSC.getCodigo())){
-                        rubroNuevo = false;
-                        if(!rubVictoria.getNombre().equals(rubSC.getNombre())){
-                            System.out.println("VT: "+rubVictoria.getNombre()+"|"+"SC: "+rubSC.getNombre());
-             //               rubrosWSPUT(rubSC.getId(), rubVictoria);
-                            
-                        }else{
-                            rubrosOmitidos++;
-                        }
-                    }
-                }
-                
-                if(rubroNuevo){
-                   rubrosWSPOST(rubVictoria);
-                   buscarRubros();
-                   
-                }
-                
-            }
-            
-            //RECORRIDO WEBSERVICE
-            for (RubrosSC rubSC : rubrosSC.get()) {
-                rubroEliminar = true;
-                for (RubrosVictoria rubVictoria : rubrosW.get()) {
-                    if(rubVictoria.getCodigo().equals(rubSC.getCodigo())){
-                        rubroEliminar = false;
-                    }
-                }
-                
-                if(rubroEliminar){
-                    rubrosWSDELETE(rubSC);
-                }
-            }
-            
-            //RECORRIDO VICTORIA PARENT ID
-            for (RubrosVictoria rubVictoria : rubrosW.get()) {
-                for (RubrosSC rubSC : rubrosSC.get()) {
-                    if(rubVictoria.getCodigo().equals(rubSC.getCodigo()) && rubSC.getParent_id() == 0 || rubSC.getParent_id() == null){
-                        if(rubVictoria.getParent_codigo() != null){
-                            if(rubrosSC.obtenerRubro(rubVictoria.getParent_codigo()) != null){
-                                rubVictoria.setParent_id(rubrosSC.obtenerRubro(rubVictoria.getParent_codigo()).getId());
-                                
-                            }else{
-                                System.out.println("PARENT ID: No se encuentra el RUBRO "+rubVictoria.getParent_codigo()+ "en el WS.");
-                                rubVictoria.setParent_id(null);
-                                
-                            }
-                            
-                            rubrosWSPUT(rubSC.getId(), rubVictoria);
-                            
-                        }
-                    }
-                }
-            }
-                
-            System.out.println("RUBROS OMITIDOS: "+rubrosOmitidos);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }       
+rubrosRecorrido();            
     }//GEN-LAST:event_btRubrosVTPostActionPerformed
 
     private void btRubrosSCCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRubrosSCCargarActionPerformed
@@ -4776,56 +4899,7 @@ buscarRubrosSC();
     }//GEN-LAST:event_btRubrosSCCargarActionPerformed
 
     private void btRubrosSCPostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRubrosSCPostActionPerformed
-        Boolean marcaEliminar;      
-        Integer marcasOmitidos = 0;
-        Boolean marcaNueva = false;
-        // PUT - ACTUALIZA
-        // POST - CREA
-        
-        try{  
-            //RECORRIDO VICTORIA
-            for (MarcasVictoria marVictoria : marcasW.get()) {
-                marcaNueva = true;
-                for (MarcasSC marSC : marcasSC.get()) {
-                    if(marVictoria.getCodigo().equals(marSC.getCodigo())){
-                        marcaNueva = false;
-                        if(!marVictoria.getNombre().equals(marSC.getNombre())){
-                            System.out.println("VT: "+marVictoria.getNombre()+"|"+"SC: "+marSC.getNombre());
-                           }else{
-                            marcasOmitidos++;
-                        }
-                    }
-                }
-                
-                if(marcaNueva){
-                   marcasWSPOST(marVictoria);
-              //     System.out.println("Se insertara a marcas : "+marVictoria.getNombre());
-                   buscarMarcas();
-                }
-                
-            }
-            /*
-            //RECORRIDO WEBSERVICE ESTO DEBE SER PARA ELIMINAR MARCAS
-            for (RubrosSC rubSC : rubrosSC.get()) {
-                marcaEliminar = true;
-                for (RubrosVictoria rubVictoria : rubrosW.get()) {
-                    if(rubVictoria.getCodigo().equals(rubSC.getCodigo())){
-                        marcaEliminar = false;
-                    }
-                }
-                
-                if(marcaEliminar){
-                    rubrosWSDELETE(rubSC);
-                }
-            }
-            */
-            //RECORRIDO VICTORIA PARENT ID
-           
-            System.out.println("MARCAS OMITIDAS: "+marcasOmitidos);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }    
+marcasRecorrido();    
     }//GEN-LAST:event_btRubrosSCPostActionPerformed
 
     private void btRubrosSCDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRubrosSCDeleteActionPerformed
@@ -4838,7 +4912,7 @@ buscarRubrosSC();
             //System.out.println(" url " + url.toString());
             HttpURLConnection http = (HttpURLConnection)url.openConnection();
             http.setRequestMethod("DELETE");
-            http.setRequestProperty("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+            http.setRequestProperty("Authorization", propSC.getProperty("clave"));
             
             
             
@@ -4988,13 +5062,21 @@ buscarRubrosSC();
     private javax.swing.JComboBox<String> cbOrigen;
     private javax.swing.JButton debugRubro;
     private javax.swing.JTextArea debugRubros;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -5159,6 +5241,8 @@ buscarRubrosSC();
     private javax.swing.JScrollPane spProductoDetallesTecnicos2;
     private javax.swing.JScrollPane spProductoImagenes;
     private javax.swing.JScrollPane spProductoImagenes2;
+    private javax.swing.JTextField tCodigoM;
+    private javax.swing.JTextField tCodigoR;
     private javax.swing.JTextField tGeneralesEnviosDesde;
     private javax.swing.JTextField tGeneralesEnviosHasta;
     private javax.swing.JTextField tGeneralesEnviosImporte;
@@ -5192,6 +5276,8 @@ buscarRubrosSC();
     private javax.swing.JTable tMarcaSC;
     private javax.swing.JScrollPane tMarcasSC;
     private javax.swing.JTable tMarcasVictoria;
+    private javax.swing.JTextField tNombreM;
+    private javax.swing.JTextField tNombreR;
     private javax.swing.JTextField tPrestashopExportColumnas;
     private javax.swing.JTextField tPrestashopExportLineas;
     private javax.swing.JTextField tPrestashopFileExport;
@@ -5705,7 +5791,8 @@ buscarRubrosSC();
                 }
             
             }
-     } }
+      }
+    }
 
     public Integer extraeEntero(String cadena){
         System.out.println("ORIG: "+cadena);

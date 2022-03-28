@@ -50,11 +50,7 @@ public class CuotasWorker extends SwingWorker<ProductoCuotasVictoria[], String >
                     propiedades.getProperty("puerto"),
                   propiedades.getProperty("metodoGET"),
                     propiedades.getProperty("cuotas")+cuotaV.getCodigo());
-            System.out.println("SERVIDOR DT " +propiedades.getProperty("servidor"));
-            System.out.println("PUERTO DT " +propiedades.getProperty("puerto"));
-            System.out.println("METODO DT " + propiedades.getProperty("metodoGET"));
-            System.out.println("DETALLE DT " + propiedades.getProperty("cuotas")+cuotaV.getCodigo());
-                      if(!consultaV.getError()){
+                       if(!consultaV.getError()){
                 if(consultaV.getJson().has("cuotas")){ 
                     JSONObject cuotaJ = consultaV.getJson().getJSONObject("cuotas");
                     cuotaV.loadJSONConsulta(cuotaJ);
@@ -105,7 +101,6 @@ public class CuotasWorker extends SwingWorker<ProductoCuotasVictoria[], String >
      public ProductoCuotasVictoria obtenerRubro(String codigo){
         for (ProductoCuotasVictoria rubrosSC1 : cuotasV) {
             if(rubrosSC1.getCodigo().equals(codigo)){
-                System.out.println("CUOTAS" + codigo); 
                 return rubrosSC1;
             }
         }

@@ -26,6 +26,7 @@ public class ProductoSC{
     private String descripcion;
     private String nombre;
     private String marca;
+    
     public Boolean cargado;
     
     private String rubro;

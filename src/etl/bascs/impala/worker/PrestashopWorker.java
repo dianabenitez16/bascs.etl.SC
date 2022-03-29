@@ -44,6 +44,11 @@ public class PrestashopWorker extends SwingWorker<Producto[], String> implements
         propiedades = prop;
         detalleWs = new DetalleWorker[0];
     }
+    /********************NOTAS ******************
+     AÑADIR UN AVISO AL USUSARIO AL PRINCIPIO DE RUBROS
+     JAVA SINCRONYZED LO MISMO QUE INVOKE LATER
+     
+     */
     
     public void iniciar(){
         maestroW = new MaestroWorker(propiedades);

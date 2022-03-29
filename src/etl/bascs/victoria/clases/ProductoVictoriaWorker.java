@@ -23,7 +23,7 @@ import org.json.JSONObject;
  * @author User
  */ 
 
-public class ProductoDetalleVictoriaWorker extends SwingWorker<ProductoVictoria, String> implements PropertyChangeListener{
+public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String> implements PropertyChangeListener{
     public ConsultaHttpVictoria consulta;
     public ProductoVictoria productosV;
     public Properties propiedades;
@@ -33,7 +33,7 @@ public class ProductoDetalleVictoriaWorker extends SwingWorker<ProductoVictoria,
     public Boolean error;
     public JSONObject productoJ;
     
-    public ProductoDetalleVictoriaWorker(ProductoVictoria producto,Properties propVictoria) {
+    public ProductoVictoriaWorker(ProductoVictoria producto,Properties propVictoria) {
         this.producto = producto;
         this.propiedades = propVictoria;
         this.error = false;
@@ -145,6 +145,5 @@ public class ProductoDetalleVictoriaWorker extends SwingWorker<ProductoVictoria,
         return object;
     }
 }
- 
   
     

@@ -35,7 +35,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     public ProductoVictoria[] productosFinalizados;
     
     public ProductosVictoriaWorker productosWorker;
-    public ProductoDetalleVictoriaWorker[] productosDetalleWorker;
+    public ProductoVictoriaWorker[] productosDetalleWorker;
     public CuotasVictoriaWorker[] productosCuotasWorker;
     
     public JLabel estado;
@@ -43,7 +43,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
    
     public VictoriaWorker(Properties prop){
         productosFinalizados = new ProductoVictoria[0];
-        productosDetalleWorker = new ProductoDetalleVictoriaWorker[0];
+        productosDetalleWorker = new ProductoVictoriaWorker[0];
         productosCuotasWorker = new CuotasVictoriaWorker[0];
         
         propiedades = prop;
@@ -72,7 +72,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
             hilosACorrer = productosWorker.get().length;   
             
             productosFinalizados = new ProductoVictoria[hilosACorrer];
-            productosDetalleWorker = new ProductoDetalleVictoriaWorker[hilosACorrer];
+            productosDetalleWorker = new ProductoVictoriaWorker[hilosACorrer];
             productosCuotasWorker = new CuotasVictoriaWorker[hilosACorrer];
             
             setProgress(0);
@@ -81,22 +81,21 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                 if(hilosCorriendo < hilosMaximo){
                     publish("RUNNING");
                     
-                    productosDetalleWorker[hilosIniciados] = new ProductoDetalleVictoriaWorker(productosWorker.get()[hilosIniciados],propiedades);
+                    productosDetalleWorker[hilosIniciados] = new ProductoVictoriaWorker(productosWorker.get()[hilosIniciados],propiedades);
                     productosDetalleWorker[hilosIniciados].addPropertyChangeListener(this);
                     productosDetalleWorker[hilosIniciados].setId(hilosIniciados);
                     productosDetalleWorker[hilosIniciados].execute();
                     
-                  /*  
                     productosCuotasWorker[hilosIniciados] = new CuotasVictoriaWorker(productosWorker.get()[hilosIniciados],propiedades);
                     productosCuotasWorker[hilosIniciados].addPropertyChangeListener(this);
                     productosCuotasWorker[hilosIniciados].setId(hilosIniciados);
                     productosCuotasWorker[hilosIniciados].execute();
-                    */
+                    
                     
                     hilosIniciados++;
                     hilosCorriendo++;
                 }else{
-                    Thread.sleep(10000);
+                    Thread.sleep(500);
                 }
                 if(isCancelled()){
                     break;
@@ -126,7 +125,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     public void cancelar(Boolean mayInterruptIfRunning){
         super.cancel(mayInterruptIfRunning);
         productosWorker.cancel(mayInterruptIfRunning);
-        for (ProductoDetalleVictoriaWorker detalleW : productosDetalleWorker) {
+        for (ProductoVictoriaWorker detalleW : productosDetalleWorker) {
             if(detalleW != null){
                 detalleW.cancel(mayInterruptIfRunning);
             }
@@ -145,7 +144,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
         evt.setPropagationId(clase);
         
         if("ProductoVictoriaWorker".equals(source)){
-            ProductoDetalleVictoriaWorker detalle = (ProductoDetalleVictoriaWorker) evt.getSource();
+            ProductoVictoriaWorker detalle = (ProductoVictoriaWorker) evt.getSource();
 
             //System.out.println(clase+">> "+source+" > "+value+" | ID: "+detalle.id);
 
@@ -175,7 +174,8 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                 }
 
             }
-        } /*else if("CuotasVictoriaWorker".equals(source)){
+        }else if("CuotasVictoriaWorker".equals(source)){
+            /*
             CuotasVictoriaWorker cuotas = (ProductoVictoriaWorker) evt.getSource();
 
             //System.out.println(clase+">> "+source+" > "+value+" | ID: "+detalle.id);
@@ -206,8 +206,8 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                 }
 
             }
-        }
         */
+        }
     }
 
     public Integer getHilosMaximo() {

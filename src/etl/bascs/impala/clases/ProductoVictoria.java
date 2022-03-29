@@ -7,7 +7,7 @@ package etl.bascs.impala.clases;
 
 import bascs.website.clases.RubrosSC;
 import etl.bascs.impala.main;
-import etl.bascs.victoria.clases.ProductoDetalleVictoriaWorker;
+import etl.bascs.victoria.clases.ProductoVictoriaWorker;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -31,7 +31,7 @@ public class ProductoVictoria {
    
     public Boolean cargado;
     
-    public ProductoDetalleVictoriaWorker[] cuotad;
+    public ProductoVictoriaWorker[] cuotad;
     private String rubro;
     public CuotasVictoria[] cuotas;
 

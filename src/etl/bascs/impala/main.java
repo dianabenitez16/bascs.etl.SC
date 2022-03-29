@@ -24,7 +24,7 @@ import etl.bascs.impala.clases.MarcasSC;
 import etl.bascs.impala.clases.ProductoCuotasVictoria;
 import etl.bascs.impala.worker.PrestashopWorker;
 import etl.bascs.victoria.clases.CuotasVictoriaWorker;
-import etl.bascs.victoria.clases.ProductoDetalleVictoriaWorker;
+import etl.bascs.victoria.clases.ProductoVictoriaWorker;
 import etl.bascs.victoria.clases.ProductosVictoriaWorker;
 import etl.bascs.victoria.clases.RubrosVictoriaWorker;
 import etl.bascs.victoria.clases.VictoriaWorker;
@@ -122,7 +122,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public PrestashopWorker prestashopW;
     public MaestroWorker maestroW;
     public DetalleWorker detalleW;
-    public ProductoDetalleVictoriaWorker productoW;
+    public ProductoVictoriaWorker productoW;
     
     public RubrosVictoria rubVt;
     public RubrosSC rubScl;
@@ -238,7 +238,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }
     public void buscarProductoVictoria (ProductoVictoria productoV){
        if(!tProductoIDV.getText().isEmpty()){
-            productoW = new ProductoDetalleVictoriaWorker(productoV, getPropiedades());
+            productoW = new ProductoVictoriaWorker(productoV, getPropiedades());
             productoW.addPropertyChangeListener(this);
             productoW.execute();
         }else{
@@ -4951,9 +4951,10 @@ marcasRecorrido();
         
             buscarRubrosVictoria();
             buscarMarcasVictoria();
-            
+            buscarProductosVictoria();
             buscarRubrosSC();
             buscarMarcasSC();
+            buscarProductoWebsite();
             
             
             while (!rubrosW.isDone() || !rubrosSC.isDone() || !marcasSC.isDone() || !marcasW.isDone()) {
@@ -5502,7 +5503,6 @@ marcasRecorrido();
                 
             }else{
                 lVictoriaEstado.setText("Cargando "+value+"%");
-                System.out.println("\tVictoriaWorker "+value+"%");
             }
         }else if("ProductosVictoriaWorker".equals(source)){
             if(value.equals("STARTED")){

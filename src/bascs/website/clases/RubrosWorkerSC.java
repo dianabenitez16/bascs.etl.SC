@@ -8,7 +8,7 @@ package bascs.website.clases;
 import etl.bascs.impala.clases.RubrosVictoria;
 import etl.bascs.impala.json.ConsultaHttpSC;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
-import etl.bascs.victoria.clases.RubrosWorker;
+import etl.bascs.victoria.clases.RubrosVictoriaWorker;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
@@ -61,7 +61,7 @@ public class RubrosWorkerSC extends SwingWorker<RubrosSC[], String> implements P
                            
                          }
         } catch (Exception ex) {
-            Logger.getLogger(RubrosWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RubrosVictoriaWorker.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("_ERROR" + ex);
         }
         return rubrosSC;

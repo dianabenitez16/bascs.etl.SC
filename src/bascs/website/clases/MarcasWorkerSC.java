@@ -5,7 +5,7 @@
  */
 package bascs.website.clases;
 
-import etl.bascs.victoria.clases.RubrosWorker;
+import etl.bascs.victoria.clases.RubrosVictoriaWorker;
 import etl.bascs.impala.clases.MarcasSC;
 import etl.bascs.impala.json.ConsultaHttpSC;
 import java.beans.PropertyChangeEvent;
@@ -64,7 +64,7 @@ public class MarcasWorkerSC extends SwingWorker<MarcasSC[], String> implements P
                         }
                          
                 } catch (Exception ex) {
-            Logger.getLogger(RubrosWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RubrosVictoriaWorker.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("_ERROR" + ex);
         }
         return marcasSC;

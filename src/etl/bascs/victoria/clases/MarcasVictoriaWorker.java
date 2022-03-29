@@ -23,7 +23,7 @@ import org.json.JSONObject;
  *
  * @author User
  */
-    public class MarcasWorker extends SwingWorker<MarcasVictoria[], String> implements PropertyChangeListener {
+    public class MarcasVictoriaWorker extends SwingWorker<MarcasVictoria[], String> implements PropertyChangeListener {
 
     public ConsultaHttpVictoria consultaV;
     public ConsultaHttpSC consultaS;
@@ -35,12 +35,12 @@ import org.json.JSONObject;
     public MarcasVictoria marcaV;
     public JSONObject marcasJ;
     
-    public MarcasWorker(Properties prop){
+    public MarcasVictoriaWorker(Properties prop){
        marcasV = new MarcasVictoria[0];
        propiedades = prop;
     }
 
-    public MarcasWorker() {
+    public MarcasVictoriaWorker() {
      //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -87,7 +87,7 @@ import org.json.JSONObject;
                 System.out.println("_ERROR");
             }
         } catch (Exception ex) {
-            Logger.getLogger(RubrosWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RubrosVictoriaWorker.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("_ERROR" + ex);
         }
         return marcasV;

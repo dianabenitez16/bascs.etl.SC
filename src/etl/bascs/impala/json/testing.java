@@ -8,7 +8,6 @@ package etl.bascs.impala.json;
 import etl.bascs.impala.clases.MarcasVictoria;
 import etl.bascs.impala.clases.RubrosVictoria;
 import etl.bascs.impala.main;
-import etl.bascs.victoria.clases.MarcasWorker;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;

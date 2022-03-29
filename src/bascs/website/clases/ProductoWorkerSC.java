@@ -6,7 +6,6 @@
 package bascs.website.clases;
 
 import etl.bascs.impala.json.ConsultaHttpSC;
-import etl.bascs.victoria.clases.RubrosWorker;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
@@ -61,7 +60,7 @@ public class ProductoWorkerSC extends SwingWorker<ProductoSC[], String> implemen
                         }
                          
                 } catch (Exception ex) {
-            Logger.getLogger(RubrosWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductoWorkerSC.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("_ERROR" + ex);
         }
         return productosSC;

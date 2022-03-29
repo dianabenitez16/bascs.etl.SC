@@ -19,7 +19,7 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class CuotasWorker extends SwingWorker<ProductoCuotasVictoria[], String > implements PropertyChangeListener{
+public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], String > implements PropertyChangeListener{
     public ConsultaHttpVictoria consultaV;
     public Properties propiedades;
     public Integer cantidad;
@@ -29,13 +29,13 @@ public class CuotasWorker extends SwingWorker<ProductoCuotasVictoria[], String >
     public ProductoCuotasVictoria[] cuotasV;
     public Boolean error;
     
-    public CuotasWorker(ProductoCuotasVictoria cuota, Properties propVictoria){
+    public CuotasVictoriaWorker(ProductoCuotasVictoria cuota, Properties propVictoria){
        this.cuotaV = cuota;
        this.propiedades = propVictoria;
        this.error = false;
     }
 
-    public CuotasWorker(Properties prop) {
+    public CuotasVictoriaWorker(Properties prop) {
      cuotasV = new ProductoCuotasVictoria[0];
      propiedades = prop;//To change body of generated methods, choose Tools | Templates.
     }

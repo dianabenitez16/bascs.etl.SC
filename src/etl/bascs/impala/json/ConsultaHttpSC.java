@@ -60,14 +60,15 @@ public class ConsultaHttpSC {
         if(get){
         try {
             url = new URL(protocolo+"://"+servidor+marcas);
+           /*
             System.out.println("PROT " + protocolo);
             System.out.println("SER " + servidor);
             System.out.println("RECUR " + marcas);
-            
+            */
             con = url.openConnection();
             
             con.setRequestProperty("Access-Control-Request-Method", metodo);
-            System.out.println("METODO " + metodo);
+            //System.out.println("METODO " + metodo);
             con.setRequestProperty("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
             con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:27.0) Gecko/20100101 Firefox/27.0.2 Waterfox/27.0");
             //con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");

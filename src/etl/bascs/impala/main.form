@@ -3287,20 +3287,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="tpVictoria" max="32767" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="tpVictoria" alignment="0" pref="1006" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="tpVictoria" pref="660" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="tpVictoria" alignment="0" pref="660" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -3728,10 +3720,6 @@
                                       <Component id="lMaestroCantidad1" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                                       <Component id="tVictoriaCantidad" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                                      <Component id="lVictoriaEstado" min="-2" pref="316" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                      <Component id="lVictoriaEstado1" min="-2" pref="123" max="-2" attributes="0"/>
                                       <EmptySpace max="32767" attributes="0"/>
                                       <Component id="bVictoriaLimpiar" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -3739,7 +3727,7 @@
                                       <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                                       <Component id="bVictoriaBuscar" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="spMaestroProductos1" alignment="0" pref="999" max="32767" attributes="0"/>
+                                  <Component id="spMaestroProductos1" alignment="0" pref="991" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                           </Group>
@@ -3749,24 +3737,20 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lMaestroCantidad1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="tVictoriaCantidad" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                          <Component id="bVictoriaLimpiar" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="bVictoriaBuscar" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="Cargar" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lMaestroCantidad1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tVictoriaCantidad" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                      <Component id="bVictoriaLimpiar" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="bVictoriaBuscar" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="Cargar" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="lVictoriaEstado" min="-2" pref="19" max="-2" attributes="0"/>
-                                  <Component id="lVictoriaEstado1" min="-2" pref="19" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="sProductoSeparador5" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="spMaestroProductos1" pref="579" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="spMaestroProductos1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -3898,261 +3882,9 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CargarActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="lVictoriaEstado">
-                    </Component>
-                    <Component class="javax.swing.JLabel" name="lVictoriaEstado1">
-                    </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JPanel" name="pConsultaPrestashop1">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Tahoma" size="10" style="0"/>
-                    </Property>
-                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[960, 710]"/>
-                    </Property>
-                  </Properties>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="Prestashop">
-                        <Property name="tabTitle" type="java.lang.String" value="Prestashop"/>
-                      </JTabbedPaneConstraints>
-                    </Constraint>
-                  </Constraints>
-
-                  <Layout>
-                    <DimensionLayout dim="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="spPrestashop1" alignment="0" max="32767" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" alignment="1" attributes="0">
-                                              <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                                              <Component id="tPrestashopFileExport1" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Component id="tPrestashopWorkerEstado1" min="-2" pref="200" max="-2" attributes="0"/>
-                                              <EmptySpace pref="121" max="32767" attributes="0"/>
-                                              <Component id="bPrestashopAbrir1" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                                              <Component id="bPrestashopLimpiar1" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                                              <Component id="bPrestashopProcesar1" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Component id="sProductoSeparador6" alignment="1" max="32767" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                          </Group>
-                          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="628" max="-2" attributes="0"/>
-                                  <Component id="lMaestroCantidad12" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="281" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="103" rootIndex="2" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace pref="291" max="32767" attributes="0"/>
-                                  <Component id="lMaestroCantidad13" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="618" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                      </Group>
-                    </DimensionLayout>
-                    <DimensionLayout dim="1">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tPrestashopFileExport1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tPrestashopWorkerEstado1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                      <Component id="bPrestashopAbrir1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="bPrestashopLimpiar1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="bPrestashopProcesar1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                              <Component id="sProductoSeparador6" min="-2" pref="10" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="spPrestashop1" pref="581" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="331" max="-2" attributes="0"/>
-                                  <Component id="lMaestroCantidad12" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="277" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="103" rootIndex="2" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace pref="287" max="32767" attributes="0"/>
-                                  <Component id="lMaestroCantidad13" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="321" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                      </Group>
-                    </DimensionLayout>
-                  </Layout>
-                  <SubComponents>
-                    <Component class="javax.swing.JButton" name="bPrestashopProcesar1">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Tahoma" size="10" style="0"/>
-                        </Property>
-                        <Property name="text" type="java.lang.String" value="Procesar"/>
-                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[80, 20]"/>
-                        </Property>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bPrestashopProcesar1ActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="bPrestashopLimpiar1">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Tahoma" size="10" style="0"/>
-                        </Property>
-                        <Property name="text" type="java.lang.String" value="Limpiar"/>
-                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[80, 20]"/>
-                        </Property>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bPrestashopLimpiar1ActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JSeparator" name="sProductoSeparador6">
-                    </Component>
-                    <Container class="javax.swing.JScrollPane" name="spPrestashop1">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Tahoma" size="10" style="0"/>
-                        </Property>
-                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[900, 480]"/>
-                        </Property>
-                      </Properties>
-                      <AuxValues>
-                        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                      </AuxValues>
-
-                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                      <SubComponents>
-                        <Component class="javax.swing.JTable" name="tbPrestashop1">
-                          <Properties>
-                            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                              <Font name="Tahoma" size="10" style="0"/>
-                            </Property>
-                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    tablaHeaderMaestro&#xa;)" type="code"/>
-                            </Property>
-                            <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-                              <TableColumnModel selectionModel="0">
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                              </TableColumnModel>
-                            </Property>
-                            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
-                            </Property>
-                          </Properties>
-                        </Component>
-                      </SubComponents>
-                    </Container>
-                    <Component class="javax.swing.JButton" name="bPrestashopAbrir1">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Tahoma" size="10" style="0"/>
-                        </Property>
-                        <Property name="text" type="java.lang.String" value="Abrir archivo"/>
-                        <Property name="enabled" type="boolean" value="false"/>
-                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[100, 20]"/>
-                        </Property>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bPrestashopAbrir1ActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JTextField" name="tPrestashopFileExport1">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Tahoma" size="10" style="0"/>
-                        </Property>
-                        <Property name="enabled" type="boolean" value="false"/>
-                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[300, 20]"/>
-                        </Property>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JLabel" name="lMaestroCantidad12">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Cantidad"/>
-                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[100, 25]"/>
-                        </Property>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JLabel" name="lMaestroCantidad13">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Cantidad"/>
-                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[100, 25]"/>
-                        </Property>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel2">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Tahoma" size="10" style="0"/>
-                        </Property>
-                        <Property name="text" type="java.lang.String" value="Ruta"/>
-                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[80, 20]"/>
-                        </Property>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JLabel" name="tPrestashopWorkerEstado1">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Tahoma" size="10" style="0"/>
-                        </Property>
-                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[150, 20]"/>
-                        </Property>
-                      </Properties>
-                    </Component>
-                  </SubComponents>
-                </Container>
-                <Container class="javax.swing.JPanel" name="pMyR">
+                <Container class="javax.swing.JPanel" name="pVictoriaMyR">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                       <JTabbedPaneConstraints tabName="Marcas/Rubros">
@@ -4167,7 +3899,7 @@
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="411" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="btRubrosVTPost" pref="133" max="32767" attributes="0"/>
+                                  <Component id="btRubrosVTPost" pref="125" max="32767" attributes="0"/>
                                   <Component id="btRubrosVTCargar" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -4185,7 +3917,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                                   <Component id="jScrollPane2" min="-2" pref="373" max="-2" attributes="0"/>
-                                  <EmptySpace pref="606" max="32767" attributes="0"/>
+                                  <EmptySpace pref="598" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -4215,7 +3947,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="97" max="-2" attributes="0"/>
                                   <Component id="jScrollPane2" min="-2" pref="354" max="-2" attributes="0"/>
-                                  <EmptySpace pref="182" max="32767" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -4282,7 +4014,7 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JPanel" name="pDebugRYM">
+                <Container class="javax.swing.JPanel" name="pVictoriaDebug">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                       <JTabbedPaneConstraints tabName="Debug">
@@ -4296,7 +4028,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jScrollPane3" min="-2" pref="849" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="160" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="32767" attributes="0"/>
@@ -4311,7 +4043,7 @@
                               <Component id="jScrollPane3" min="-2" pref="464" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="debugRubro" min="-2" pref="51" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="100" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -4339,6 +4071,80 @@
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="debugRubroActionPerformed"/>
                       </Events>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JPanel" name="pVictoriaOperaciones">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="Operaciones">
+                        <Property name="tabTitle" type="java.lang.String" value="Operaciones"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jScrollPane4" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="bVictoriaSincronizar" min="-2" pref="120" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="lVictoriaWorkerEstado" pref="702" max="32767" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="lVictoriaEstado" min="-2" pref="123" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="bVictoriaSincronizar" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="lVictoriaWorkerEstado" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="lVictoriaEstado" min="-2" pref="25" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jScrollPane4" min="-2" pref="470" max="-2" attributes="0"/>
+                              <EmptySpace pref="116" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JButton" name="bVictoriaSincronizar">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Sincronizar"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bVictoriaSincronizarActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Container class="javax.swing.JScrollPane" name="jScrollPane4">
+                      <AuxValues>
+                        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                      </AuxValues>
+
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                      <SubComponents>
+                        <Component class="javax.swing.JTextArea" name="taVictoriaSincronizar">
+                          <Properties>
+                            <Property name="columns" type="int" value="20"/>
+                            <Property name="rows" type="int" value="5"/>
+                          </Properties>
+                        </Component>
+                      </SubComponents>
+                    </Container>
+                    <Component class="javax.swing.JLabel" name="lVictoriaEstado">
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lVictoriaWorkerEstado">
                     </Component>
                   </SubComponents>
                 </Container>

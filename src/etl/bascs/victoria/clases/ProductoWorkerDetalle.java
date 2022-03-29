@@ -8,7 +8,7 @@ package etl.bascs.victoria.clases;
 
 
 import etl.bascs.impala.clases.Producto;
-import etl.bascs.impala.clases.ProductoVictoria;
+import etl.bascs.impala.clases.ProductosVictoria;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -23,17 +23,16 @@ import org.json.JSONObject;
  * @author User
  */ 
 
-public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String> implements PropertyChangeListener{
+public class ProductoWorkerDetalle extends SwingWorker<ProductosVictoria, String> implements PropertyChangeListener{
     public ConsultaHttpVictoria consulta;
-    public ProductoVictoria productosV;
+    public ProductosVictoria productosV;
     public Properties propiedades;
     public String codigo;
     public Integer id;
-    public ProductoVictoria producto;
+    public ProductosVictoria producto;
     public Boolean error;
     public JSONObject productoJ;
-    
-    public ProductoVictoriaWorker(ProductoVictoria producto,Properties propVictoria) {
+    public ProductoWorkerDetalle(ProductosVictoria producto,Properties propVictoria) {
         this.producto = producto;
         this.propiedades = propVictoria;
         this.error = false;
@@ -41,7 +40,7 @@ public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String
 
     
     @Override
-    protected ProductoVictoria doInBackground(){
+    protected ProductosVictoria doInBackground(){
  
         try {
             setProgress(0);
@@ -50,12 +49,12 @@ public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String
                     propiedades.getProperty("puerto"),
                   propiedades.getProperty("metodoGET"),
                     propiedades.getProperty("detalle")+producto.getCodigo());
-             //System.out.println("DETALLE DT " + propiedades.getProperty("detalle")+producto.getCodigo());
+             System.out.println("DETALLE DT " + propiedades.getProperty("detalle")+producto.getCodigo());
                       if(!consulta.getError()){
                 if(consulta.getJson().has("items")){ 
                      productoJ = consulta.getJson().getJSONObject("items");
                     producto.loadJSONConsulta(productoJ);
-                    //System.out.println("productoJ " + productoJ.toString());
+                    System.out.println("productoJ " + productoJ.toString());
                     setProgress(100);
                 }else{
                     error = true;
@@ -125,7 +124,7 @@ public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String
     public JSONObject getJSON(){
         JSONObject object;
         object = new JSONObject();
-      ProductoVictoria  pro = new ProductoVictoria();
+      ProductosVictoria  pro = new ProductosVictoria();
         for (int i = 0; i < productoJ.length(); i++) {
         
         object.put("codigo_interno_ws", getCodigo());

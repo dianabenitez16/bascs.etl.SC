@@ -7,7 +7,7 @@ package etl.bascs.impala.clases;
 
 import bascs.website.clases.RubrosSC;
 import etl.bascs.impala.main;
-import etl.bascs.victoria.clases.ProductoVictoriaWorker;
+import etl.bascs.victoria.clases.ProductoWorkerDetalle;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -20,7 +20,7 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class ProductoVictoria {
+public class ProductosVictoria {
     private String codigo;
     private String descripcion;
     private String nombre;
@@ -31,14 +31,22 @@ public class ProductoVictoria {
    
     public Boolean cargado;
     
-    public ProductoVictoriaWorker[] cuotad;
+    public ProductoWorkerDetalle[] cuotad;
     private String rubro;
     public CuotasVictoria[] cuotas;
 
-    public ProductoVictoria() {
+    public ProductosVictoria() {
     }
     
-    
+   
+     public ProductosVictoria(Properties propiedades) {
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.marca = marca;
+        this.rubro = rubro;
+ 
+    }     
     public void loadJSONConsulta(JSONObject productoJ){
         try{
             

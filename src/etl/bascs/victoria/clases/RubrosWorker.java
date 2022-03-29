@@ -5,10 +5,8 @@
  */
 package etl.bascs.victoria.clases;
 
-import bascs.website.clases.RubrosSC;
 import etl.bascs.impala.clases.Producto;
-import etl.bascs.impala.clases.ProductoVictoria;
-import etl.bascs.impala.json.ConsultaHttp;
+import etl.bascs.impala.clases.RubrosVictoria;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -25,78 +23,82 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class ProductosVictoriaWorker extends SwingWorker<ProductoVictoria[], String>implements PropertyChangeListener{
+public class RubrosWorker extends SwingWorker<RubrosVictoria[], String> implements PropertyChangeListener {
+
     public ConsultaHttpVictoria consulta;
     private Properties propiedades;
     private Integer cantidad;
-
     
-    private ProductoVictoria[] productos;
-    private ProductoVictoria producto;
-
-    public ProductosVictoriaWorker(Properties prop) {
-        productos = new ProductoVictoria[0];
-        propiedades = prop;
-        
-    }  
+    public RubrosVictoria[] rubrosV;
+    public RubrosVictoria rubroV;
+    public JSONObject rubroJ;
     
+    public RubrosWorker(Properties prop){
+       rubrosV = new RubrosVictoria[0];
+       propiedades = prop;
+    }
+
+    public RubrosWorker() {
+     //To change body of generated methods, choose Tools | Templates.
+    }
+            
     @Override
-    protected ProductoVictoria[] doInBackground() throws Exception {
-        try {
-            setProgress(0);
-            consulta = new ConsultaHttpVictoria("http",
-                   propiedades.getProperty("servidor"),
-                    propiedades.getProperty("puerto"),
-                  propiedades.getProperty("metodoGET"),
-                    propiedades.getProperty("productos"));
-                    
-            //Thread.sleep(5000); //JUST FOR TESTING
-            if(!consulta.getError()){
+    protected RubrosVictoria[] doInBackground(){
+        try{
+             setProgress(0);
+             consulta = new ConsultaHttpVictoria("http",
+             propiedades.getProperty("servidor"),
+             propiedades.getProperty("puerto"),
+             propiedades.getProperty("metodoGET"),
+             propiedades.getProperty("rubros")
+             );
+        if(!consulta.getError()){
                 if(consulta.getJson().has("total")){
                     cantidad = consulta.getJson().getInt("total");
                 }else{
                     publish("No se encontraron productos en el maestro.");
                 }
-               if(cantidad > 0){
+                if(cantidad > 0){
                     if(consulta.getJson().has("items")){
                         JSONArray respuesta = consulta.getJson().getJSONArray("items");
-                        productos = new ProductoVictoria[respuesta.length()];
-                       for (int i = 0; i < respuesta.length(); i++) {
+                        rubrosV = new RubrosVictoria[respuesta.length()];
+                         for (int i = 0; i < respuesta.length(); i++) {
                             Iterator keys = respuesta.getJSONObject(i).keys();
                             String key = keys.next().toString();
                             JSONObject productoJ = respuesta.getJSONObject(i).getJSONObject(key);
-                            producto = new ProductoVictoria();
-                            producto.loadJSONConsulta(productoJ);
-                            productos[i] = producto;
+                            rubroV = new RubrosVictoria(propiedades);
+                            rubroV.loadJSONConsulta(productoJ);
+                            rubrosV[i] = rubroV;
                             setProgress(((i+1)*100)/cantidad);
                             //Thread.sleep(50); //JUST FOR TESTING
                             //publish(producto.getCodigo());
-                        
-                             }
+                        }
                     }else{
-                        publish("No se encontraron productos en el maestro.");
+                        publish("No se encontraron rubros en el maestro.");
                     }
                 }else{
-                    publish("No se encontraron productos en el maestro.");
+                    publish("No se encontraron rubros en el maestro.");
                 }
             }else{
                 publish("Error");
                 System.out.println("_ERROR");
             }
         } catch (Exception ex) {
-            Logger.getLogger(ProductosVictoriaWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RubrosWorker.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("_ERROR" + ex);
         }
-        return productos;//To change body of generated methods, choose Tools | Templates.
+        return rubrosV;
+    
     }
- @Override
+   @Override
     protected void done() {
-        System.out.println("_Productos obtenido. Se encontraron "+productos.length+" productos de Victoria.");
+        System.out.println("_Rubros obtenido. Se encontraron "+rubrosV.length+" rubros.");
     }
     
     @Override
     protected void process(List<String> prods) {
         for (String prod : prods) {
-     //       System.out.println("EL PROD ES ETO "+prod);
+            System.out.println(prod);
         }
     }
     public Integer getCantidad() {
@@ -106,7 +108,8 @@ public class ProductosVictoriaWorker extends SwingWorker<ProductoVictoria[], Str
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
-     @Override
+    
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String clase = getClass().getName().substring(getClass().getName().lastIndexOf(".")+1, getClass().getName().length()).toUpperCase();
         String source = evt.getSource().toString().substring(evt.getSource().toString().lastIndexOf(".")+1, evt.getSource().toString().indexOf("@"));
@@ -115,4 +118,8 @@ public class ProductosVictoriaWorker extends SwingWorker<ProductoVictoria[], Str
         
         System.out.println(clase+">> "+source+" > "+value);
     }
+    
+    
+    
+    
 }

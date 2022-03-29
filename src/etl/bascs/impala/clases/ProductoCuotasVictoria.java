@@ -18,7 +18,7 @@ import org.json.JSONObject;
  */
 public class ProductoCuotasVictoria {
     private Integer numero;
-    private ProductoVictoria producto;
+    private String codigo;
     private Double precio_contado;
     private Double precio_cuota;
     private Double precio_credito;
@@ -46,19 +46,19 @@ public class ProductoCuotasVictoria {
            
     }
     
-    public void loadJSONConsulta(JSONObject cuotasJ){
+   public void loadJSONConsulta(JSONObject cuotasJ){
       
-        try{
-            //setCodigo((getCodigo() == null ? cuotasJ.optString("codigo_interno_ws"):getCodigo())); 
-            setNumero((getNumero() == null ? cuotasJ.optInt("numero"):getNumero())); 
-            setPrecio_cuota((getPrecio_cuota() == null ? cuotasJ.optDouble("precio_cuota"):getPrecio_cuota())); 
-            setPrecio_contado((getPrecio_contado() == null ? cuotasJ.optDouble("precio_contado"):getPrecio_contado())); 
-            setPrecio_credito((getPrecio_credito() == null ? cuotasJ.optDouble("precio_credito"):getPrecio_credito())); 
+       try{
+          setCodigo((getCodigo() == null ? cuotasJ.optString("codigo_interno_ws"):getCodigo())); 
+          setNumero((getNumero() == null ? cuotasJ.optInt("numero"):getNumero())); 
+          setPrecio_cuota((getPrecio_cuota() == null ? cuotasJ.optDouble("precio_cuota"):getPrecio_cuota())); 
+          setPrecio_contado((getPrecio_contado() == null ? cuotasJ.optDouble("precio_contado"):getPrecio_contado())); 
+          setPrecio_credito((getPrecio_credito() == null ? cuotasJ.optDouble("precio_credito"):getPrecio_credito())); 
           
-            cargado = true;
-            cantidad = cuotasJ.length();
+          cargado = true;
+          cantidad = cuotasJ.length();
         
-        } catch (JSONException e) {
+          } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }     
    } 
@@ -94,12 +94,12 @@ public class ProductoCuotasVictoria {
         this.precio_credito = precio_credito;
     }
 
-    public ProductoVictoria getProducto() {
-        return producto;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public void setProducto(ProductoVictoria producto) {
-        this.producto = producto;
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
     
     

@@ -60,16 +60,14 @@ public class ConsultaHttpVictoria {
 private void conectar() {
         try {
             url = new URL(protocolo+"://"+servidor+":"+puerto+productos);
-            /*
             System.out.println("PROT " + protocolo);
             System.out.println("SER " + servidor);
             System.out.println("PUER " + puerto);
             System.out.println("RECUR " + productos);
-            */
             con = url.openConnection();
             
             con.setRequestProperty("Access-Control-Request-Method", metodoGET);
-            //System.out.println(" METODO " + metodoGET);
+            System.out.println(" METODO " + metodoGET);
             con.setRequestProperty("Authorization", "None");
             con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:27.0) Gecko/20100101 Firefox/27.0.2 Waterfox/27.0");
             //con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");

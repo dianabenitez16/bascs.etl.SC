@@ -27,12 +27,14 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     private Integer hilosFinalizados;
     private Integer hilosConError;
     private Integer hilosACorrer;
+    public Boolean paused = false;
     
     private String codigosConError;
-    
+    public Boolean limit_reached;
     public Properties propiedades;
     
     public ProductoVictoria[] productosFinalizados;
+    public ProductoVictoria[] productosCargados;
     
     public ProductosVictoriaWorker productosWorker;
     public ProductoVictoriaWorker[] productosDetalleWorker;
@@ -62,9 +64,9 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
       codigosConError = "";
      
     }
-
+  
     @Override
-    protected ProductoVictoria[] doInBackground() {
+    protected synchronized ProductoVictoria[] doInBackground() {
         try {
             publish("LOADING");
             productosWorker.execute();
@@ -77,7 +79,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
             
             setProgress(0);
             while (hilosIniciados < hilosACorrer) {
-                
+                limit_reached = false;
                 if(hilosCorriendo < hilosMaximo){
                     publish("RUNNING");
                     
@@ -94,9 +96,13 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                     
                     hilosIniciados++;
                     hilosCorriendo++;
+                    limit_reached = false;
                 }else{
-                    Thread.sleep(500);
+                   
+                    Thread.sleep(10000);
+                   
                 }
+                
                 if(isCancelled()){
                     break;
                 }
@@ -114,8 +120,10 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
             Logger.getLogger(VictoriaWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+                   
         return productosFinalizados;
-    }
+        
+    }    
     
     @Override
     protected void done() {
@@ -155,9 +163,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                     }else{
                         productosFinalizados[hilosFinalizados] = productosDetalleWorker[detalle.id].get();
                         
-                        
-                        
-                        //System.out.println("Producto: "+detalleV[detalle.id].get().getCodigo());
+                        System.out.println("Producto: "+productosDetalleWorker[detalle.id].get().getCodigo());
                         if(productosDetalleWorker[detalle.id].getError()){
                             hilosConError++;
                             codigosConError += detalle.producto.getCodigo()+", ";

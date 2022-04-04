@@ -27,7 +27,6 @@ public class ConsultaHttpSC {
     private BufferedReader in;
     private StringBuilder response;
     private JSONArray jason ;
-    private JSONObject jobson;
     
     public Boolean get = true;
     
@@ -57,14 +56,9 @@ public class ConsultaHttpSC {
     
        
     private void conectar() {
-        if(get){
         try {
             url = new URL(protocolo+"://"+servidor+marcas);
-           /*
-            System.out.println("PROT " + protocolo);
-            System.out.println("SER " + servidor);
-            System.out.println("RECUR " + marcas);
-            */
+           
             con = url.openConnection();
             
             con.setRequestProperty("Access-Control-Request-Method", metodo);
@@ -88,8 +82,7 @@ public class ConsultaHttpSC {
             
             jason = new JSONArray(response.toString());
            
-           
-              error = false;
+            error = false;
           
             debugMessage = con.getHeaderField(0);
             
@@ -112,7 +105,7 @@ public class ConsultaHttpSC {
             //System.out.println("EX: "+ex.getMessage());
         }
         }
-    }
+    
     
     public JSONArray getJason() {
         return jason;
@@ -121,18 +114,7 @@ public class ConsultaHttpSC {
     public void setJason(JSONArray jason) {
         this.jason = jason;
     }
-
-    public JSONObject getJobson() {
-        return jobson;
-    }
-
-    public void setJobson(JSONObject jobson) {
-        this.jobson = jobson;
-    }
-
-    
-    
-    public URL getUrl() {
+     public URL getUrl() {
         return url;
     }
 

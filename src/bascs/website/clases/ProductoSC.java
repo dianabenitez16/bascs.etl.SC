@@ -26,6 +26,8 @@ public class ProductoSC{
     private String descripcion;
     private String nombre;
     private String marca;
+    private Double precio;
+    private Integer stock;
     
     public Boolean cargado;
     
@@ -39,16 +41,25 @@ public class ProductoSC{
         this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.precio = precio;
         this.marca = marca;
         this.rubro = rubro;
  
     }     
+
+    public ProductoSC() {
+    }
+     
+    
     public void loadJSONConsulta(JSONObject productoJ){
         try{
    //         setCodigo((getId() == null ? productoJ.optInt("id"):getId()));
+            setId((getId() == null ? productoJ.optInt("id"):getId()));
             setCodigo((getCodigo() == null ? productoJ.optString("codigo_interno_ws"):getCodigo()));
             setNombre((getNombre() == null ? productoJ.optString("nombre") : getNombre()));
             setDescripcion((getDescripcion() == null ? productoJ.optString("descripcion") : getDescripcion()));
+            setPrecio((getPrecio() == null ? productoJ.optDouble("precio") : getPrecio()));
+            setStock((getStock() == null ? productoJ.optInt("stock") : getStock()));
             JSONObject marcaJ = new JSONObject();
             marcaJ = productoJ.getJSONObject("marca");
             setMarca((getMarca() == null ? marcaJ.optString("nombre") : getMarca()));
@@ -57,6 +68,7 @@ public class ProductoSC{
             setRubro((getRubro() == null ? rubroJ.optString("nombre") : getRubro()));
               
             cargado = true;
+           
             } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -102,6 +114,14 @@ public class ProductoSC{
         this.descripcion = descripcion;
     }
 
+    public Double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(Double precio) {
+        this.precio = precio;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -134,7 +154,22 @@ public class ProductoSC{
         this.id = id;
     }
 
- 
-    
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public Boolean getCargado() {
+        return cargado;
+    }
+
+    public void setCargado(Boolean cargado) {
+        this.cargado = cargado;
+    }
+
+  
            
 }

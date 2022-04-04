@@ -15,6 +15,9 @@ public class CuotasVictoria {
     private Integer precio_contado;
     private Integer precio_credito;
 
+    public CuotasVictoria() {
+    }
+
     
 
     public CuotasVictoria(Integer numero, Integer precio_cuota, Integer precio_contado, Integer precio_credito) {

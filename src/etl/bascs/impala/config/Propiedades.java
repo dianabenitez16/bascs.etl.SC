@@ -120,7 +120,8 @@ public class Propiedades {
                 propiedades.setProperty("marcas", "/WS/webapi/victoria/marcas");
                 propiedades.setProperty("detalle", "/WS/webapi/victoria/productos/");
                 propiedades.setProperty("cuotas", "/WS/webapi/victoria/cuotas/");
-                propiedades.setProperty("hilos", "60");
+                propiedades.setProperty("hilos", "200");
+                propiedades.setProperty("stock", "10");
                 break;
             case "SaraComercial":
                 propiedades.setProperty("servidor", "www.saracomercial.com");
@@ -129,7 +130,7 @@ public class Propiedades {
                 propiedades.setProperty("rubros", "/panel/api/loader/rubros");
                 propiedades.setProperty("marcas", "/panel/api/loader/marcas");
                 propiedades.setProperty("productos", "/panel/api/loader/productos");
-                propiedades.setProperty("detalle", "/api/loader/productos/");
+                propiedades.setProperty("detalle", "/panel/api/loader/productos/");
                 propiedades.setProperty("clave", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
                 propiedades.setProperty("hilos", "10");
                 break;

@@ -32,6 +32,7 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
     public ProductoCuotasVictoria cuotaV;
     public ProductoCuotasVictoria[] cuotasV;
     public Boolean error;
+    public Boolean cargado;
     
     public CuotasVictoriaWorker(ProductoVictoria producto, Properties propVictoria){
        this.producto = producto;
@@ -40,6 +41,9 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
        this.error = false;
     }
 
+    public CuotasVictoriaWorker() {
+    }
+    
     public CuotasVictoriaWorker(Properties prop) {
         cuotasV = new ProductoCuotasVictoria[0];
         propiedades = prop;
@@ -60,14 +64,18 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
                     Integer cantidad = consultaV.getJson().getInt("total");
                     //JSONObject cuotaJ = consultaV.getJson().getJSONObject("cuotas");
                     JSONArray cuotas = consultaV.getJson().getJSONArray("cuotas"); 
-                    
-                    
-                    cuotasV = new ProductoCuotasVictoria[cantidad];
+                     cuotasV = new ProductoCuotasVictoria[cantidad];
                     for (int i = 1; i <= cantidad; i++) {
+                        
                         cuotaV.loadJSONConsulta(cuotas.getJSONObject(i));
                         cuotaV.setProducto(producto);
                         cuotasV[i] = cuotaV;
                         System.out.println("CUOTAS WORKER: PRODUCTO: "+cuotaV.getProducto().getCodigo() + " CUOTA: "+cuotaV.getNumero());
+                        if(cantidad > 0){
+                            cargado = true;
+                        }else{
+                            cargado = false;
+                        }
                     }
                     
                     setProgress(100);

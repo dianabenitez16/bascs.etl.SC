@@ -14,8 +14,8 @@ public class CuotasSC {
     private Integer producto_id;
     private Integer cuotas;
     private Integer posee_descuento;
-    private Double importe_cuota;
-    private Double porcentaje_descuento;
+    private Integer importe_cuota;
+    private Integer porcentaje_descuento;
 
     public Integer getId() {
         return id;
@@ -49,19 +49,19 @@ public class CuotasSC {
         this.posee_descuento = posee_descuento;
     }
 
-    public Double getImporte_cuota() {
+    public Integer getImporte_cuota() {
         return importe_cuota;
     }
 
-    public void setImporte_cuota(Double importe_cuota) {
+    public void setImporte_cuota(Integer importe_cuota) {
         this.importe_cuota = importe_cuota;
     }
 
-    public Double getPorcentaje_descuento() {
+    public Integer getPorcentaje_descuento() {
         return porcentaje_descuento;
     }
 
-    public void setPorcentaje_descuento(Double porcentaje_descuento) {
+    public void setPorcentaje_descuento(Integer porcentaje_descuento) {
         this.porcentaje_descuento = porcentaje_descuento;
     }
     

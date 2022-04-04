@@ -50,28 +50,31 @@ public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String
                     propiedades.getProperty("puerto"),
                   propiedades.getProperty("metodoGET"),
                     propiedades.getProperty("detalle")+producto.getCodigo());
-             //System.out.println("DETALLE DT " + propiedades.getProperty("detalle")+producto.getCodigo());
-                      if(!consulta.getError()){
-                if(consulta.getJson().has("items")){ 
-                     productoJ = consulta.getJson().getJSONObject("items");
+            System.out.println("SER: " + propiedades.getProperty("servidor"));
+            System.out.println("PUER: " + propiedades.getProperty("puerto"));
+            System.out.println("MET: " + propiedades.getProperty("metodoGET"));
+            System.out.println("DETALLE: " + propiedades.getProperty("detalle"));
+           
+            if (!consulta.getError()) {
+                if (consulta.getJson().has("items")) {
+                    productoJ = consulta.getJson().getJSONObject("items");
                     producto.loadJSONConsulta(productoJ);
-                    //System.out.println("productoJ " + productoJ.toString());
                     setProgress(100);
-                }else{
+                } else {
                     error = true;
-                    publish("No se obtuvo información al consultar: "+producto.getCodigo());
-         //           System.out.println("_No se obtubo información al consultar: "+producto.getCodigo());
+                    publish("No se obtubo información al consultar: " + producto.getCodigo());
+                    //System.out.println("_No se obtubo información al consultar: "+producto.getCodigo());
                 }
-            }else{
+            } else {
                 error = true;
-                publish(consulta.getErrorMessage()+": "+producto.getCodigo());
+                publish(consulta.getErrorMessage() + ": " + producto.getCodigo());
                 //System.out.println("_"+consulta.getErrorMessage()+": "+producto.getCodigo());
             }
             //Thread.sleep(5000); //JUST FOR TESTING
         } catch (Exception e) {
             error = true;
             //System.out.println("_Error desconocido al consultar: "+producto.getCodigo());
-            publish("Error desconocido al consultar: "+producto.getCodigo());
+            publish("Error desconocido al consultar: " + producto.getCodigo() + e);
             //Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
         return producto;

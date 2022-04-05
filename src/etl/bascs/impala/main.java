@@ -23,7 +23,6 @@ import bascs.website.clases.ProductoWorkerSC;
 import bascs.website.clases.RubrosWorkerSC;
 import etl.bascs.impala.clases.CuotasVictoria;
 import etl.bascs.impala.clases.MarcasSC;
-import etl.bascs.impala.clases.ProductoCuotasVictoria;
 import etl.bascs.impala.worker.PrestashopWorker;
 import etl.bascs.victoria.clases.CuotasVictoriaWorker;
 import etl.bascs.victoria.clases.ProductoVictoriaWorker;
@@ -45,7 +44,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
@@ -56,8 +54,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -75,20 +71,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
-import javax.swing.table.DefaultTableModel;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 
 /**
@@ -222,6 +212,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         
         tProductoEstado.setText("");
     }
+    
     public void sincronizarVictoria(){
         Properties propiedades = new Properties();
         propiedades.putAll(propVictoria);
@@ -647,7 +638,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         rubroNuevo = false;
                         if(!rubVictoria.getNombre().equals(rubSC.getNombre())){
                             System.out.println("RUBROS [PUT] (Nombres diferentes) \t VT: "+rubVictoria.getNombre()+"|"+"SC: "+rubSC.getNombre());
-      //                      rubrosWSPUT(rubSC.getId(), rubSC);
+                            rubrosWSPUT(rubSC.getId(), rubSC);
                             
                         }else{
                             rubrosOmitidos++;
@@ -692,7 +683,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                 
                             }
                             System.out.println("RUBROS [PUT] (No tiene Codigo Parent) \t VT: "+rubVictoria.getNombre()+"|"+"SC: "+rubSC.getNombre());
-                   //         rubrosWSPUT(rubSC.getId(), rubSC);
+                            //rubrosWSPUT(rubSC.getId(), rubSC);
                             
                         }
                     }
@@ -779,7 +770,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         productoNuevo = false;
                         if(!podVictoria.getNombre().equals(podSC.getNombre())){
                             System.out.println("VT: "+podVictoria.getNombre()+"|"+"SC: "+podSC.getNombre());
-
+                            
                         }else{
                             productosOmitidos++;
                         }
@@ -808,14 +799,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
                 }
                 taVictoriaSincronizar.append("Productos a ser inser: " + podVictoria.getJSON());
+                
                 if(productoNuevo){
-                           ProductosWSPOST(podVictoria);
-                taVictoriaSincronizar.append("SE INSERTARON " + podVictoria.getCodigo());
-
+                    ProductosWSPOST(podVictoria);
+                    taVictoriaSincronizar.append("SE INSERTARON " + podVictoria.getCodigo());
                 }
 
                 taVictoriaSincronizar.append("\nSe omitieron " + productosOmitidos + " PRODUCTOS.");
-                
                 taVictoriaSincronizar.append("\nSe completo la sincronizacion de PRODUCTOS.");
 
             }
@@ -5350,7 +5340,8 @@ buscarMaestro();
                         lVictoriaEstado.setText("Cancelado");
 
                     }else{
-                        productosFinalizados = new ProductoVictoria[victoriaW.productosFinalizados.length];
+                        //productosFinalizados = new ProductoVictoria[victoriaW.productosFinalizados.length];
+                        
                         try {
                             productosFinalizados = victoriaW.get();
                         } catch (InterruptedException ex) {
@@ -5358,23 +5349,36 @@ buscarMaestro();
                         } catch (ExecutionException ex) {
                             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        for (ProductoVictoria productosFinalizado : productosFinalizados) {
-                            System.out.println("CODIGO " + productosFinalizado.getCodigo());
-                        }
-                        if(victoriaW.getHilosConError()>0){
-                            lVictoriaEstado.setText("Finalizado con errores.");
+                        
+                        if(productosFinalizados != null){
+                            /*
+                            for (ProductoVictoria productosFinalizado : productosFinalizados) {
+                                //
+                                //System.out.println("CODIGO " + productosFinalizado.getCodigo());
+                            }
+                            */
 
-                            taVictoriaSincronizar.append("\nSe finalizo el proceso de VICTORIA WORKER con "+victoriaW.getHilosConError()+" errores. ("+victoriaW.getCodigosConError().substring(0, victoriaW.getCodigosConError().length()-2)+")");
-                            taVictoriaSincronizar.append("\nConsidere disminuir la cantidad de hilos en simultaneo.");
+                            if(victoriaW.getHilosConError()>0){
+                                lVictoriaEstado.setText("Finalizado con errores.");
+
+                                taVictoriaSincronizar.append("\nSe finalizo el proceso de VICTORIA WORKER con "+victoriaW.getHilosConError()+" errores. ("+victoriaW.getCodigosConError().substring(0, victoriaW.getCodigosConError().length()-2)+")");
+                                taVictoriaSincronizar.append("\nConsidere disminuir la cantidad de hilos en simultaneo.");
+                            }else{
+                                lVictoriaEstado.setText("Listo.");
+                                taVictoriaSincronizar.append("\nSe finalizo el proceso de VICTORIA WORKER.");
+                            }
+
+                            
+                            // CONSULTAR WEB SERVICE ETC.
+                            productosRecorrido();
+                            rubrosRecorrido();
+                            marcasRecorrido();
+                            
                         }else{
-                            lVictoriaEstado.setText("Listo.");
-                            taVictoriaSincronizar.append("\nSe finalizo el proceso de VICTORIA WORKER.");
+                            taVictoriaSincronizar.append("\nNo se pudo obtener los productos finalizados VICTORIA WORKER.");
+                            lVictoriaEstado.setText("Error");
                         }
                         
-                        // CONSULTAR WEB SERVICE ETC.
-                        productosRecorrido();
-                        rubrosRecorrido();
-                        marcasRecorrido();
                     }
                 }else{
                     taVictoriaSincronizar.append("\nAlgun error no previsto");
@@ -5445,27 +5449,32 @@ buscarMaestro();
                         if(rubrosW.isCancelled()){
                             System.out.println("Proceso de busqueda cancelado.");
                         }else{
-                            tVictoriaCantidad.setText(rubrosW.getCantidad().toString());
-                            tablaContenidoRubros = new Object[rubrosW.getCantidad()][tablaHeaderRubros.length];
+                            if(rubrosW != null){
+                                tVictoriaCantidad.setText(rubrosW.getCantidad().toString());
+                                tablaContenidoRubros = new Object[rubrosW.getCantidad()][tablaHeaderRubros.length];
 
-                            int i = 0;
-                            for (RubrosVictoria rubros : rubrosW.get()) {
-                             
-                                tablaContenidoRubros[i][0] = rubros; 
-                                tablaContenidoRubros[i][1] = i; 
-                                tablaContenidoRubros[i][2] = rubros.getCodigo();
-                                tablaContenidoRubros[i][3] = rubros.getNombre();
-                                tablaContenidoRubros[i][4] = rubros.getParent_codigo();
-                                
-                              i++;
-                            }   
-                            cargarTablaRubrosVictoria(tablaContenidoRubros);
-                            tProductoEstado.setText(rubrosW.consulta.getErrorMessage());
-                            appendMensaje("RESPUESTA: "+ rubrosW.consulta.getDebugMessage()+ " | "+ rubrosW.consulta.getJson().getJSONArray("items").getJSONObject(1)); 
-                            appendMensaje("Se obtuvieron "+rubrosW.getCantidad()+" registros.");
-                        
-                        
+                                int i = 0;
+                                for (RubrosVictoria rubros : rubrosW.get()) {
+
+                                    tablaContenidoRubros[i][0] = rubros; 
+                                    tablaContenidoRubros[i][1] = i; 
+                                    tablaContenidoRubros[i][2] = rubros.getCodigo();
+                                    tablaContenidoRubros[i][3] = rubros.getNombre();
+                                    tablaContenidoRubros[i][4] = rubros.getParent_codigo();
+
+                                  i++;
+                                }   
+                                cargarTablaRubrosVictoria(tablaContenidoRubros);
+                                tProductoEstado.setText(rubrosW.consulta.getErrorMessage());
+                                appendMensaje("RESPUESTA: "+ rubrosW.consulta.getDebugMessage()+ " | "+ rubrosW.consulta.getJson().getJSONArray("items").getJSONObject(1)); 
+                                appendMensaje("Se obtuvieron "+rubrosW.getCantidad()+" registros.");
+                            }else{
+                                appendMensaje("Se obtuvieron 0 registros. Verifique el funcionamiento del WS de Victoria.");
                             }
+                            
+                        
+                        
+                        }
                         }} catch (InterruptedException | ExecutionException | JSONException ex){
                     System.out.println("Error desconocido: "+rubrosW.consulta.getDebugMessage());
                     System.err.println(ex.getMessage());

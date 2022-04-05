@@ -37,7 +37,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     
     public ProductosVictoriaWorker productosWorker;
     public ProductoVictoriaWorker[] productosDetalleWorker;
-    public CuotasVictoriaWorker[] productosCuotasWorker;
+    //public CuotasVictoriaWorker[] productosCuotasWorker; // se deshabilita porque el worker de DETALLE ya trae las cuotas
     
     public JLabel estado;
     public JLabel progress;
@@ -45,7 +45,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     public VictoriaWorker(Properties prop){
         productosFinalizados = new ProductoVictoria[0];
         productosDetalleWorker = new ProductoVictoriaWorker[0];
-        productosCuotasWorker = new CuotasVictoriaWorker[0];
+        //productosCuotasWorker = new CuotasVictoriaWorker[0];
         
         propiedades = prop;
     }
@@ -74,7 +74,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
             
             productosFinalizados = new ProductoVictoria[hilosACorrer];
             productosDetalleWorker = new ProductoVictoriaWorker[hilosACorrer];
-            productosCuotasWorker = new CuotasVictoriaWorker[hilosACorrer];
+            //productosCuotasWorker = new CuotasVictoriaWorker[hilosACorrer];
             
             setProgress(0);
             while (hilosIniciados < hilosACorrer) {
@@ -87,16 +87,18 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                     productosDetalleWorker[hilosIniciados].setId(hilosIniciados);
                     productosDetalleWorker[hilosIniciados].execute();
                     
+                    /*
                     productosCuotasWorker[hilosIniciados] = new CuotasVictoriaWorker(productosWorker.get()[hilosIniciados],propiedades);
                     productosCuotasWorker[hilosIniciados].addPropertyChangeListener(this);
                     productosCuotasWorker[hilosIniciados].setId(hilosIniciados);
                     productosCuotasWorker[hilosIniciados].execute();
-                    
+                    */
                     
                     hilosIniciados++;
                     hilosCorriendo++;
                 }else{
-                    Thread.sleep(500);
+                    publish("SLEEPING");
+                    Thread.sleep(1000);
                 }
                 if(isCancelled()){
                     break;
@@ -157,12 +159,14 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                         productosFinalizados[hilosFinalizados] = productosDetalleWorker[detalle.id].get();
                         
                         
-                        
-                        //System.out.println("Producto: "+detalleV[detalle.id].get().getCodigo());
                         if(productosDetalleWorker[detalle.id].getError()){
                             hilosConError++;
                             codigosConError += detalle.producto.getCodigo()+", ";
+                            System.out.println("Producto ERROR: "+productosDetalleWorker[detalle.id].get().getCodigo());
+                        }else{
+                            System.out.println("Producto OK: "+productosDetalleWorker[detalle.id].get().getCodigo());
                         }
+                        
                         hilosFinalizados ++;
                         hilosCorriendo --;
                         setProgress(((hilosFinalizados+1)*100)/hilosACorrer);

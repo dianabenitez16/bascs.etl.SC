@@ -67,7 +67,7 @@ public class ProductoVictoria {
                     cuota.optJSONObject(i).getInt("precio_cuota"),
                     cuota.optJSONObject(i).getInt("precio_contado"),
                     cuota.optJSONObject(i).getInt("precio_credito"));
-                    System.out.println("CUOTAS " + cuotas[i]);
+                    //System.out.println("CUOTAS " + cuotas[i]);
                 }
                 
             }

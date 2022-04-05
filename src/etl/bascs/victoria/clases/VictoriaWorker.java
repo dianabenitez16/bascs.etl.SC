@@ -5,6 +5,7 @@
  */
 package etl.bascs.victoria.clases;
 
+import etl.bascs.impala.clases.CuotasVictoria;
 import etl.bascs.impala.clases.ProductoVictoria;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -38,6 +39,8 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     
     public ProductosVictoriaWorker productosWorker;
     public ProductoVictoriaWorker[] productosDetalleWorker;
+    
+    public CuotasVictoria[] cuotasFinalizadas;
     public CuotasVictoriaWorker[] productosCuotasWorker;
     
     public JLabel estado;
@@ -75,6 +78,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
             
             productosFinalizados = new ProductoVictoria[hilosACorrer];
             productosDetalleWorker = new ProductoVictoriaWorker[hilosACorrer];
+            cuotasFinalizadas = new CuotasVictoria[hilosACorrer];
             productosCuotasWorker = new CuotasVictoriaWorker[hilosACorrer];
             
             setProgress(0);
@@ -88,19 +92,23 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                     productosDetalleWorker[hilosIniciados].setId(hilosIniciados);
                     productosDetalleWorker[hilosIniciados].execute();
                     
+                    /*
                     productosCuotasWorker[hilosIniciados] = new CuotasVictoriaWorker(productosWorker.get()[hilosIniciados],propiedades);
                     productosCuotasWorker[hilosIniciados].addPropertyChangeListener(this);
                     productosCuotasWorker[hilosIniciados].setId(hilosIniciados);
                     productosCuotasWorker[hilosIniciados].execute();
-                    
+                    */
                     
                     hilosIniciados++;
                     hilosCorriendo++;
                     limit_reached = false;
+                    
+                    //System.out.println("TRABAJANDO... | hilosIniciados: "+hilosIniciados+" hilosCorriendo: "+hilosCorriendo);
+                    
                 }else{
-                   
-                    Thread.sleep(10000);
-                   
+                    publish("SLEEPING");
+                    Thread.sleep(1000);
+                    //System.out.println("DURMIENDOS... | hilosIniciados: "+hilosIniciados+" hilosCorriendo: "+hilosCorriendo);
                 }
                 
                 if(isCancelled()){
@@ -144,34 +152,42 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     protected void process(List<String> chunks) {
         estado.setText("[MAX:"+hilosMaximo+"] "+"[RUN:"+hilosCorriendo+"] "+"[INI:"+hilosIniciados+"] "+"[FIN:"+hilosFinalizados+"] "+"[TOT:"+hilosACorrer+"] ["+chunks.get(chunks.size()-1)+"]");
     }
-     @Override
+    
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String clase = getClass().getName().substring(getClass().getName().lastIndexOf(".")+1, getClass().getName().length()).toUpperCase();
         String source = evt.getSource().toString().substring(evt.getSource().toString().lastIndexOf(".")+1, evt.getSource().toString().indexOf("@"));
         String value = evt.getNewValue().toString();
         evt.setPropagationId(clase);
         
+        System.out.println(clase+">> "+source+" > "+value+" ");
+        //System.out.println("[MAX:"+hilosMaximo+"] "+"[RUN:"+hilosCorriendo+"] "+"[INI:"+hilosIniciados+"] "+"[FIN:"+hilosFinalizados+"] "+"[TOT:"+hilosACorrer+"] [ERR:"+hilosConError+"]");
+        
         if("ProductoVictoriaWorker".equals(source)){
             ProductoVictoriaWorker detalle = (ProductoVictoriaWorker) evt.getSource();
 
-            //System.out.println(clase+">> "+source+" > "+value+" | ID: "+detalle.id);
+//            System.out.println(clase+">> "+source+" > "+value+" | ID: "+detalle.id);
 
             if(value.equals("DONE")){
                 try {
                     if(productosDetalleWorker[detalle.id].isCancelled()){
-                        
+                        System.out.println("PRODUCTO CANCELADO: "+detalle.producto.getCodigo());
                     }else{
                         productosFinalizados[hilosFinalizados] = productosDetalleWorker[detalle.id].get();
                         
-                        System.out.println("Producto: "+productosDetalleWorker[detalle.id].get().getCodigo());
+                        
                         if(productosDetalleWorker[detalle.id].getError()){
                             hilosConError++;
                             codigosConError += detalle.producto.getCodigo()+", ";
+                            System.out.println("Producto CON error. "+productosDetalleWorker[detalle.id].get().getCodigo());
+                        }else{
+                            System.out.println("Producto SIN error: "+productosDetalleWorker[detalle.id].get().getCodigo());
                         }
+                        
                         hilosFinalizados ++;
                         hilosCorriendo --;
-                        setProgress(((hilosFinalizados+1)*100)/hilosACorrer);
                         Integer progress = ((hilosFinalizados+1)*100)/hilosACorrer;
+                        setProgress(progress);
                         this.progress.setText("Cargando " + (progress).toString()+"%");
                     }
                 } catch (InterruptedException | ExecutionException ex) {
@@ -182,29 +198,29 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
             }
         }else if("CuotasVictoriaWorker".equals(source)){
             /*
-            CuotasVictoriaWorker cuotas = (ProductoVictoriaWorker) evt.getSource();
+            CuotasVictoriaWorker cuotas = (CuotasVictoriaWorker) evt.getSource();
 
             //System.out.println(clase+">> "+source+" > "+value+" | ID: "+detalle.id);
 
             if(value.equals("DONE")){
                 try {
-                    if(productosDetalleWorker[detalle.id].isCancelled()){
+                    if(productosDetalleWorker[cuotas.id].isCancelled()){
                         
                     }else{
-                        productosFinalizados[hilosFinalizados] = productosDetalleWorker[detalle.id].get();
+                        cuotasFinalizadas[hilosFinalizados] = cuotas[cuotas.id].get();
                         
                         
                         
                         //System.out.println("Producto: "+detalleV[detalle.id].get().getCodigo());
-                        if(productosDetalleWorker[detalle.id].getError()){
+                        if(productosDetalleWorker[cuotas.id].getError()){
                             hilosConError++;
-                            codigosConError += detalle.producto.getCodigo()+", ";
+                            codigosConError += cuotas.producto.getCodigo()+"[C]"+", ";
                         }
-                        hilosFinalizados ++;
-                        hilosCorriendo --;
-                        setProgress(((hilosFinalizados+1)*100)/hilosACorrer);
-                        Integer progress = ((hilosFinalizados+1)*100)/hilosACorrer;
-                        this.progress.setText("Cargando " + (progress).toString()+"%");
+                        //hilosFinalizados ++;
+                        //hilosCorriendo --;
+                        //setProgress(((hilosFinalizados+1)*100)/hilosACorrer);
+                        //Integer progress = ((hilosFinalizados+1)*100)/hilosACorrer;
+                        //this.progress.setText("Cargando " + (progress).toString()+"%");
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     System.out.println("EX:"+ex.getLocalizedMessage());
@@ -212,7 +228,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                 }
 
             }
-        */
+            */
         }
     }
 

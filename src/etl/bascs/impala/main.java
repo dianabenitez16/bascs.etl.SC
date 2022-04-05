@@ -96,6 +96,8 @@ import org.json.JSONObject;
  * @author junju
  */
 public class main extends javax.swing.JFrame implements java.beans.PropertyChangeListener {
+    public static final Boolean DEBUG = true;
+    
     public static DecimalFormat formatInt = new DecimalFormat("#,##0");
     public static DecimalFormat formatDec = new DecimalFormat("#,##0.##");
     
@@ -825,217 +827,250 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
    }
    
     /**/
-   public void marcasWSPOST(MarcasVictoria marcasVT){
-       try {
-            HttpClient hc = new DefaultHttpClient();
-            HttpPost hp = new HttpPost("http://www.saracomercial.com/panel/api/loader/marcas");
-            
-     //       System.out.println("POST: "+"http://www.saracomercial.com/panel/api/loader/rubros");
-            System.out.println("OBJETO POST: "+marcasVT.getJSON().toString());
-            
-    //        hp.setEntity(new StringEntity(marcasVT.getJSON().toString(), "UTF-8"));
-            hp.setHeader("Content-type", "application/json;charset=UTF-8");
-            hp.setHeader("Accept", "application/json");
-            hp.setHeader("Retry-After", "120");
-            hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
-            hp.setHeader("Connection", "keep-alive");
-            hp.setHeader("Authorization", propSC.getProperty("clave"));
-            
-            HttpResponse resp = hc.execute(hp);
-            
-            resp.getEntity().consumeContent();
-            
-            if (resp != null) {
-                switch (resp.getStatusLine().getStatusCode()){
-                    case 200: // INGRESADO CORRECTAMENTE
-                        break;
-                    case 422: //SUPUESTAMENTE YA EXISTE
-                        break;
-                    default: // CODIGO DESCONOCIDO
-                        break;
-                        
-                        
+    public void marcasWSPOST(MarcasVictoria marcasVT){
+        if(!DEBUG){
+            try {
+                HttpClient hc = new DefaultHttpClient();
+                HttpPost hp = new HttpPost("http://www.saracomercial.com/panel/api/loader/marcas");
+
+         //       System.out.println("POST: "+"http://www.saracomercial.com/panel/api/loader/rubros");
+                System.out.println("OBJETO POST: "+marcasVT.getJSON().toString());
+
+        //        hp.setEntity(new StringEntity(marcasVT.getJSON().toString(), "UTF-8"));
+                hp.setHeader("Content-type", "application/json;charset=UTF-8");
+                hp.setHeader("Accept", "application/json");
+                hp.setHeader("Retry-After", "120");
+                hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
+                hp.setHeader("Connection", "keep-alive");
+                hp.setHeader("Authorization", propSC.getProperty("clave"));
+
+                HttpResponse resp = hc.execute(hp);
+
+                resp.getEntity().consumeContent();
+
+                if (resp != null) {
+                    switch (resp.getStatusLine().getStatusCode()){
+                        case 200: // INGRESADO CORRECTAMENTE
+                            break;
+                        case 422: //SUPUESTAMENTE YA EXISTE
+                            break;
+                        default: // CODIGO DESCONOCIDO
+                            break;
+
+
+                    }
+                    System.out.println("RESPUESTA: " + resp.toString());
+
+                }else{
+                    debugRubros.append("Respuesta NULL");
                 }
-                System.out.println("RESPUESTA: " + resp.toString());
-                
-            }else{
-                debugRubros.append("Respuesta NULL");
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+            } catch (IOException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            } 
+        }else{
+            System.out.println("DEBUG: marcasWSPOST");
+        }
    }
     public void rubrosWSPUT(Integer id, RubrosSC rubroSC){
         
         //ACTUALIZAR EN EL WS
-        try {
-            HttpClient hc = new DefaultHttpClient();
-            HttpPut hp = new HttpPut("http://www.saracomercial.com/panel/api/loader/rubros/"+ id);
+        if(!DEBUG){
             
-  //          System.out.println("PUT: "+"http://www.saracomercial.com/panel/api/loader/rubros/"+ id);
-            System.out.println("OBJETO PUT: "+rubroSC.getJSON().toString());
-            
-  //          hp.setEntity(new StringEntity(rubroSC.getJSON().toString(), "UTF-8"));
-            hp.setHeader("Content-type", "application/json;charset=UTF-8");
-            hp.setHeader("Accept", "application/json");
-            hp.setHeader("Retry-After", "120");
-            hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
-            hp.setHeader("Connection", "keep-alive");
-            hp.setHeader("Authorization", propSC.getProperty("clave"));
-            
-            HttpResponse resp = hc.execute(hp);
-            
-            resp.getEntity().consumeContent();
-            
-            if (resp != null) {
-                switch (resp.getStatusLine().getStatusCode()){
-                    case 200: // INGRESADO CORRECTAMENTE
-                        break;
-                    case 422: //SUPUESTAMENTE YA EXISTE
-                        break;
-                    default: // CODIGO DESCONOCIDO
-                        break;
-                        
-                        
+        
+            try {
+                HttpClient hc = new DefaultHttpClient();
+                HttpPut hp = new HttpPut("http://www.saracomercial.com/panel/api/loader/rubros/"+ id);
+
+      //          System.out.println("PUT: "+"http://www.saracomercial.com/panel/api/loader/rubros/"+ id);
+                System.out.println("OBJETO PUT: "+rubroSC.getJSON().toString());
+
+      //          hp.setEntity(new StringEntity(rubroSC.getJSON().toString(), "UTF-8"));
+                hp.setHeader("Content-type", "application/json;charset=UTF-8");
+                hp.setHeader("Accept", "application/json");
+                hp.setHeader("Retry-After", "120");
+                hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
+                hp.setHeader("Connection", "keep-alive");
+                hp.setHeader("Authorization", propSC.getProperty("clave"));
+
+                HttpResponse resp = hc.execute(hp);
+
+                resp.getEntity().consumeContent();
+
+                if (resp != null) {
+                    switch (resp.getStatusLine().getStatusCode()){
+                        case 200: // INGRESADO CORRECTAMENTE
+                            break;
+                        case 422: //SUPUESTAMENTE YA EXISTE
+                            break;
+                        default: // CODIGO DESCONOCIDO
+                            break;
+
+
+                    }
+                   System.out.println("RESPUESTA: " + resp.toString());
+
+                }else{
+                    debugRubros.append("Respuesta NULL");
                 }
-               System.out.println("RESPUESTA: " + resp.toString());
-                
-            }else{
-                debugRubros.append("Respuesta NULL");
+            } catch (IOException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }else{
+            System.out.println("DEBUG: rubrosWSPUT");
         }
     }
      public void productosWSPUT(Integer id, ProductoVictoria podVictoria){
-        
-        //ACTUALIZAR EN EL WS
-        try {
-            HttpClient hc = new DefaultHttpClient();
-            HttpPut hp = new HttpPut("http://www.saracomercial.com/panel/api/loader/productos/"+ id);
+        if(!DEBUG){
             
-  //          System.out.println("PUT: "+"http://www.saracomercial.com/panel/api/loader/rubros/"+ id);
-            System.out.println("OBJETO PUT: "+podVictoria.getJSON().toString());
-            
-  //          hp.setEntity(new StringEntity(podVictoria.getJSON().toString(), "UTF-8"));
-            hp.setHeader("Content-type", "application/json;charset=UTF-8");
-            hp.setHeader("Accept", "application/json");
-            hp.setHeader("Retry-After", "120");
-            hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
-            hp.setHeader("Connection", "keep-alive");
-            hp.setHeader("Authorization", propSC.getProperty("clave"));
-            
-            HttpResponse resp = hc.execute(hp);
-            
-            resp.getEntity().consumeContent();
-            
-            if (resp != null) {
-                switch (resp.getStatusLine().getStatusCode()){
-                    case 200: // INGRESADO CORRECTAMENTE
-                        break;
-                    case 422: //SUPUESTAMENTE YA EXISTE
-                        break;
-                    default: // CODIGO DESCONOCIDO
-                        break;
-                        
-                        
+
+            //ACTUALIZAR EN EL WS
+            try {
+                HttpClient hc = new DefaultHttpClient();
+                HttpPut hp = new HttpPut("http://www.saracomercial.com/panel/api/loader/productos/"+ id);
+
+      //          System.out.println("PUT: "+"http://www.saracomercial.com/panel/api/loader/rubros/"+ id);
+                System.out.println("OBJETO PUT: "+podVictoria.getJSON().toString());
+
+      //          hp.setEntity(new StringEntity(podVictoria.getJSON().toString(), "UTF-8"));
+                hp.setHeader("Content-type", "application/json;charset=UTF-8");
+                hp.setHeader("Accept", "application/json");
+                hp.setHeader("Retry-After", "120");
+                hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
+                hp.setHeader("Connection", "keep-alive");
+                hp.setHeader("Authorization", propSC.getProperty("clave"));
+
+                HttpResponse resp = hc.execute(hp);
+
+                resp.getEntity().consumeContent();
+
+                if (resp != null) {
+                    switch (resp.getStatusLine().getStatusCode()){
+                        case 200: // INGRESADO CORRECTAMENTE
+                            break;
+                        case 422: //SUPUESTAMENTE YA EXISTE
+                            break;
+                        default: // CODIGO DESCONOCIDO
+                            break;
+
+
+                    }
+                   System.out.println("RESPUESTA: " + resp.toString());
+
+                }else{
+                    debugRubros.append("Respuesta NULL");
                 }
-               System.out.println("RESPUESTA: " + resp.toString());
-                
-            }else{
-                debugRubros.append("Respuesta NULL");
+            } catch (IOException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }else{
+            System.out.println("DEBUG: productosWSPUT");
         }
     }
-     public synchronized void ProductosWSPOST(ProductoVictoria productoVT){
-        try {
-            HttpClient hc = new DefaultHttpClient();
-            HttpPost hp = new HttpPost("http://www.saracomercial.com/panel/api/loader/productos");
-            
-             
-            hp.setEntity(new StringEntity(productoVT.getJSON().toString(), "UTF-8"));
-            hp.setHeader("User-Agent", USER_AGENT);
-            hp.setHeader("Content-type", "application/json;charset=UTF-8");
-            hp.setHeader("Accept", "application/json");
-            hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
-            hp.setHeader("Connection", "keep-alive");
-            hp.setHeader("Authorization", propSC.getProperty("clave"));
-        
-            HttpResponse resp = hc.execute(hp);
-            
-            
-            resp.getEntity().consumeContent();
-            
-            if (resp != null) {
-                switch (resp.getStatusLine().getStatusCode()){
-                    case 200: // INGRESADO CORRECTAMENTE
-                        break;
-                    case 422: //SUPUESTAMENTE YA EXISTE
-                        break;
-                    default: // CODIGO DESCONOCIDO
-                        break;
-                        
-                        
+     
+    public synchronized void ProductosWSPOST(ProductoVictoria productoVT){
+        if(!DEBUG){
+            try {
+                HttpClient hc = new DefaultHttpClient();
+                HttpPost hp = new HttpPost("http://www.saracomercial.com/panel/api/loader/productos");
+
+                hp.setEntity(new StringEntity(productoVT.getJSON().toString(), "UTF-8"));
+                hp.setHeader("User-Agent", USER_AGENT);
+                hp.setHeader("Content-type", "application/json;charset=UTF-8");
+                hp.setHeader("Accept", "application/json");
+                hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
+                hp.setHeader("Connection", "keep-alive");
+                hp.setHeader("Authorization", propSC.getProperty("clave"));
+
+                HttpResponse resp = hc.execute(hp);
+
+
+                resp.getEntity().consumeContent();
+
+                if (resp != null) {
+                    switch (resp.getStatusLine().getStatusCode()){
+                        case 200: // INGRESADO CORRECTAMENTE
+                            break;
+                        case 422: //SUPUESTAMENTE YA EXISTE
+                            break;
+                        default: // CODIGO DESCONOCIDO
+                            break;
+
+
+                    }
+                    System.out.println("\nOBJ: " + productoVT.getJSON().toString() + "\nRESPUESTA: " + resp.toString() );
+
+                }else{
+                    debugRubros.append("Respuesta NULL");
                 }
-                System.out.println("\nOBJ: " + productoVT.getJSON().toString() + "\nRESPUESTA: " + resp.toString() );
-               
-            }else{
-                debugRubros.append("Respuesta NULL");
+            } catch (IOException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+
             }
-        } catch (IOException ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-          
+        }else{
+            System.out.println("DEBUG: ProductosWSPOST");
         }
     }
     public synchronized void rubrosWSPOST(RubrosVictoria rubroVT){
-        try {
-            HttpClient hc = new DefaultHttpClient();
-            HttpPost hp = new HttpPost("http://www.saracomercial.com/panel/api/loader/rubros");
-            
-     //       System.out.println("POST: "+"http://www.saracomercial.com/panel/api/loader/rubros");
-            System.out.println("OBJETO POST: "+rubroVT.getJSON().toString());
-            
-            hp.setEntity(new StringEntity(rubroVT.getJSON().toString(), "UTF-8"));
-            hp.setHeader("Content-type", "application/json;charset=UTF-8");
-            hp.setHeader("Accept", "application/json");
-            hp.setHeader("Retry-After", "120");
-            hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
-            hp.setHeader("Connection", "keep-alive");
-            hp.setHeader("Authorization", propSC.getProperty("clave"));
-            
-            HttpResponse resp = hc.execute(hp);
-            
-            resp.getEntity().consumeContent();
-            
-            if (resp != null) {
-                switch (resp.getStatusLine().getStatusCode()){
-                    case 200: // INGRESADO CORRECTAMENTE
-                        break;
-                    case 422: //SUPUESTAMENTE YA EXISTE
-                        break;
-                    default: // CODIGO DESCONOCIDO
-                        break;
-                        
-                        
+        if(!DEBUG){
+            try {
+                HttpClient hc = new DefaultHttpClient();
+                HttpPost hp = new HttpPost("http://www.saracomercial.com/panel/api/loader/rubros");
+
+                //System.out.println("POST: "+"http://www.saracomercial.com/panel/api/loader/rubros");
+                System.out.println("OBJETO POST: "+rubroVT.getJSON().toString());
+
+                hp.setEntity(new StringEntity(rubroVT.getJSON().toString(), "UTF-8"));
+                hp.setHeader("Content-type", "application/json;charset=UTF-8");
+                hp.setHeader("Accept", "application/json");
+                hp.setHeader("Retry-After", "120");
+                hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
+                hp.setHeader("Connection", "keep-alive");
+                hp.setHeader("Authorization", propSC.getProperty("clave"));
+
+                HttpResponse resp = hc.execute(hp);
+
+                resp.getEntity().consumeContent();
+
+                if (resp != null) {
+                    switch (resp.getStatusLine().getStatusCode()){
+                        case 200: // INGRESADO CORRECTAMENTE
+                            break;
+                        case 422: //SUPUESTAMENTE YA EXISTE
+                            break;
+                        default: // CODIGO DESCONOCIDO
+                            break;
+
+
+                    }
+                    System.out.println("RESPUESTA: " + resp.toString());
+
+                }else{
+                    debugRubros.append("Respuesta NULL");
                 }
-                System.out.println("RESPUESTA: " + resp.toString());
-                
-            }else{
-                debugRubros.append("Respuesta NULL");
+            } catch (IOException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }else{
+            System.out.println("DEBUG: rubrosWSPOST");
         }
     }
     
     public void rubrosWSDELETE(RubrosSC rubroWS){
         // ELIMINAR DEL WS
+        if(!DEBUG){
+            
+        }else{
+            System.out.println("DEBUG: rubrosWSDELETE");
+        }
     }
    
     public void marcasWSDELETE(MarcasSC marcaWS){
         //ELIMINAR DEL WS
+        if(!DEBUG){
+            
+        }else{
+            System.out.println("DEBUG: marcasWSDELETE");
+        }
     }
     /**/
         
@@ -4683,14 +4718,14 @@ buscarMaestro();
 
     private void bVictoriaBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bVictoriaBuscarActionPerformed
         //hilosWorker();
-   /*     buscarProductoWebsite();
+        buscarProductoWebsite();
         buscarMarcasVictoria();
         buscarRubrosVictoria();
         buscarRubrosSC();
         buscarMarcasSC();
         buscarProductosVictoria();
-*/
-   sincronizarVictoria();
+
+        sincronizarVictoria();
    
        
     }//GEN-LAST:event_bVictoriaBuscarActionPerformed
@@ -4732,6 +4767,7 @@ buscarMaestro();
                 }
             }
        
+            sincronizarVictoria();
             
         }else{
             victoriaW.cancel(false);

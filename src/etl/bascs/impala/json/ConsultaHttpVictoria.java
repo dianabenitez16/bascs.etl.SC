@@ -23,7 +23,7 @@ import org.json.JSONObject;
  * @author User
  */
 public class ConsultaHttpVictoria {
-     private URL url;
+    private URL url;
     private URLConnection con;
     private DataOutputStream wr;
     private BufferedReader in;

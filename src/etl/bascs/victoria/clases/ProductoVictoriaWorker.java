@@ -10,6 +10,7 @@ package etl.bascs.victoria.clases;
 import etl.bascs.impala.clases.Producto;
 import etl.bascs.impala.clases.ProductoVictoria;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
+import etl.bascs.impala.main;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -45,15 +46,20 @@ public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String
  
         try {
             setProgress(0);
-           consulta = new ConsultaHttpVictoria("http",
-                   propiedades.getProperty("servidor"),
+            consulta = new ConsultaHttpVictoria("http",
+                    propiedades.getProperty("servidor"),
                     propiedades.getProperty("puerto"),
-                  propiedades.getProperty("metodoGET"),
+                    propiedades.getProperty("metodoGET"),
                     propiedades.getProperty("detalle")+producto.getCodigo());
-            System.out.println("SER: " + propiedades.getProperty("servidor"));
-            System.out.println("PUER: " + propiedades.getProperty("puerto"));
-            System.out.println("MET: " + propiedades.getProperty("metodoGET"));
-            System.out.println("DETALLE: " + propiedades.getProperty("detalle"));
+                
+            if(main.DEBUG){
+                /*
+                System.out.println("SER: " + propiedades.getProperty("servidor"));
+                System.out.println("PUER: " + propiedades.getProperty("puerto"));
+                System.out.println("MET: " + propiedades.getProperty("metodoGET"));
+                System.out.println("DETALLE: " + propiedades.getProperty("detalle"));
+*/
+            }
            
             if (!consulta.getError()) {
                 if (consulta.getJson().has("items")) {
@@ -132,7 +138,8 @@ public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String
         for (int i = 0; i < productoJ.length(); i++) {
         
         object.put("codigo_interno_ws", getCodigo());
-            System.out.println("CODIGO DE WORKER " + getCodigo());
+        
+        System.out.println("CODIGO DE WORKER " + getCodigo());
         object.put("nombre", pro.getNombre());
         object.put("marca_id", pro.getMarca_id());
         object.put("rubro_id", pro.getRubro_id());
@@ -140,8 +147,8 @@ public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String
             JSONArray cuota = productoJ.optJSONArray("cuotas");
         object.put("cuotas", cuota.optJSONObject(i).getInt("precio_contado"));
         }
-        System.out.println("rubro_id del jason " + pro.getRubro_id());
-        System.out.println("marca_id del jason " + pro.getMarca_id());
+        System.out.println("rubro_id del json " + pro.getRubro_id());
+        System.out.println("marca_id del json " + pro.getMarca_id());
        
         }
         

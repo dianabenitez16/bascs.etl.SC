@@ -21,16 +21,16 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class ProductoWorkerSC extends SwingWorker<ProductoSC[], String> implements PropertyChangeListener{
+public class ProductosWorkerSC extends SwingWorker<ProductoSC[], String> implements PropertyChangeListener{
     public ConsultaHttpSC consulta;
     private Properties propiedades;
     private Integer cantidad;
     
     private ProductoSC[] productosSC;
-    public ProductoSC productoSC; 
+    private ProductoSC productoSC; 
    
     
-    public ProductoWorkerSC(Properties prop){
+    public ProductosWorkerSC(Properties prop){
         productosSC = new ProductoSC[0];
         propiedades = prop;
     }
@@ -53,14 +53,17 @@ public class ProductoWorkerSC extends SwingWorker<ProductoSC[], String> implemen
                             JSONObject object = respuesta.getJSONObject(i);
                             productoSC = new ProductoSC(propiedades);
                             productoSC.loadJSONConsulta(object);
+                            
+                            //productoSC.setCuotas(cuotas);
                             productosSC[i] = productoSC;
+                            
                             setProgress(((i+1)*100)/cantidad);
                             //Thread.sleep(50); //JUST FOR TESTING
                             //publish(producto.getCodigo());
                         }
                          
                 } catch (Exception ex) {
-            Logger.getLogger(ProductoWorkerSC.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductosWorkerSC.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("_ERROR" + ex);
         }
         return productosSC;

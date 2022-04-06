@@ -5,7 +5,7 @@
  */
 package etl.bascs.victoria.clases;
 
-import bascs.website.clases.RubrosSC;
+import bascs.website.clases.RubroSC;
 import etl.bascs.impala.clases.Producto;
 import etl.bascs.impala.clases.ProductoVictoria;
 import etl.bascs.impala.json.ConsultaHttp;
@@ -66,7 +66,7 @@ public class ProductosVictoriaWorker extends SwingWorker<ProductoVictoria[], Str
                             String key = keys.next().toString();
                             JSONObject productoJ = respuesta.getJSONObject(i).getJSONObject(key);
                             producto = new ProductoVictoria();
-                            producto.loadJSONConsulta(productoJ);
+                            producto.loadJSONDetalle(productoJ);
                             productos[i] = producto;
                             setProgress(((i+1)*100)/cantidad);
                             //Thread.sleep(50); //JUST FOR TESTING

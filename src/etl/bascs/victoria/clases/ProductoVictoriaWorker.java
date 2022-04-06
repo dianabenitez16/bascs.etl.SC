@@ -64,7 +64,7 @@ public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String
             if (!consulta.getError()) {
                 if (consulta.getJson().has("items")) {
                     productoJ = consulta.getJson().getJSONObject("items");
-                    producto.loadJSONConsulta(productoJ);
+                    producto.loadJSONDetalle(productoJ);
                     setProgress(100);
                 } else {
                     error = true;
@@ -142,12 +142,12 @@ public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String
         System.out.println("CODIGO DE WORKER " + getCodigo());
         object.put("nombre", pro.getNombre());
         object.put("marca_id", pro.getMarca_id());
-        object.put("rubro_id", pro.getRubro_id());
+        object.put("rubro_id", pro.getRubroSC().getId());
         if(productoJ.has("cuotas")){
             JSONArray cuota = productoJ.optJSONArray("cuotas");
         object.put("cuotas", cuota.optJSONObject(i).getInt("precio_contado"));
         }
-        System.out.println("rubro_id del json " + pro.getRubro_id());
+        System.out.println("rubro_id del json " + pro.getRubroSC().getId());
         System.out.println("marca_id del json " + pro.getMarca_id());
        
         }

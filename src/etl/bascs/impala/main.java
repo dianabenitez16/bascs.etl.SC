@@ -10,8 +10,8 @@ import etl.bascs.impala.clases.MarcasVictoria;
 import etl.bascs.victoria.clases.MarcasVictoriaWorker;
 import etl.bascs.impala.clases.Producto;
 import etl.bascs.impala.clases.ProductoVictoria;
-import bascs.website.clases.RubrosSC;
-import etl.bascs.impala.clases.RubrosVictoria;
+import bascs.website.clases.RubroSC;
+import etl.bascs.impala.clases.RubroVictoria;
 import etl.bascs.impala.clases.Scalr;
 import etl.bascs.impala.config.Propiedades;
 import etl.bascs.impala.worker.DetalleWorker;
@@ -19,9 +19,9 @@ import etl.bascs.impala.worker.MaestroWorker;
 import bascs.website.clases.MarcasWorkerSC;
 import bascs.website.clases.ProductoDetalleWorkerSC;
 import bascs.website.clases.ProductoSC;
-import bascs.website.clases.ProductoWorkerSC;
+import bascs.website.clases.ProductosWorkerSC;
 import bascs.website.clases.RubrosWorkerSC;
-import etl.bascs.impala.clases.CuotasVictoria;
+import etl.bascs.impala.clases.CuotaVictoria;
 import etl.bascs.impala.clases.MarcasSC;
 import etl.bascs.impala.worker.PrestashopWorker;
 import etl.bascs.victoria.clases.CuotasVictoriaWorker;
@@ -110,7 +110,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     
     public MarcasWorkerSC marcasSC;
     public RubrosWorkerSC rubrosSC;
-    public ProductoWorkerSC productosSC;
+    public ProductosWorkerSC productosSC;
     public ProductoDetalleWorkerSC productoSC;
     public VictoriaWorker victoriaW;
     public CuotasVictoriaWorker cuotasW;
@@ -120,8 +120,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public DetalleWorker detalleW;
     public ProductoVictoriaWorker productoW;
     
-    public RubrosVictoria rubVt;
-    public RubrosSC rubScl;
+    public RubroVictoria rubVt;
+    public RubroSC rubScl;
     public Boolean rubroNuevo;
     public JFileChooser fc;
     public File fPrestashopImport;
@@ -235,7 +235,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             JOptionPane.showMessageDialog(null, "Ingrese un codigo de producto válido.");
         }
     }
-    public void buscarCuotas(CuotasVictoria cuotas){
+    public void buscarCuotas(CuotaVictoria cuotas){
         if(!tProductoIDV.getText().isEmpty()){
             limpiarProducto(false);
             cuotasW = new CuotasVictoriaWorker();
@@ -312,7 +312,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             tProductoNombreV.setText(producto.getNombre());
             taProductoDescripcionV.setText(producto.getDescripcion());
             tProductoMarcaV.setText(producto.getMarca());
-            tProductoRubroV.setText(producto.getRubro());
+            tProductoRubroVictoriaCodigo.setText(producto.getRubroVictoria().getCodigo());
+            tProductoRubroVictoriaNombre.setText(producto.getRubroVictoria().getNombre());
             
               Object cuotas[][] = new Object[producto.getCuotas().length][4];
             for (int i = 0; i < cuotas.length; i++){
@@ -560,7 +561,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         propiedades.putAll(propSC);
         propiedades.putAll(propGenerales);
         
-        productosSC = new ProductoWorkerSC(propiedades);
+        productosSC = new ProductosWorkerSC(propiedades);
         productosSC.addPropertyChangeListener(this);
         productosSC.execute();
     }
@@ -631,9 +632,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         try{  
             taVictoriaSincronizar.append("\n\nInicia sincronizacion de RUBROS.");
             //RECORRIDO VICTORIA
-            for (RubrosVictoria rubVictoria : rubrosW.get()) {
+            for (RubroVictoria rubVictoria : rubrosW.get()) {
                 rubroNuevo = true;
-                for (RubrosSC rubSC : rubrosSC.get()) {
+                for (RubroSC rubSC : rubrosSC.get()) {
                     if(rubVictoria.getCodigo().equals(rubSC.getCodigo())){
                         rubroNuevo = false;
                         if(!rubVictoria.getNombre().equals(rubSC.getNombre())){
@@ -655,9 +656,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
             
             //RECORRIDO WEBSERVICE
-            for (RubrosSC rubSC : rubrosSC.get()) {
+            for (RubroSC rubSC : rubrosSC.get()) {
                 rubroEliminar = true;
-                for (RubrosVictoria rubVictoria : rubrosW.get()) {
+                for (RubroVictoria rubVictoria : rubrosW.get()) {
                     if(rubVictoria.getCodigo().equals(rubSC.getCodigo())){
                         rubroEliminar = false;
                     }
@@ -669,8 +670,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
             
             //RECORRIDO VICTORIA PARENT ID
-            for (RubrosVictoria rubVictoria : rubrosW.get()) {
-                for (RubrosSC rubSC : rubrosSC.get()) {
+            for (RubroVictoria rubVictoria : rubrosW.get()) {
+                for (RubroSC rubSC : rubrosSC.get()) {
                     if(rubVictoria.getCodigo().equals(rubSC.getCodigo()) && rubSC.getParent_id() == 0 || rubSC.getParent_id() == null){
                         if(rubVictoria.getParent_codigo() != null && !rubVictoria.getParent_codigo().equals("")){
                             if(rubrosSC.obtenerRubro(rubVictoria.getParent_codigo()) != null){
@@ -762,53 +763,78 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         // POST - CREA
         try{
             //RECORRIDO VICTORIA
-            for (ProductoVictoria podVictoria : victoriaW.get()) {
+            for (ProductoVictoria prodVictoria : victoriaW.get()) {
                 productoNuevo = true;
                 prendido = false;
                 for (ProductoSC podSC : productosSC.get()) {
-                    if(podVictoria.getCodigo().equals(podSC.getCodigo())){
+                    // Verificamos si ya existe el CODIGO
+                    if(prodVictoria.getCodigo().equals(podSC.getCodigo())){
                         productoNuevo = false;
-                        if(!podVictoria.getNombre().equals(podSC.getNombre())){
-                            System.out.println("VT: "+podVictoria.getNombre()+"|"+"SC: "+podSC.getNombre());
+                        
+                        prodVictoria.setProducto_id(podSC.getId());
+                        
+                        if(!prodVictoria.getNombre().trim().equals(podSC.getNombre().trim())){
+                            System.out.println("PUT DE PRODUCTO. Nombres diferentes. CODIGO: "+prodVictoria.getCodigo());
+                            //System.out.println("VT: "+prodVictoria.getNombre()+"|"+"SC: "+podSC.getNombre());
                             
                         }else{
                             productosOmitidos++;
                         }
+                    }else{
+                        System.out.println("POST DE PRODUCTO. No existe el codigo. CODIGO: "+prodVictoria.getCodigo());
                     }
-                    for (RubrosSC rubSC : rubrosSC.get()) {
-                        if(podVictoria.getRubro().equals(rubSC.getCodigo())){
+                    
+                    
+                    // SE ASIGNA A LOS PRODUCTOS VICTORIA, LOS RUBROS SC CORRESPONDIENTES
+                    if(rubrosSC.obtenerRubro(prodVictoria.getRubroVictoria().getCodigo()) != null){
+                        prodVictoria.setRubroSC(rubrosSC.obtenerRubro(prodVictoria.getRubroVictoria().getCodigo()));
+                    }else{
+                        taVictoriaSincronizar.append("RUBRO ID: No se encuentra el RUBRO "+prodVictoria.getRubroVictoria().getNombre()+ "en el WS.");
+                    }
+                                        
+                    /*
+                    for (RubroSC rubSC : rubrosSC.get()) {
+                        // Verifico si el rubro del producto victoria, existe en SC
+                        if(prodVictoria.getRubroVictoria().getCodigo().equals(rubSC.getCodigo())){
 
-                            if(rubrosSC.obtenerRubro(podVictoria.getRubro()) != null){
-                                podVictoria.setRubro_id(rubrosSC.obtenerRubro(podVictoria.getRubro()).getId());
-                            }else{
-                                System.out.println("RUBRO ID: No se encuentra el RUBRO "+podVictoria.getRubro()+ "en el WS.");
-                            }
+                            
                         }
                     }
-
+                    */
+                    
+                    // SE ASIGNA A LOS PRODUCTOS VICTORIA, LAS MARCAS SC CORRESPONDIENTES
+                    if(marcasSC.obtenerMarca(prodVictoria.getMarca()) != null){
+                        prodVictoria.setMarca_id(marcasSC.obtenerMarca(prodVictoria.getMarca()).getId());
+                    }else{
+                        taVictoriaSincronizar.append("MARCA ID: No se encuentra la MARCA "+prodVictoria.getMarca()+ "en el WS.");
+                    }
+                    
+                    /*
                     for (MarcasSC marSC : marcasSC.get()) {
-                        if(podVictoria.getMarca().equals(marSC.getCodigo())){
-                            if(marcasSC.obtenerMarca(podVictoria.getMarca()) != null){
-                                podVictoria.setMarca_id(marcasSC.obtenerMarca(podVictoria.getMarca()).getId());
+                        if(prodVictoria.getMarca().equals(marSC.getCodigo())){
+                            if(marcasSC.obtenerMarca(prodVictoria.getMarca()) != null){
+                                prodVictoria.setMarca_id(marcasSC.obtenerMarca(prodVictoria.getMarca()).getId());
 
                             }else{
-                                System.out.println("MARCA ID: No se encuentra la MARCA "+podVictoria.getMarca()+ "en el WS.");
+                                System.out.println("MARCA ID: No se encuentra la MARCA "+prodVictoria.getMarca()+ "en el WS.");
                             }
                         }
                     }
-
+                    */
                 }
-                taVictoriaSincronizar.append("Productos a ser inser: " + podVictoria.getJSON());
+                taVictoriaSincronizar.append("Productos a ser insertados: " + prodVictoria.getJSON());
                 
                 if(productoNuevo){
-                    ProductosWSPOST(podVictoria);
-                    taVictoriaSincronizar.append("SE INSERTARON " + podVictoria.getCodigo());
+                    ProductosWSPOST(prodVictoria);
+                    taVictoriaSincronizar.append("SE INSERTARON " + prodVictoria.getCodigo());
+                }else{
+                    
                 }
 
-                taVictoriaSincronizar.append("\nSe omitieron " + productosOmitidos + " PRODUCTOS.");
-                taVictoriaSincronizar.append("\nSe completo la sincronizacion de PRODUCTOS.");
-
             }
+            
+            taVictoriaSincronizar.append("\nSe omitieron " + productosOmitidos + " PRODUCTOS.");
+            taVictoriaSincronizar.append("\nSe completo la sincronizacion de PRODUCTOS.");
 
 
         } catch (Exception e) {
@@ -861,7 +887,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             System.out.println("DEBUG: marcasWSPOST");
         }
    }
-    public void rubrosWSPUT(Integer id, RubrosSC rubroSC){
+    public void rubrosWSPUT(Integer id, RubroSC rubroSC){
         
         //ACTUALIZAR EN EL WS
         if(!DEBUG){
@@ -1000,7 +1026,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             System.out.println("DEBUG: ProductosWSPOST");
         }
     }
-    public synchronized void rubrosWSPOST(RubrosVictoria rubroVT){
+    public synchronized void rubrosWSPOST(RubroVictoria rubroVT){
         if(!DEBUG){
             try {
                 HttpClient hc = new DefaultHttpClient();
@@ -1045,7 +1071,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         }
     }
     
-    public void rubrosWSDELETE(RubrosSC rubroWS){
+    public void rubrosWSDELETE(RubroSC rubroWS){
         // ELIMINAR DEL WS
         if(!DEBUG){
             
@@ -1617,8 +1643,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoStock1 = new javax.swing.JTextField();
         lProductoExistencia7 = new javax.swing.JLabel();
         lProductoDetallesTecnicos3 = new javax.swing.JLabel();
-        tProductoRubroV = new javax.swing.JTextField();
+        tProductoRubroVictoriaCodigo = new javax.swing.JTextField();
         lProductoMarca3 = new javax.swing.JLabel();
+        tProductoRubroVictoriaNombre = new javax.swing.JTextField();
         pVictoriaMaestro = new javax.swing.JPanel();
         sProductoSeparador5 = new javax.swing.JSeparator();
         bVictoriaLimpiar = new javax.swing.JButton();
@@ -3500,13 +3527,17 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lProductoDetallesTecnicos3.setText("Cuotas:");
         lProductoDetallesTecnicos3.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        tProductoRubroV.setEditable(false);
-        tProductoRubroV.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tProductoRubroV.setPreferredSize(new java.awt.Dimension(150, 20));
+        tProductoRubroVictoriaCodigo.setEditable(false);
+        tProductoRubroVictoriaCodigo.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tProductoRubroVictoriaCodigo.setPreferredSize(new java.awt.Dimension(150, 20));
 
         lProductoMarca3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca3.setText("Rubro:");
         lProductoMarca3.setPreferredSize(new java.awt.Dimension(80, 20));
+
+        tProductoRubroVictoriaNombre.setEditable(false);
+        tProductoRubroVictoriaNombre.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tProductoRubroVictoriaNombre.setPreferredSize(new java.awt.Dimension(150, 20));
 
         javax.swing.GroupLayout pVictoriaDetalleLayout = new javax.swing.GroupLayout(pVictoriaDetalle);
         pVictoriaDetalle.setLayout(pVictoriaDetalleLayout);
@@ -3535,6 +3566,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                             .addComponent(lProductoDetallesTecnicos3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(pVictoriaDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pVictoriaDetalleLayout.createSequentialGroup()
+                                .addGap(126, 126, 126)
+                                .addGroup(pVictoriaDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(spProductoDescripcionLarga1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(spProductoDetallesTecnicos1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(pVictoriaDetalleLayout.createSequentialGroup()
                                 .addGap(5, 5, 5)
                                 .addComponent(tProductoMarcaV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(55, 55, 55)
@@ -3544,13 +3580,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                 .addGap(63, 63, 63)
                                 .addComponent(lProductoMarca3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tProductoRubroV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pVictoriaDetalleLayout.createSequentialGroup()
-                                .addGap(126, 126, 126)
-                                .addGroup(pVictoriaDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(spProductoDescripcionLarga1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(spProductoDetallesTecnicos1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(tProductoRubroVictoriaCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tProductoRubroVictoriaNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(260, Short.MAX_VALUE))
         );
         pVictoriaDetalleLayout.setVerticalGroup(
             pVictoriaDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3582,10 +3615,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                 .addComponent(lProductoExistencia7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(tProductoStock1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lProductoMarca3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(tProductoRubroV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(tProductoRubroVictoriaCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tProductoRubroVictoriaNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(lProductoMarca1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(lProductoDetallesTecnicos3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(38, 38, 38))
+                .addGap(224, 224, 224))
         );
 
         tpVictoria.addTab("Detalle", pVictoriaDetalle);
@@ -4391,7 +4425,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 1271, Short.MAX_VALUE)
+                    .addComponent(tpPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 1271, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(tProductoEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -4648,7 +4682,8 @@ buscarMaestro();
     }//GEN-LAST:event_btRubrosVTCargarActionPerformed
 
     private void CargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CargarActionPerformed
-  Integer productosOmitidos = 0;
+  /*
+        Integer productosOmitidos = 0;
         Boolean productoNuevo = false;
         // PUT - ACTUALIZA
         // POST - CREA
@@ -4668,7 +4703,7 @@ buscarMaestro();
                            
                         }
                     }
-                    for (RubrosSC rubSC : rubrosSC.get()) {
+                    for (RubroSC rubSC : rubrosSC.get()) {
                         if(podVictoria.getRubro().equals(rubSC.getCodigo())){
 
                             if(rubrosSC.obtenerRubro(podVictoria.getRubro()) != null){
@@ -4703,7 +4738,7 @@ buscarMaestro();
         } catch (Exception e) {
             e.printStackTrace();
         }        
-
+*/
     }//GEN-LAST:event_CargarActionPerformed
 
     private void bVictoriaBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bVictoriaBuscarActionPerformed
@@ -5146,7 +5181,8 @@ buscarMaestro();
     private javax.swing.JTextField tProductoPrecioVenta;
     private javax.swing.JTextField tProductoPrecioVentaFinal;
     private javax.swing.JTextField tProductoRubroSCCodigo;
-    private javax.swing.JTextField tProductoRubroV;
+    private javax.swing.JTextField tProductoRubroVictoriaCodigo;
+    private javax.swing.JTextField tProductoRubroVictoriaNombre;
     private javax.swing.JTextField tProductoSC;
     private javax.swing.JTextField tProductoSCMarca;
     private javax.swing.JTextField tProductoSCRubro;
@@ -5414,7 +5450,7 @@ buscarMaestro();
                                 tablaContenidoProductos[i][3] = producto.getNombre();
                                 tablaContenidoProductos[i][4] = producto.getDescripcion();
                                 tablaContenidoProductos[i][5] = producto.getMarca();
-                                tablaContenidoProductos[i][6] = producto.getRubro();
+                                tablaContenidoProductos[i][6] = producto.getRubroVictoria().getNombre();
                                 tablaContenidoProductos[i][7] = producto.getPrecio_contado();
                                 tablaContenidoProductos[i][8] = Integer.valueOf(propVictoria.getProperty("stock"));
                                 
@@ -5454,7 +5490,7 @@ buscarMaestro();
                                 tablaContenidoRubros = new Object[rubrosW.getCantidad()][tablaHeaderRubros.length];
 
                                 int i = 0;
-                                for (RubrosVictoria rubros : rubrosW.get()) {
+                                for (RubroVictoria rubros : rubrosW.get()) {
 
                                     tablaContenidoRubros[i][0] = rubros; 
                                     tablaContenidoRubros[i][1] = i; 
@@ -5620,7 +5656,7 @@ buscarMaestro();
                             tablaContenidoRubrosSC = new Object[rubrosSC.getCantidad()][tablaHeaderRubrosSC.length];
 
                             int i = 0;
-                            for (RubrosSC rubros : rubrosSC.get()) {
+                            for (RubroSC rubros : rubrosSC.get()) {
                                 tablaContenidoRubrosSC[i][0] = rubros; //Se utiliza para pasar despues a la consulta.
                                 //Se utiliza para asociar desde el Modelo al array de contenidos.
                                 tablaContenidoRubrosSC[i][1] = rubros.getId(); //Se utiliza para asociar desde el Modelo al array de contenidos.

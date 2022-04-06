@@ -23,20 +23,24 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class RubrosVictoria {
+public class RubroVictoria {
     private String codigo;
     private String nombre;
     private Integer parent_id;
     private String parent_codigo;
     public Boolean cargado;
-    public RubrosVictoria(Properties propiedades) {
-        this.codigo = codigo;
-        this.nombre = nombre;
+    
+    public RubroVictoria(Properties propiedades) {
+        
         //this.nombre = parent_id;
     }
 
-    public RubrosVictoria() {
+    public RubroVictoria() {
       
+    }
+    
+    public RubroVictoria(JSONObject rubroJ) {
+      loadJSONConsulta(rubroJ);
     }
   
     public String getCodigo() {
@@ -94,7 +98,7 @@ public class RubrosVictoria {
             stringLegible = new String(rawString.getBytes("UTF-8"));
                        
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(RubrosVictoria.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RubroVictoria.class.getName()).log(Level.SEVERE, null, ex);
         }
         return stringLegible;
     }

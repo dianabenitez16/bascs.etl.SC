@@ -6,7 +6,7 @@
 package etl.bascs.victoria.clases;
 
 import etl.bascs.impala.clases.Producto;
-import etl.bascs.impala.clases.RubrosVictoria;
+import etl.bascs.impala.clases.RubroVictoria;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -23,18 +23,18 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class RubrosVictoriaWorker extends SwingWorker<RubrosVictoria[], String> implements PropertyChangeListener {
+public class RubrosVictoriaWorker extends SwingWorker<RubroVictoria[], String> implements PropertyChangeListener {
 
     public ConsultaHttpVictoria consulta;
     private Properties propiedades;
     private Integer cantidad;
     
-    public RubrosVictoria[] rubrosV;
-    public RubrosVictoria rubroV;
+    public RubroVictoria[] rubrosV;
+    public RubroVictoria rubroV;
     public JSONObject rubroJ;
     
     public RubrosVictoriaWorker(Properties prop){
-       rubrosV = new RubrosVictoria[0];
+       rubrosV = new RubroVictoria[0];
        propiedades = prop;
     }
 
@@ -43,7 +43,7 @@ public class RubrosVictoriaWorker extends SwingWorker<RubrosVictoria[], String> 
     }
             
     @Override
-    protected RubrosVictoria[] doInBackground(){
+    protected RubroVictoria[] doInBackground(){
         try{
              setProgress(0);
              consulta = new ConsultaHttpVictoria("http",
@@ -61,12 +61,12 @@ public class RubrosVictoriaWorker extends SwingWorker<RubrosVictoria[], String> 
                 if(cantidad > 0){
                     if(consulta.getJson().has("items")){
                         JSONArray respuesta = consulta.getJson().getJSONArray("items");
-                        rubrosV = new RubrosVictoria[respuesta.length()];
+                        rubrosV = new RubroVictoria[respuesta.length()];
                          for (int i = 0; i < respuesta.length(); i++) {
                             Iterator keys = respuesta.getJSONObject(i).keys();
                             String key = keys.next().toString();
                             JSONObject productoJ = respuesta.getJSONObject(i).getJSONObject(key);
-                            rubroV = new RubrosVictoria(propiedades);
+                            rubroV = new RubroVictoria(propiedades);
                             rubroV.loadJSONConsulta(productoJ);
                             rubrosV[i] = rubroV;
                             setProgress(((i+1)*100)/cantidad);

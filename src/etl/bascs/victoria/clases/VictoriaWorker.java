@@ -5,7 +5,7 @@
  */
 package etl.bascs.victoria.clases;
 
-import etl.bascs.impala.clases.CuotasVictoria;
+import etl.bascs.impala.clases.CuotaVictoria;
 import etl.bascs.impala.clases.ProductoVictoria;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -22,7 +22,7 @@ import javax.swing.SwingWorker;
  * @author User
  */
 public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> implements PropertyChangeListener {
-     private Integer hilosMaximo;
+    private Integer hilosMaximo;
     private Integer hilosCorriendo;
     private Integer hilosIniciados;
     private Integer hilosFinalizados;
@@ -70,7 +70,8 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
             publish("LOADING");
             productosWorker.execute();
             
-            hilosACorrer = productosWorker.get().length;   
+            //hilosACorrer = productosWorker.get().length;   
+            hilosACorrer = 20;   
             
             productosFinalizados = new ProductoVictoria[hilosACorrer];
             productosDetalleWorker = new ProductoVictoriaWorker[hilosACorrer];
@@ -86,6 +87,8 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                     productosDetalleWorker[hilosIniciados].addPropertyChangeListener(this);
                     productosDetalleWorker[hilosIniciados].setId(hilosIniciados);
                     productosDetalleWorker[hilosIniciados].execute();
+                    
+                    
                     
                     /*
                     productosCuotasWorker[hilosIniciados] = new CuotasVictoriaWorker(productosWorker.get()[hilosIniciados],propiedades);

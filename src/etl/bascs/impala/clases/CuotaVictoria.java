@@ -9,18 +9,18 @@ package etl.bascs.impala.clases;
  *
  * @author User
  */
-public class CuotasVictoria {
+public class CuotaVictoria {
     private Integer numero;
     private Integer precio_cuota;
     private Integer precio_contado;
     private Integer precio_credito;
 
-    public CuotasVictoria() {
+    public CuotaVictoria() {
     }
 
     
 
-    public CuotasVictoria(Integer numero, Integer precio_cuota, Integer precio_contado, Integer precio_credito) {
+    public CuotaVictoria(Integer numero, Integer precio_cuota, Integer precio_contado, Integer precio_credito) {
         try{
             this.numero = Integer.valueOf(numero);
             this.precio_cuota = Integer.valueOf(precio_cuota);

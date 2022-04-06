@@ -5,7 +5,7 @@
  */
 package bascs.website.clases;
 
-import etl.bascs.impala.clases.RubrosVictoria;
+import etl.bascs.impala.clases.RubroVictoria;
 import etl.bascs.impala.json.ConsultaHttpSC;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
 import etl.bascs.victoria.clases.RubrosVictoriaWorker;
@@ -24,22 +24,22 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class RubrosWorkerSC extends SwingWorker<RubrosSC[], String> implements PropertyChangeListener {
+public class RubrosWorkerSC extends SwingWorker<RubroSC[], String> implements PropertyChangeListener {
     public ConsultaHttpSC consulta;
     private Properties propiedades;
     private Integer cantidad;
     
-    public RubrosSC[] rubrosSC;
-    public RubrosSC rubroSC;
+    public RubroSC[] rubrosSC;
+    public RubroSC rubroSC;
     public JSONObject rubroJ;
     
     public RubrosWorkerSC(Properties prop){
-       rubrosSC = new RubrosSC[0];
+       rubrosSC = new RubroSC[0];
        propiedades = prop;
     }
      
     @Override
-    protected RubrosSC[] doInBackground(){
+    protected RubroSC[] doInBackground(){
         try{
              setProgress(0);
              consulta = new ConsultaHttpSC("http",
@@ -49,10 +49,10 @@ public class RubrosWorkerSC extends SwingWorker<RubrosSC[], String> implements P
              );
           JSONArray respuesta = consulta.getJason();
                 cantidad = consulta.getJason().length();
-               rubrosSC = new RubrosSC[respuesta.length()];
+               rubrosSC = new RubroSC[respuesta.length()];
                          for (int i = 0; i < respuesta.length(); i++) {
                             JSONObject object = respuesta.getJSONObject(i);
-                            rubroSC = new RubrosSC(propiedades);
+                            rubroSC = new RubroSC(propiedades);
                             rubroSC.loadJSONConsulta(object);
                             rubrosSC[i] = rubroSC;
                             setProgress(((i+1)*100)/cantidad);
@@ -94,8 +94,8 @@ public class RubrosWorkerSC extends SwingWorker<RubrosSC[], String> implements P
         this.consulta = consulta;
     }
     
-    public RubrosSC obtenerRubro(String codigo){
-        for (RubrosSC rubrosSC1 : rubrosSC) {
+    public RubroSC obtenerRubro(String codigo){
+        for (RubroSC rubrosSC1 : rubrosSC) {
             if(rubrosSC1.getCodigo().equals(codigo)){
         //        System.out.println("RUBROS " + codigo); 
                 return rubrosSC1;

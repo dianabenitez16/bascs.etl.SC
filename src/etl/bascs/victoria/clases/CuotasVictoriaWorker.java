@@ -5,7 +5,7 @@
  */
 package etl.bascs.victoria.clases;
 
-import etl.bascs.impala.clases.CuotasVictoria;
+import etl.bascs.impala.clases.CuotaVictoria;
 import etl.bascs.impala.clases.ProductoCuotasVictoria;
 import etl.bascs.impala.clases.ProductoVictoria;
 import etl.bascs.impala.json.ConsultaHttpVictoria;

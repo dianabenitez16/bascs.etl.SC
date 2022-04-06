@@ -18,7 +18,7 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class RubrosSC {
+public class RubroSC {
     private Integer id;
     private String codigo;
     private String nombre;
@@ -26,13 +26,13 @@ public class RubrosSC {
     public Integer cantidad;
     public Boolean cargado;
 
-    public RubrosSC(Properties propiedades) {
+    public RubroSC(Properties propiedades) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
     }
 
-    public RubrosSC() {
+    public RubroSC() {
          //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -109,7 +109,7 @@ public class RubrosSC {
             stringLegible = new String(rawString.getBytes("UTF-8"));
                        
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(RubrosSC.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RubroSC.class.getName()).log(Level.SEVERE, null, ex);
         }
         return stringLegible;
     }

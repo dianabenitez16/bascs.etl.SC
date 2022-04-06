@@ -34,7 +34,7 @@ public class ProductoSC{
     private String rubro;
     private CuotasSC[] cuotas;
     private MarcasSC[] marcasSC;
-    private RubrosSC[] rubrosSC;
+    private RubroSC[] rubrosSC;
     
      public ProductoSC(Properties propiedades) {
         this.id = id;
@@ -88,6 +88,16 @@ public class ProductoSC{
         }
         
     }
+
+    public CuotasSC[] getCuotas() {
+        return cuotas;
+    }
+
+    public void setCuotas(CuotasSC[] cuotas) {
+        this.cuotas = cuotas;
+    }
+     
+    
      public MarcasSC obtenerMarca(String codigo){
         for (MarcasSC marcasSC1 : marcasSC) {
             if(marcasSC1.getCodigo().equals(codigo)){

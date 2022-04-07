@@ -32,8 +32,11 @@ public class RubroSC {
         this.nombre = nombre;
     }
 
+    public RubroSC(JSONObject rubroJ) {
+         loadJSONConsulta(rubroJ);
+    }
+
     public RubroSC() {
-         //To change body of generated methods, choose Tools | Templates.
     }
 
     public Integer getId() {

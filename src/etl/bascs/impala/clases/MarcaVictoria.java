@@ -16,20 +16,23 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class MarcasVictoria {
+public class MarcaVictoria {
     private String codigo;
     private String nombre;
     public Integer cantidad;
     public Boolean cargado;
     private Integer marca_id;
     
-      public MarcasVictoria(Properties propiedades) {
+      public MarcaVictoria(Properties propiedades) {
         this.codigo = codigo;
         this.nombre = nombre;
     }
 
-    public MarcasVictoria() {
-        
+    public MarcaVictoria() {
+    }
+
+    public MarcaVictoria(JSONObject marcaJ) {
+        loadJSONConsulta(marcaJ);
     }
        public String getCodigo() {
         return codigo;

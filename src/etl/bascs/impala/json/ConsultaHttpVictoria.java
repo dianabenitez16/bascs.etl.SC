@@ -5,7 +5,7 @@
  */
 package etl.bascs.impala.json;
 
-import etl.bascs.impala.clases.MarcasVictoria;
+import etl.bascs.impala.clases.MarcaVictoria;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class ConsultaHttpVictoria {
     private String rubros;
     private String marcas;
     private String productos;
-    private MarcasVictoria parametros;
+    private MarcaVictoria parametros;
 
     public ConsultaHttpVictoria(String protocolo, String servidor, String puerto, String metodo, String recurso) {
         this.protocolo = protocolo;

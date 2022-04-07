@@ -1,8 +1,9 @@
 package bascs.website.clases;
 
 import bascs.website.clases.CuotasSC;
-import etl.bascs.impala.clases.MarcasSC;
+import etl.bascs.impala.clases.MarcaSC;
 import etl.bascs.impala.main;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,14 +27,16 @@ public class ProductoSC{
     private String descripcion;
     private String nombre;
     private String marca;
-    private Double precio;
+    private Integer precio;
     private Integer stock;
     
     public Boolean cargado;
     
     private String rubro;
     private CuotasSC[] cuotas;
-    private MarcasSC[] marcasSC;
+    private MarcaSC marcaSC;
+    private RubroSC rubroSC;
+    private MarcaSC[] marcasSC;
     private RubroSC[] rubrosSC;
     
      public ProductoSC(Properties propiedades) {
@@ -58,15 +61,16 @@ public class ProductoSC{
             setCodigo((getCodigo() == null ? productoJ.optString("codigo_interno_ws"):getCodigo()));
             setNombre((getNombre() == null ? productoJ.optString("nombre") : getNombre()));
             setDescripcion((getDescripcion() == null ? productoJ.optString("descripcion") : getDescripcion()));
-            setPrecio((getPrecio() == null ? productoJ.optDouble("precio") : getPrecio()));
+            setPrecio((getPrecio() == null ? productoJ.optInt("precio") : getPrecio()));
             setStock((getStock() == null ? productoJ.optInt("stock") : getStock()));
-            JSONObject marcaJ = new JSONObject();
-            marcaJ = productoJ.getJSONObject("marca");
-            setMarca((getMarca() == null ? marcaJ.optString("nombre") : getMarca()));
-            JSONObject rubroJ = new JSONObject();
-            rubroJ = productoJ.getJSONObject("rubro");
-            setRubro((getRubro() == null ? rubroJ.optString("nombre") : getRubro()));
-              
+            RubroSC rubSC = new RubroSC();
+            rubSC.setId(productoJ.optInt("rubro_id"));
+            setRubroSC(rubSC);
+            MarcaSC marSC = new MarcaSC();
+            marSC.setId(productoJ.optInt("marca_id"));
+            setMarcaSC(marSC);
+             
+            
             cargado = true;
            
             } catch (JSONException e) {
@@ -79,10 +83,13 @@ public class ProductoSC{
             setCodigo(productoJ.optString("codigo_interno_ws"));
             setNombre(productoJ.optString("nombre"));
             setDescripcion(productoJ.optString("descripcion"));
-            setMarca(productoJ.optString("marca"));
-            setRubro(productoJ.optString("rubro"));
+            setStock(productoJ.optInt("stock"));
+            setPrecio(productoJ.optInt("precio"));
+            setMarcaSC(new MarcaSC(productoJ.getJSONObject("marca")));
+            setRubroSC(new RubroSC(productoJ.getJSONObject("rubro")));
+            
+         
             cargado = true;
-            System.out.println(" " + cargado);
         } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -98,8 +105,8 @@ public class ProductoSC{
     }
      
     
-     public MarcasSC obtenerMarca(String codigo){
-        for (MarcasSC marcasSC1 : marcasSC) {
+     public MarcaSC obtenerMarca(String codigo){
+        for (MarcaSC marcasSC1 : marcasSC) {
             if(marcasSC1.getCodigo().equals(codigo)){
            
                 return marcasSC1;
@@ -124,14 +131,7 @@ public class ProductoSC{
         this.descripcion = descripcion;
     }
 
-    public Double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(Double precio) {
-        this.precio = precio;
-    }
-
+   
     public String getNombre() {
         return nombre;
     }
@@ -140,20 +140,22 @@ public class ProductoSC{
         this.nombre = nombre;
     }
 
-    public String getMarca() {
-        return marca;
+   
+
+    public MarcaSC getMarcaSC() {
+        return marcaSC;
     }
 
-    public void setMarca(String marca) {
-        this.marca = marca;
+    public void setMarcaSC(MarcaSC marcaSC) {
+        this.marcaSC = marcaSC;
     }
 
-    public String getRubro() {
-        return rubro;
+    public RubroSC getRubroSC() {
+        return rubroSC;
     }
 
-    public void setRubro(String rubro) {
-        this.rubro = rubro;
+    public void setRubroSC(RubroSC rubroSC) {
+        this.rubroSC = rubroSC;
     }
 
     public Integer getId() {
@@ -180,6 +182,15 @@ public class ProductoSC{
         this.cargado = cargado;
     }
 
+    public Integer getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(Integer precio) {
+        this.precio = precio;
+    }
+
+    
   
            
 }

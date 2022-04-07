@@ -5,8 +5,10 @@
  */
 package etl.bascs.impala;
 
+import bascs.website.clases.CuotasSC;
+import bascs.website.clases.CuotasWorkerSC;
 import com.formdev.flatlaf.IntelliJTheme;
-import etl.bascs.impala.clases.MarcasVictoria;
+import etl.bascs.impala.clases.MarcaVictoria;
 import etl.bascs.victoria.clases.MarcasVictoriaWorker;
 import etl.bascs.impala.clases.Producto;
 import etl.bascs.impala.clases.ProductoVictoria;
@@ -22,7 +24,7 @@ import bascs.website.clases.ProductoSC;
 import bascs.website.clases.ProductosWorkerSC;
 import bascs.website.clases.RubrosWorkerSC;
 import etl.bascs.impala.clases.CuotaVictoria;
-import etl.bascs.impala.clases.MarcasSC;
+import etl.bascs.impala.clases.MarcaSC;
 import etl.bascs.impala.worker.PrestashopWorker;
 import etl.bascs.victoria.clases.CuotasVictoriaWorker;
 import etl.bascs.victoria.clases.ProductoVictoriaWorker;
@@ -114,6 +116,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public ProductoDetalleWorkerSC productoSC;
     public VictoriaWorker victoriaW;
     public CuotasVictoriaWorker cuotasW;
+    public CuotasWorkerSC cuotasSCW;
     
     public PrestashopWorker prestashopW;
     public MaestroWorker maestroW;
@@ -255,7 +258,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         }
     }
     public void buscarProductoWebsite (ProductoSC productoSCW){
-       if(!tProductoSC.getText().isEmpty()){
+       if(!tProductoIDSC.getText().isEmpty()){
             productoSC = new ProductoDetalleWorkerSC(productoSCW, getPropiedades());
             productoSC.addPropertyChangeListener(this);
             productoSC.execute();
@@ -263,6 +266,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             JOptionPane.showMessageDialog(null, "Ingrese un codigo de producto válido.");
         }
     } 
+     
     public void cargarProducto(Producto producto){
         if(producto.cargado){
             tProductoID.setText(producto.getCodigo());
@@ -311,7 +315,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             tProductoIDV.setText(producto.getCodigo());
             tProductoNombreV.setText(producto.getNombre());
             taProductoDescripcionV.setText(producto.getDescripcion());
-            tProductoMarcaV.setText(producto.getMarca());
+            tProductoMarcaVictoriaNombre.setText(producto.getMarcaVictoria().getNombre());
+            tProductoMarcaVictoriaCodigo.setText(producto.getMarcaVictoria().getCodigo());
             tProductoRubroVictoriaCodigo.setText(producto.getRubroVictoria().getCodigo());
             tProductoRubroVictoriaNombre.setText(producto.getRubroVictoria().getNombre());
             
@@ -332,16 +337,33 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
            tProductoSC.setText(producto.getCodigo());
            tProductoNombre.setText(producto.getNombre());
            taProductoDescripcionSC.setText(producto.getDescripcion());
-           tProductoSCMarca.setText(producto.getMarca());
-           tProductoSCRubro.setText(producto.getRubro());
-       }
+           tProductoSCMarca.setText(formatInt.format(producto.getMarcaSC().getId()));
+           tProductoSCRubro.setText(formatInt.format(producto.getRubroSC().getId()));
+            Object cuotas[][] = new Object[producto.getCuotas().length][4];
+            for (int i = 0; i < cuotas.length; i++){
+                cuotas[i][0] = producto.getCuotas()[i].getNumero();
+                cuotas[i][1] = producto.getCuotas()[i].getImporte_cuota();
+                cuotas[i][2] = producto.getCuotas()[i].getProducto_id();
+                
+            }
+             cargarTablaCuotasSC(cuotas);
+        
+        }
+  
   }
     public void cargarTablaCuotasV(Object[][] contenido){
-       tbProductoCuotas.setModel(new javax.swing.table.DefaultTableModel(contenido,new String [] {"CUOTA", "PRECIO CUOTA", "PRECIO CREDITO", "PRECIO CONTADO"}));
+       tbProductoCuotas.setModel(new javax.swing.table.DefaultTableModel(contenido,new String [] {"CUOTA", "PRECIO CONTADO", "PRECIO CREDITO", "PRECIO CUOTA"}));
         tbProductoCuotas.getColumnModel().getColumn(0).setPreferredWidth(130);
         tbProductoCuotas.getColumnModel().getColumn(1).setPreferredWidth(130);
         tbProductoCuotas.getColumnModel().getColumn(2).setPreferredWidth(130);
         tbProductoCuotas.getColumnModel().getColumn(3).setPreferredWidth(130);
+    }
+    public void cargarTablaCuotasSC(Object[][] contenido){
+       tbProductoCuotasSC.setModel(new javax.swing.table.DefaultTableModel(contenido,new String [] {"CUOTA", "IMPORTE", "PRODUCTO ID"}));
+        tbProductoCuotasSC.getColumnModel().getColumn(0).setPreferredWidth(130);
+        tbProductoCuotasSC.getColumnModel().getColumn(1).setPreferredWidth(130);
+        tbProductoCuotasSC.getColumnModel().getColumn(2).setPreferredWidth(130);
+        tbProductoCuotasSC.getColumnModel().getColumn(3).setPreferredWidth(130);
     }
     public void cargarTablaImagenes(Object[][] contenido){
         tbProductoImagenes.setModel(new javax.swing.table.DefaultTableModel(contenido,new String [] {"ID", "URL"}));
@@ -506,6 +528,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         cuotasW.addPropertyChangeListener(this);
         cuotasW.execute();
     }
+     
     public void buscarRubrosSC(){
         cargarTablaRubrosSC(new Object[0][0]);
         
@@ -516,6 +539,17 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         rubrosSC = new RubrosWorkerSC(propiedades);
         rubrosSC.addPropertyChangeListener(this);
         rubrosSC.execute();
+    }
+     public void buscarCuotasSC(){
+        cargarTablaRubrosSC(new Object[0][0]);
+        
+        Properties propiedades = new Properties();
+        propiedades.putAll(propSC);
+        propiedades.putAll(propGenerales);
+        
+        cuotasSCW = new CuotasWorkerSC(propiedades);
+        cuotasSCW.addPropertyChangeListener(this);
+        cuotasSCW.execute();
     }
     public void buscarMarcasSC(){
         Properties propiedades = new Properties();
@@ -711,9 +745,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         try{  
             taVictoriaSincronizar.append("\n\nInicia sincronizacion de MARCAS.");
             //RECORRIDO VICTORIA
-            for (MarcasVictoria marVictoria : marcasW.get()) {
+            for (MarcaVictoria marVictoria : marcasW.get()) {
                 marcaNueva = true;
-                for (MarcasSC marSC : marcasSC.get()) {
+                for (MarcaSC marSC : marcasSC.get()) {
                     if(marVictoria.getCodigo().equals(marSC.getCodigo())){
                         marcaNueva = false;
                         if(!marVictoria.getNombre().equals(marSC.getNombre())){
@@ -734,9 +768,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
             
             //RECORRIDO WEBSERVICE ESTO DEBE SER PARA ELIMINAR MARCAS
-            for (MarcasSC marSC : marcasSC.get()) {
+            for (MarcaSC marSC : marcasSC.get()) {
                 marcaEliminar = true;
-                for (MarcasVictoria marVictoria : marcasW.get()) {
+                for (MarcaVictoria marVictoria : marcasW.get()) {
                     if(marVictoria.getCodigo().equals(marSC.getCodigo())){
                         marcaEliminar = false;
                     }
@@ -763,7 +797,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         // POST - CREA
         try{
             //RECORRIDO VICTORIA
-            for (ProductoVictoria prodVictoria : victoriaW.get()) {
+            for (ProductoVictoria prodVictoria : productosW.get()) {
                 productoNuevo = true;
                 prendido = false;
                 for (ProductoSC podSC : productosSC.get()) {
@@ -772,6 +806,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         productoNuevo = false;
                         
                         prodVictoria.setProducto_id(podSC.getId());
+                        
+                        for(CuotasSC cuoSC : cuotasSCW.get()){
+                            
+                            if(prodVictoria.getProducto_id() == cuoSC.getProducto_id()){
+                                System.out.println("PRODUCTO ID " + cuoSC.getProducto_id());
+                            }
+                            
+                        }
                         
                         if(!prodVictoria.getNombre().trim().equals(podSC.getNombre().trim())){
                             System.out.println("PUT DE PRODUCTO. Nombres diferentes. CODIGO: "+prodVictoria.getCodigo());
@@ -825,7 +867,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 taVictoriaSincronizar.append("Productos a ser insertados: " + prodVictoria.getJSON());
                 
                 if(productoNuevo){
-                    ProductosWSPOST(prodVictoria);
+            //        ProductosWSPOST(prodVictoria);
                     taVictoriaSincronizar.append("SE INSERTARON " + prodVictoria.getCodigo());
                 }else{
                     
@@ -841,9 +883,27 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             e.printStackTrace();
         }
    }
-   
+   public void recorridoCuotas(){
+       Boolean cuotaNueva = true; 
+       try {
+            for (ProductoVictoria prodVictoria : victoriaW.get()) {
+                prendido = false;
+                for (ProductoSC podSC : productosSC.get()) {
+                 if(prodVictoria.getCodigo().equals(podSC.getCodigo())){
+                     prodVictoria.setProducto_id(podSC.getId());
+                        
+                 }
+                    
+                }
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
     /**/
-    public void marcasWSPOST(MarcasVictoria marcasVT){
+    public void marcasWSPOST(MarcaVictoria marcasVT){
         if(!DEBUG){
             try {
                 HttpClient hc = new DefaultHttpClient();
@@ -989,7 +1049,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 HttpClient hc = new DefaultHttpClient();
                 HttpPost hp = new HttpPost("http://www.saracomercial.com/panel/api/loader/productos");
 
-                hp.setEntity(new StringEntity(productoVT.getJSON().toString(), "UTF-8"));
+    //            hp.setEntity(new StringEntity(productoVT.getJSON().toString(), "UTF-8"));
                 hp.setHeader("User-Agent", USER_AGENT);
                 hp.setHeader("Content-type", "application/json;charset=UTF-8");
                 hp.setHeader("Accept", "application/json");
@@ -1035,7 +1095,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 //System.out.println("POST: "+"http://www.saracomercial.com/panel/api/loader/rubros");
                 System.out.println("OBJETO POST: "+rubroVT.getJSON().toString());
 
-                hp.setEntity(new StringEntity(rubroVT.getJSON().toString(), "UTF-8"));
+  //              hp.setEntity(new StringEntity(rubroVT.getJSON().toString(), "UTF-8"));
                 hp.setHeader("Content-type", "application/json;charset=UTF-8");
                 hp.setHeader("Accept", "application/json");
                 hp.setHeader("Retry-After", "120");
@@ -1080,7 +1140,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         }
     }
    
-    public void marcasWSDELETE(MarcasSC marcaWS){
+    public void marcasWSDELETE(MarcaSC marcaWS){
         //ELIMINAR DEL WS
         if(!DEBUG){
             
@@ -1637,7 +1697,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoNombreV = new javax.swing.JTextField();
         spProductoDescripcionLarga1 = new javax.swing.JScrollPane();
         taProductoDescripcionV = new javax.swing.JTextArea();
-        tProductoMarcaV = new javax.swing.JTextField();
+        tProductoMarcaVictoriaNombre = new javax.swing.JTextField();
         spProductoDetallesTecnicos1 = new javax.swing.JScrollPane();
         tbProductoCuotas = new javax.swing.JTable();
         tProductoStock1 = new javax.swing.JTextField();
@@ -1646,6 +1706,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoRubroVictoriaCodigo = new javax.swing.JTextField();
         lProductoMarca3 = new javax.swing.JLabel();
         tProductoRubroVictoriaNombre = new javax.swing.JTextField();
+        tProductoMarcaVictoriaCodigo = new javax.swing.JTextField();
         pVictoriaMaestro = new javax.swing.JPanel();
         sProductoSeparador5 = new javax.swing.JSeparator();
         bVictoriaLimpiar = new javax.swing.JButton();
@@ -1703,7 +1764,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoMoneda2 = new javax.swing.JTextField();
         tProductoExistencia2 = new javax.swing.JCheckBox();
         spProductoDetallesTecnicos2 = new javax.swing.JScrollPane();
-        tbProductoDetallesTecnicos2 = new javax.swing.JTable();
+        tbProductoCuotasSC = new javax.swing.JTable();
         lProductoExistencia13 = new javax.swing.JLabel();
         lProductoMarca4 = new javax.swing.JLabel();
         lProductoMarca5 = new javax.swing.JLabel();
@@ -3494,9 +3555,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         taProductoDescripcionV.setRows(5);
         spProductoDescripcionLarga1.setViewportView(taProductoDescripcionV);
 
-        tProductoMarcaV.setEditable(false);
-        tProductoMarcaV.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tProductoMarcaV.setPreferredSize(new java.awt.Dimension(150, 20));
+        tProductoMarcaVictoriaNombre.setEditable(false);
+        tProductoMarcaVictoriaNombre.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tProductoMarcaVictoriaNombre.setPreferredSize(new java.awt.Dimension(150, 20));
 
         spProductoDetallesTecnicos1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         spProductoDetallesTecnicos1.setPreferredSize(new java.awt.Dimension(400, 150));
@@ -3539,6 +3600,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoRubroVictoriaNombre.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoRubroVictoriaNombre.setPreferredSize(new java.awt.Dimension(150, 20));
 
+        tProductoMarcaVictoriaCodigo.setEditable(false);
+        tProductoMarcaVictoriaCodigo.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tProductoMarcaVictoriaCodigo.setPreferredSize(new java.awt.Dimension(150, 20));
+
         javax.swing.GroupLayout pVictoriaDetalleLayout = new javax.swing.GroupLayout(pVictoriaDetalle);
         pVictoriaDetalle.setLayout(pVictoriaDetalleLayout);
         pVictoriaDetalleLayout.setHorizontalGroup(
@@ -3571,9 +3636,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                     .addComponent(spProductoDescripcionLarga1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(spProductoDetallesTecnicos1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(pVictoriaDetalleLayout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(tProductoMarcaV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(55, 55, 55)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tProductoMarcaVictoriaCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tProductoMarcaVictoriaNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(33, 33, 33)
                                 .addComponent(lProductoExistencia7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(tProductoStock1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -3583,7 +3650,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                 .addComponent(tProductoRubroVictoriaCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tProductoRubroVictoriaNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(260, Short.MAX_VALUE))
+                .addContainerGap(268, Short.MAX_VALUE))
         );
         pVictoriaDetalleLayout.setVerticalGroup(
             pVictoriaDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3611,13 +3678,15 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addGap(53, 53, 53)
                         .addGroup(pVictoriaDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pVictoriaDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(tProductoMarcaV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lProductoExistencia7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(tProductoStock1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lProductoMarca3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(tProductoRubroVictoriaCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(tProductoRubroVictoriaNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lProductoMarca1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(pVictoriaDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lProductoMarca1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tProductoMarcaVictoriaNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tProductoMarcaVictoriaCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(lProductoDetallesTecnicos3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(224, 224, 224))
         );
@@ -4071,8 +4140,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         spProductoDetallesTecnicos2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         spProductoDetallesTecnicos2.setPreferredSize(new java.awt.Dimension(400, 150));
 
-        tbProductoDetallesTecnicos2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tbProductoDetallesTecnicos2.setModel(new javax.swing.table.DefaultTableModel(
+        tbProductoCuotasSC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tbProductoCuotasSC.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -4080,7 +4149,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 "Numero", "Precio Crédito", "Precio Contado", "Precio Cuota"
             }
         ));
-        spProductoDetallesTecnicos2.setViewportView(tbProductoDetallesTecnicos2);
+        spProductoDetallesTecnicos2.setViewportView(tbProductoCuotasSC);
 
         lProductoExistencia13.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia13.setText("Stock superior a");
@@ -4112,6 +4181,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         tProductoIDSC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoIDSC.setPreferredSize(new java.awt.Dimension(100, 20));
+        tProductoIDSC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tProductoIDSCActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pWebsiteDetalleLayout = new javax.swing.GroupLayout(pWebsiteDetalle);
         pWebsiteDetalle.setLayout(pWebsiteDetalleLayout);
@@ -4425,7 +4499,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tpPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 1271, Short.MAX_VALUE)
+                    .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 1271, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(tProductoEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -4668,7 +4742,7 @@ buscarMaestro();
     }//GEN-LAST:event_tVictoriaHilosActionPerformed
 
     private void debugRubroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugRubroActionPerformed
-
+productosRecorrido();
     }//GEN-LAST:event_debugRubroActionPerformed
 
     private void btRubrosVTPostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRubrosVTPostActionPerformed
@@ -4748,11 +4822,9 @@ buscarMaestro();
         buscarRubrosVictoria();
         buscarRubrosSC();
         buscarMarcasSC();
+        buscarCuotasSC();
         buscarProductosVictoria();
 
-        sincronizarVictoria();
-   
-       
     }//GEN-LAST:event_bVictoriaBuscarActionPerformed
 
     private void bVictoriaLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bVictoriaLimpiarActionPerformed
@@ -4806,7 +4878,7 @@ buscarMaestro();
 
     private void bProductoBuscarSCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoBuscarSCActionPerformed
         productoBusquedaSC = new ProductoSC();
-        productoBusquedaSC.setCodigo(tProductoSC.getText());
+        productoBusquedaSC.setId(Integer.valueOf(tProductoSC.getText()));
         buscarProductoWebsite(productoBusquedaSC);         // TODO add your handling code here:
     }//GEN-LAST:event_bProductoBuscarSCActionPerformed
 
@@ -4900,11 +4972,15 @@ buscarMaestro();
         // TODO add your handling code here:
     }//GEN-LAST:event_bMaestroLimpiar2ActionPerformed
 
+    private void tProductoIDSCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tProductoIDSCActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tProductoIDSCActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        IntelliJTheme.install( etl.bascs.impala.main.class.getResourceAsStream("/json/Hiberbee.theme.json" ) );
+        IntelliJTheme.install(etl.bascs.impala.main.class.getResourceAsStream("/json/Hiberbee.theme.json" ) );
         
         Font font = UIManager.getFont("TableHeader.font");
         font = font.deriveFont(10f);
@@ -5171,7 +5247,8 @@ buscarMaestro();
     private javax.swing.JTextField tProductoIDV;
     private javax.swing.JTextField tProductoMarca;
     private javax.swing.JTextField tProductoMarcaSCCodigo;
-    private javax.swing.JTextField tProductoMarcaV;
+    private javax.swing.JTextField tProductoMarcaVictoriaCodigo;
+    private javax.swing.JTextField tProductoMarcaVictoriaNombre;
     private javax.swing.JTextField tProductoMoneda;
     private javax.swing.JTextField tProductoMoneda2;
     private javax.swing.JTextField tProductoNombre;
@@ -5211,8 +5288,8 @@ buscarMaestro();
     private javax.swing.JTable tbMaestroProductos;
     private javax.swing.JTable tbPrestashop;
     private javax.swing.JTable tbProductoCuotas;
+    private javax.swing.JTable tbProductoCuotasSC;
     private javax.swing.JTable tbProductoDetallesTecnicos;
-    private javax.swing.JTable tbProductoDetallesTecnicos2;
     private javax.swing.JTable tbProductoImagenes;
     private javax.swing.JTable tbProductosSC;
     private javax.swing.JTable tbVictoriaProductos;
@@ -5449,8 +5526,8 @@ buscarMaestro();
                                 tablaContenidoProductos[i][2] = producto.getCodigo();
                                 tablaContenidoProductos[i][3] = producto.getNombre();
                                 tablaContenidoProductos[i][4] = producto.getDescripcion();
-                                tablaContenidoProductos[i][5] = producto.getMarca();
-                                tablaContenidoProductos[i][6] = producto.getRubroVictoria().getNombre();
+                                tablaContenidoProductos[i][5] = producto.getMarcaVictoria().getCodigo();
+                                tablaContenidoProductos[i][6] = producto.getRubroVictoria().getCodigo();
                                 tablaContenidoProductos[i][7] = producto.getPrecio_contado();
                                 tablaContenidoProductos[i][8] = Integer.valueOf(propVictoria.getProperty("stock"));
                                 
@@ -5537,7 +5614,7 @@ buscarMaestro();
                             tablaContenidoMarcas = new Object[marcasW.getCantidad()][tablaHeaderMarcas.length];
 
                             int i = 0;
-                            for (MarcasVictoria marcas : marcasW.get()) {
+                            for (MarcaVictoria marcas : marcasW.get()) {
                                 tablaContenidoMarcas[i][0] = marcas; //Se utiliza para pasar despues a la consulta.
                                 tablaContenidoMarcas[i][1] = i; //Se utiliza para asociar desde el Modelo al array de contenidos.
                                 tablaContenidoMarcas[i][2] = marcas.getCodigo();
@@ -5618,7 +5695,7 @@ buscarMaestro();
                             tablaContenidoMarcasSC = new Object[marcasSC.getCantidad()][tablaHeaderMarcasSC.length];
 
                             int i = 0;
-                            for (MarcasSC marcas : marcasSC.get()) {
+                            for (MarcaSC marcas : marcasSC.get()) {
                                 tablaContenidoMarcasSC[i][0] = marcas; //Se utiliza para pasar despues a la consulta.
                                 //Se utiliza para asociar desde el Modelo al array de contenidos.
                                 tablaContenidoMarcasSC[i][1] = marcas.getId(); //Se utiliza para asociar desde el Modelo al array de contenidos.
@@ -5678,7 +5755,7 @@ buscarMaestro();
                     System.out.println("Error desconocido: "+rubrosSC.consulta.getDebugMessage());
                     System.err.println(ex.getMessage());
                 }
-            }}else if("ProductoWorkerSC".equals(source)){
+            }}else if("ProductosWorkerSC".equals(source)){
             if(value.equals("STARTED")){
                  tProductoEstado.setText("Descargando maestro...");
             }else if(value.equals("DONE")){
@@ -5704,8 +5781,8 @@ buscarMaestro();
                                 tablaContenidoProductosSC[i][2] = productos.getCodigo(); //Se utiliza para asociar desde el Modelo al array de contenidos.
                                 tablaContenidoProductosSC[i][3] = productos.getNombre();
                                 tablaContenidoProductosSC[i][4] = productos.getDescripcion();
-                                tablaContenidoProductosSC[i][5] = productos.getRubro();
-                                tablaContenidoProductosSC[i][6] = productos.getMarca();
+                                tablaContenidoProductosSC[i][5] = productos.getRubroSC().getNombre();
+                                tablaContenidoProductosSC[i][6] = productos.getMarcaSC().getNombre();
                                 tablaContenidoProductosSC[i][7] = productos.getPrecio();
                                 tablaContenidoProductosSC[i][8] = productos.getStock();
                                 

@@ -16,19 +16,25 @@ import org.json.JSONObject;
  *
  * @author User
  */
-    public class MarcasSC {
+    public class MarcaSC {
        private Integer id;
        private String codigo;
        private String nombre;
        private Boolean cargado;
        public Boolean hasid;
 
-    public MarcasSC(Properties propiedades) {
+    public MarcaSC(Properties propiedades) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
     }
 
+   public MarcaSC(JSONObject marcaJ) {
+        loadJSONConsulta(marcaJ);
+    }
+
+    public MarcaSC() {
+    }
     
     
     public Integer getId() {

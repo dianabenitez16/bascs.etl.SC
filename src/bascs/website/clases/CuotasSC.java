@@ -12,10 +12,17 @@ package bascs.website.clases;
 public class CuotasSC {
     private Integer id;
     private Integer producto_id;
-    private Integer cuotas;
+    private Integer numero;
     private Integer posee_descuento;
     private Integer importe_cuota;
     private Integer porcentaje_descuento;
+
+    public CuotasSC( Integer producto_id, Integer cuotas, Integer importe_cuota) {
+       
+        this.producto_id = producto_id;
+        this.numero = cuotas;
+        this.importe_cuota = importe_cuota;
+    }
 
     public Integer getId() {
         return id;
@@ -33,12 +40,12 @@ public class CuotasSC {
         this.producto_id = producto_id;
     }
 
-    public Integer getCuotas() {
-        return cuotas;
+    public Integer getNumero() {
+        return numero;
     }
 
-    public void setCuotas(Integer cuotas) {
-        this.cuotas = cuotas;
+    public void setNumero(Integer cuotas) {
+        this.numero = cuotas;
     }
 
     public Integer getPosee_descuento() {

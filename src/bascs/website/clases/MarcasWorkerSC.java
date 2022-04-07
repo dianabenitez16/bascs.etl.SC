@@ -5,7 +5,7 @@
  */
 package bascs.website.clases;
 
-import etl.bascs.impala.clases.MarcasSC;
+import etl.bascs.impala.clases.MarcaSC;
 import etl.bascs.impala.json.ConsultaHttpSC;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -23,24 +23,24 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class MarcasWorkerSC extends SwingWorker<MarcasSC[], String> implements PropertyChangeListener{
+public class MarcasWorkerSC extends SwingWorker<MarcaSC[], String> implements PropertyChangeListener{
 
     public ConsultaHttpSC consulta;
     private Properties propiedades;
     private Integer cantidad;
     
-    private MarcasSC[] marcasSC;
-    public MarcasSC marcaSC; 
+    private MarcaSC[] marcasSC;
+    public MarcaSC marcaSC; 
    
     
     public MarcasWorkerSC(Properties prop){
-        marcasSC = new MarcasSC[0];
+        marcasSC = new MarcaSC[0];
         propiedades = prop;
     }
 
    
     @Override
-    protected MarcasSC[] doInBackground(){
+    protected MarcaSC[] doInBackground(){
   try{
              setProgress(0);
              consulta = new ConsultaHttpSC("http",
@@ -51,10 +51,10 @@ public class MarcasWorkerSC extends SwingWorker<MarcasSC[], String> implements P
         
                 JSONArray respuesta = consulta.getJason();
                 cantidad = consulta.getJason().length();
-               marcasSC = new MarcasSC[respuesta.length()];
+               marcasSC = new MarcaSC[respuesta.length()];
                          for (int i = 0; i < respuesta.length(); i++) {
                             JSONObject object = respuesta.getJSONObject(i);
-                            marcaSC = new MarcasSC(propiedades);
+                            marcaSC = new MarcaSC(propiedades);
                             marcaSC.loadJSONConsulta(object);
                             marcasSC[i] = marcaSC;
                             setProgress(((i+1)*100)/cantidad);
@@ -87,8 +87,8 @@ public class MarcasWorkerSC extends SwingWorker<MarcasSC[], String> implements P
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
-    public MarcasSC obtenerMarca(String codigo){
-        for (MarcasSC marcasSC1 : marcasSC) {
+    public MarcaSC obtenerMarca(String codigo){
+        for (MarcaSC marcasSC1 : marcasSC) {
             if(marcasSC1.getCodigo().equals(codigo)){
        //         System.out.println("CODIGO " + codigo);
                 return marcasSC1;

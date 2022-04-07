@@ -41,8 +41,8 @@ public class ProductoVictoria {
     private RubroVictoria rubroVictoria; 
     private RubroSC rubroSC; 
     
-    private MarcasVictoria marcaVictoria;
-    private MarcasSC marcaSC;
+    private MarcaVictoria marcaVictoria;
+    private MarcaSC marcaSC;
     
 
     public ProductoVictoria() {
@@ -56,8 +56,7 @@ public class ProductoVictoria {
             setCodigo((getCodigo() == null ? productoJ.optString("codigo_interno_ws"):getCodigo()));
             setNombre((getNombre() == null ? productoJ.optString("nombre") : getNombre()));
             setDescripcion((getDescripcion() == null ? productoJ.optString("descripcion") : getDescripcion()));
-            setMarca((getMarca() == null ? productoJ.optString("marca") : getMarca()));
-            
+            setMarcaVictoria(new MarcaVictoria(productoJ.getJSONObject("marca")));
             setRubroVictoria(new RubroVictoria(productoJ.getJSONObject("rubro")));
             
             setPrecio_contado((getPrecio_contado() == null ? productoJ.optInt("precio") : getPrecio_contado()));
@@ -90,15 +89,19 @@ public class ProductoVictoria {
             //System.out.println("CODIGO DEL MAESTRO "  + productoJ.optString("codigo_interno_ws"));
             setNombre(productoJ.optString("nombre"));
             setDescripcion(productoJ.optString("descripcion"));
-            setMarca_id(productoJ.optInt("marca"));
-            setRubroVictoria(new RubroVictoria(productoJ.getJSONObject("rubro")));
+            RubroVictoria rubVictoria = new RubroVictoria();
+            rubVictoria.setCodigo(productoJ.optString("rubro"));
+            setRubroVictoria(rubVictoria);
+            MarcaVictoria marVictoria = new MarcaVictoria();
+            marVictoria.setCodigo(productoJ.optString("marca"));
+            setMarcaVictoria(marVictoria);
             /*
             RubroSC rubroSC = new RubroSC();
             rubroSC.setId(productoJ.optInt("rubro"));
             setRubroSC(rubroSC);
             */
             cargado = true;
-            System.out.println(" " + cargado);
+     //       System.out.println(" " + cargado);
         } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -129,14 +132,21 @@ public class ProductoVictoria {
     public void setRubroSC(RubroSC rubroSC) {
         this.rubroSC = rubroSC;
     }
-     
-     
+
     public String getCodigo() {
         return codigo;
     }
 
     public void setCodigo(String codigo) {
         this.codigo = decodeUFT(codigo);
+    }
+
+    public MarcaVictoria getMarcaVictoria() {
+        return marcaVictoria;
+    }
+
+    public void setMarcaVictoria(MarcaVictoria marcaVictoria) {
+        this.marcaVictoria = marcaVictoria;
     }
 
     public String getDescripcion() {

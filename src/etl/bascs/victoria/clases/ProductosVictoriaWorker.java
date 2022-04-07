@@ -66,7 +66,7 @@ public class ProductosVictoriaWorker extends SwingWorker<ProductoVictoria[], Str
                             String key = keys.next().toString();
                             JSONObject productoJ = respuesta.getJSONObject(i).getJSONObject(key);
                             producto = new ProductoVictoria();
-                            producto.loadJSONDetalle(productoJ);
+                            producto.loadJSONMaestro(productoJ);
                             productos[i] = producto;
                             setProgress(((i+1)*100)/cantidad);
                             //Thread.sleep(50); //JUST FOR TESTING

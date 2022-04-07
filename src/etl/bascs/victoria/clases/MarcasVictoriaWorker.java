@@ -5,7 +5,7 @@
  */
 package etl.bascs.victoria.clases;
 
-import etl.bascs.impala.clases.MarcasVictoria;
+import etl.bascs.impala.clases.MarcaVictoria;
 import etl.bascs.impala.json.ConsultaHttpSC;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
 import java.beans.PropertyChangeEvent;
@@ -23,7 +23,7 @@ import org.json.JSONObject;
  *
  * @author User
  */
-    public class MarcasVictoriaWorker extends SwingWorker<MarcasVictoria[], String> implements PropertyChangeListener {
+    public class MarcasVictoriaWorker extends SwingWorker<MarcaVictoria[], String> implements PropertyChangeListener {
 
     public ConsultaHttpVictoria consultaV;
     public ConsultaHttpSC consultaS;
@@ -31,12 +31,12 @@ import org.json.JSONObject;
     public Integer cantidad;
     public Boolean get = true;
     
-    public MarcasVictoria[] marcasV;
-    public MarcasVictoria marcaV;
+    public MarcaVictoria[] marcasV;
+    public MarcaVictoria marcaV;
     public JSONObject marcasJ;
     
     public MarcasVictoriaWorker(Properties prop){
-       marcasV = new MarcasVictoria[0];
+       marcasV = new MarcaVictoria[0];
        propiedades = prop;
     }
 
@@ -45,7 +45,7 @@ import org.json.JSONObject;
     }
 
     @Override
-    protected MarcasVictoria[] doInBackground() {
+    protected MarcaVictoria[] doInBackground() {
   
         try{
              setProgress(0);
@@ -64,12 +64,12 @@ import org.json.JSONObject;
                 if(cantidad > 0){
                     if(consultaV.getJson().has("items")){
                         JSONArray respuesta = consultaV.getJson().getJSONArray("items");
-                        marcasV = new MarcasVictoria[respuesta.length()];
+                        marcasV = new MarcaVictoria[respuesta.length()];
                          for (int i = 0; i < respuesta.length(); i++) {
                             Iterator keys = respuesta.getJSONObject(i).keys();
                             String key = keys.next().toString();
                             JSONObject productoJ = respuesta.getJSONObject(i).getJSONObject(key);
-                            marcaV = new MarcasVictoria(propiedades);
+                            marcaV = new MarcaVictoria(propiedades);
                             marcaV.loadJSONConsulta(productoJ);
                             marcasV[i] = marcaV;
                             setProgress(((i+1)*100)/cantidad);

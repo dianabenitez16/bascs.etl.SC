@@ -57,7 +57,7 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
                     propiedades.getProperty("servidor"),
                     propiedades.getProperty("puerto"),
                     propiedades.getProperty("metodoGET"),
-                    propiedades.getProperty("cuotas") + cuotaV.getProducto().getCodigo());
+                    propiedades.getProperty("cuotas") + cuotaV.getProducto());
             
             if(!consultaV.getError()){
                 if(consultaV.getJson().has("cuotas") && consultaV.getJson().has("total")){ 
@@ -70,7 +70,7 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
                         cuotaV.loadJSONConsulta(cuotas.getJSONObject(i));
                         cuotaV.setProducto(producto);
                         cuotasV[i] = cuotaV;
-                        System.out.println("CUOTAS WORKER: PRODUCTO: "+cuotaV.getProducto().getCodigo() + " CUOTA: "+cuotaV.getNumero());
+                        System.out.println("CUOTAS WORKER: PRODUCTO: "+cuotaV.getProducto() + " CUOTA: "+cuotaV.getNumero());
                         if(cantidad > 0){
                             cargado = true;
                         }else{

@@ -249,16 +249,18 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             cuotasW.addPropertyChangeListener(this);
             cuotasW.execute();
         }else{
-            System.out.println("NO SE HA PODIDO CARGAR LAS CUOTAS, PQ? NO HAY PQ");
+            System.out.println("Error. No se han podido cargar las cuotas.");
         }
     }
     
     public void buscarCuotasSC(ProductoSC productoSC){ // SE BUSCAN LAS CUOTAS POR ID DENTRO DEL WORKER
-    
-        cuotasSCW = new CuotasWorkerSC(productoSC, propSC);
-        cuotasSCW.addPropertyChangeListener(this);
-        cuotasSCW.execute();
-   
+        if (!tProductoID.getText().isEmpty()) {
+            cuotasSCW = new CuotasWorkerSC(productoSC, propSC);
+            cuotasSCW.addPropertyChangeListener(this);
+            cuotasSCW.execute();
+        } else {
+            System.out.println("Error. No se han podido cargar las cuotas.");
+        }
     }
     public void buscarProductoVictoria (ProductoVictoria productoV){
        if(!tProductoIDV.getText().isEmpty()){
@@ -384,10 +386,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
       }
   
     public void actualizarProductoSC(ProductoSC prodv){
-           
+       
         if (!prodv.equals(tProductoSC.getText())
                 || !prodv.equals(tProductoNombre.getText()) || !prodv.getDescripcion().equals(taProductoDescripcionSC.getText()) || !prodv.getMarcaSC().equals(tProductoSCMarca.getText())
-                || !prodv.equals(tProductoSCRubro.getText()) || !prodv.getVisible().equals(tVisibleSC.isSelected()) || !prodv.getHabilitado().equals(tHabilitadoSC.isSelected())) {
+                || !prodv.equals(tProductoSCRubro.getText()) || !prodv.getVisible().equals(tVisibleSC.isSelected()) || !prodv.getHabilitado().equals(tHabilitadoSC.isSelected())
+                || !prodv.getStock().equals(Integer.valueOf(tProductoStockSC.getText()))) {
             prodv.setCodigo(tProductoIDSC.getText());
             prodv.setNombre(tProductoSC.getText());
             prodv.setDescripcion(taProductoDescripcionSC.getText());
@@ -762,7 +765,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                 
                             }
                             System.out.println("RUBROS [PUT] (No tiene Codigo Parent) \t VT: "+rubVictoria.getNombre()+"|"+"SC: "+rubSC.getNombre());
-                            //rubrosWSPUT(rubSC.getId(), rubSC);
+                            rubrosWSPUT(rubSC.getId(), rubSC);
                             
                         }
                     }
@@ -848,7 +851,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     // Verificamos si ya existe el CODIGO
                     if(prodVictoria.getCodigo().equals(podSC.getCodigo())){
                         productoNuevo = false;
-                        
+                    /*    
                         prodVictoria.setProducto_id(podSC.getId());
                         for (CuotaVictoria cuotaV : prodVictoria.getCuotas()) {
                         for(CuotasSC cuotaSC : podSC.getCuotas()){
@@ -860,11 +863,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                             
                             
                         }
-                    }
+                    
+                        }
+                        */
                         System.out.println("CUOTA " + prodVictoria.getCuotas() + "del producto " + podSC.getId());
                         
                         if(!prodVictoria.getNombre().trim().equals(podSC.getNombre().trim())){
-                     //       productosWSPUT(podSC.getId(), prodVictoria);
+                            productosWSPUT(podSC.getId(), prodVictoria);
                             System.out.println("PUT DE PRODUCTO. Nombres diferentes. CODIGO: "+prodVictoria.getCodigo());
                             //System.out.println("VT: "+prodVictoria.getNombre()+"|"+"SC: "+podSC.getNombre());
                             
@@ -929,8 +934,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             e.printStackTrace();
         }
    }
-    public void recorridoCuotas() {
-        Boolean cuotaNueva = false;
+    public void recorridoCuotas() { // RECORRE LAS CUOTASVICTORIA, Y COMPARA SU CODIGO CON EL CODIGO DE LOS PRODUCTOS DEL WS
+         //VOLVER A VERIFICAR PORQUE HACE POST DE TODOS LAS CUOTAS
         Integer cuotaOmitida = 0;
         try {
             for (ProductoCuotasVictoria cuotasVictoria : cuotasW.get()) {
@@ -955,59 +960,56 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }
     /*POST - PUT - DELETE DEL WEBSERVICE*/
     private void cuotasWSPOST(Integer id, ProductoCuotasVictoria cuotasVT) {
+        if (!DEBUG) {
+            try {
+                ProductoCuotasVictoria cuotaVT = new ProductoCuotasVictoria();
+                String url = "http://www.saracomercial.com/panel/api/loader/productos/" + id + "/cuotas";
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-        try {
-            ProductoCuotasVictoria cuotaVT = new ProductoCuotasVictoria();
-            String url = "http://www.saracomercial.com/panel/api/loader/productos/"+id+"/cuotas";
-            URL obj = new URL(url);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-            
-            //add reuqest header
-   //         con.setRequestMethod("POST");
-            con.setRequestProperty("Content-type", "application/json");
-            con.setRequestProperty("Accept", "application/json");
-   //         con.setRequestProperty("Authorization", propSC.getProperty("clave"));
-            
-            String urlParameters = cuotaVT.getJSON().toString();
-            System.out.println("CUOTAS A INSERTAR " + urlParameters);
-            // Send post request
-            con.setDoOutput(true);
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-   //        wr.writeBytes(urlParameters);
-            wr.flush();
-            wr.close();
-            
-            int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'POST' request to URL : " + url);
-            System.out.println("Post parameters : " + urlParameters);
-            //  System.out.println("Response Code : " + responseCode);
-            System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
-            System.out.println("Accept: " + con.getRequestProperty("Accept"));
-            System.out.println("Authorization: " + propSC.getProperty("clave"));
-            System.out.println("Method: " + con.getRequestMethod());
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-type", "application/json");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
-            
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-            
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+                String urlParameters = cuotaVT.getJSON().toString();
+                System.out.println("CUOTAS A INSERTAR " + urlParameters);
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
+
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+                System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
+                System.out.println("Accept: " + con.getRequestProperty("Accept"));
+                System.out.println("Authorization: " + propSC.getProperty("clave"));
+                System.out.println("Method: " + con.getRequestMethod());
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                 System.out.println(response.toString());
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ProtocolException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-            in.close();
-            
-            //print result
-            System.out.println(response.toString());
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ProtocolException ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-}
+    }
     private void PUTproductoSC(Integer id, ProductoSC producto) {
 
         try {

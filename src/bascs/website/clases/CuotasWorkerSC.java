@@ -33,51 +33,59 @@ public class CuotasWorkerSC extends SwingWorker<CuotasSC[], String> implements P
     private ProductoSC productoSC; 
     private CuotasSC cuotaSC;
     
-    public CuotasWorkerSC(Properties prop){
-        productosSC = new ProductoSC[0];
-        propiedades = prop;
+    public CuotasWorkerSC(ProductoSC productoSC, Properties propSC){
+        this.productoSC = productoSC;
+        this.propiedades = propSC;
     }
-
-   
-    @Override
+ @Override
     protected CuotasSC[] doInBackground(){
+        synchronized(this){
+           if(productoSC.getId() <= 20){  
       try{
+         
              setProgress(0);
-             consulta = new ConsultaHttpSC("http",
-             propiedades.getProperty("servidor"),
-             propiedades.getProperty("metodoGET"),
-             "/panel/api/loader/productos/1/cuotas/"
-             );
-             System.out.println("SER:" + propiedades.getProperty("servidor"));
-             System.out.println("MET:" + propiedades.getProperty("metodoGET"));
-             System.out.println("SER:" +"/panel/api/loader/productos/1/cuotas/");
-               JSONArray respuesta = consulta.getJason();
-               cantidad = consulta.getJason().length();
-              ProductoSC prodSC = new ProductoSC();
-               cuotasSC = new CuotasSC[respuesta.length()];
-               for (int i = 0; i < cuotasSC.length; i++) {
-            cuotasSC[i] = new CuotasSC(respuesta.optJSONObject(i).getInt("producto_id"),
-                    respuesta.optJSONObject(i).getInt("numero"),
-                    respuesta.optJSONObject(i).getInt("importe_cuota"));
-                     //System.out.println("CUOTAS " + cuotas[i]);
+          consulta = new ConsultaHttpSC("http",
+                  propiedades.getProperty("servidor"),
+                  propiedades.getProperty("metodoGET"),
+                  "/panel/api/loader/productos/" + productoSC.getId() + "/cuotas"
+          );
+        System.out.println("CUOTA:" + "/panel/api/loader/productos/" + productoSC.getId() + "/cuotas/");
+
+          JSONArray respuesta = consulta.getJason();
+          cantidad = consulta.getJason().length();
+          ProductoSC prodSC = new ProductoSC();
+          cuotasSC = new CuotasSC[respuesta.length()];
+          for (int i = 0; i < cuotasSC.length; i++) {
+              cuotasSC[i] = new CuotasSC(respuesta.optJSONObject(i).getInt("producto_id"),
+                      respuesta.optJSONObject(i).getInt("numero"),
+                      respuesta.optJSONObject(i).getInt("importe_cuota"));
+            //      System.out.println("PRODUCTO ID: " +respuesta.optJSONObject(i).getInt("importe_cuota"));
               prodSC.setCuotas(cuotasSC);
-                
               setProgress(((i + 1) * 100) / cantidad);
               //Thread.sleep(50); //JUST FOR TESTING
               //publish(producto.getCodigo());
-               }
+          }
 
-                } catch (Exception ex) {
+      } catch (Exception ex) {
             Logger.getLogger(CuotasWorkerSC.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("_ERROR" + ex);
         }
-        return cuotasSC;
-    
+      return cuotasSC;
+         }else{
+               try {
+                   Thread.sleep(60000);
+               } catch (InterruptedException ex) {
+                   Logger.getLogger(CuotasWorkerSC.class.getName()).log(Level.SEVERE, null, ex);
+               }
+           }}
+        return null;
+        
     }
+    
   
 @Override
     protected void done() {
-        System.out.println("Productos obtenidos. Se encontraron "+cuotasSC.length+" cuoas en la website.");
+        System.out.println("Productos obtenidos. Se encontraron "+cuotasSC.length+" cuotas del producto "+productoSC.getId()+" en la website.");
     }
     
     @Override

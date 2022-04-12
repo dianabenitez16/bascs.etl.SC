@@ -32,9 +32,7 @@ public class ProductoVictoria {
     private Integer stock ;
     private Integer producto_id;
     public Boolean cargado = false;
-    
-    public ProductoVictoriaWorker[] cuotad;
-    
+     
     public CuotaVictoria[] cuotas;
     public CuotasVictoriaWorker cuotasW;
    

@@ -11,6 +11,7 @@ import etl.bascs.impala.clases.ProductoVictoria;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import javax.swing.SwingWorker;
@@ -50,49 +51,49 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
     }
 
     @Override
-    protected ProductoCuotasVictoria[] doInBackground() throws Exception {
+    protected ProductoCuotasVictoria[] doInBackground(){
         try {
             setProgress(0);
             consultaV = new ConsultaHttpVictoria("http",
                     propiedades.getProperty("servidor"),
                     propiedades.getProperty("puerto"),
                     propiedades.getProperty("metodoGET"),
-                    propiedades.getProperty("cuotas") + cuotaV.getProducto());
+                    propiedades.getProperty("cuotas"));
             
-            if(!consultaV.getError()){
-                if(consultaV.getJson().has("cuotas") && consultaV.getJson().has("total")){ 
-                    Integer cantidad = consultaV.getJson().getInt("total");
-                    //JSONObject cuotaJ = consultaV.getJson().getJSONObject("cuotas");
-                    JSONArray cuotas = consultaV.getJson().getJSONArray("cuotas"); 
-                     cuotasV = new ProductoCuotasVictoria[cantidad];
-                    for (int i = 1; i <= cantidad; i++) {
-                        
-                        cuotaV.loadJSONConsulta(cuotas.getJSONObject(i));
-                        cuotaV.setProducto(producto);
-                        cuotasV[i] = cuotaV;
-                        System.out.println("CUOTAS WORKER: PRODUCTO: "+cuotaV.getProducto() + " CUOTA: "+cuotaV.getNumero());
-                        if(cantidad > 0){
-                            cargado = true;
-                        }else{
-                            cargado = false;
-                        }
-                    }
-                    
-                    setProgress(100);
+              
+                if(consultaV.getJson().has("total")){
+                    cantidad = consultaV.getJson().getInt("total");
                 }else{
-                    error = true;
-                    publish("No se obtuvo información al consultar: " + cuotaV.getProducto().getCodigo());
-         //           System.out.println("_No se obtubo información al consultar: "+producto.getCodigo());
+                    publish("No se encontraron productos en el maestro.");
                 }
-            }else{
-                error = true;
-                publish(consultaV.getErrorMessage()+": "+cuotaV.getProducto().getCodigo());
-                //System.out.println("_"+consulta.getErrorMessage()+": "+producto.getCodigo());
-            }
+               if(cantidad > 0){
+                    if(consultaV.getJson().has("cuotas")){
+                        JSONArray respuesta = consultaV.getJson().getJSONArray("cuotas");
+                        cuotasV = new ProductoCuotasVictoria[respuesta.length()];
+                       for (int i = 0; i < respuesta.length(); i++) {
+                            Iterator keys = respuesta.getJSONObject(i).keys();
+                            String key = keys.next().toString();
+                            JSONObject cuotasJ = respuesta.getJSONObject(i);
+                            cuotaV = new ProductoCuotasVictoria();
+                            cuotaV.loadJSONConsulta(cuotasJ);
+                            cuotasV[i] = cuotaV;
+                            setProgress(((i+1)*100)/cantidad);
+                            //Thread.sleep(50); //JUST FOR TESTING
+                            //publish(producto.getCodigo());
+                        
+                             }
+                    }else{
+                        publish("No se encontraron productos en el maestro.");
+                    }
+                }else{
+                    publish("No se encontraron productos en el maestro.");
+                }
+          
             //Thread.sleep(5000); //JUST FOR TESTING
         } catch (Exception e) {
             error = true;
             //System.out.println("_Error desconocido al consultar: "+producto.getCodigo());
+            System.out.println("ERROR" +e);
             publish("Error desconocido al consultar: "+cuotaV.getProducto().getCodigo());
             //Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -100,6 +101,10 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
     }
 
    @Override
+     protected void done() {
+        System.out.println("Cuotas obtenidas. Se encontraron "+cuotasV.length+"");
+    }
+    
     protected void process(List<String> chunks) {
         for (String key : chunks) {
             System.out.println(key);

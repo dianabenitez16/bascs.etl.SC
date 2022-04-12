@@ -172,7 +172,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                         
                         hilosFinalizados ++;
                         hilosCorriendo --;
-                        setProgress(((hilosFinalizados+1)*100)/hilosACorrer);
+//                        setProgress(((hilosFinalizados+1)*100)/hilosACorrer);
                         Integer progress = ((hilosFinalizados+1)*100)/hilosACorrer;
                         this.progress.setText("Cargando " + (progress).toString()+"%");
                     }

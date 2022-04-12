@@ -43,7 +43,7 @@ public class ProductoDetalleWorkerSC extends SwingWorker<ProductoSC, String> imp
     }
 
     @Override
-    protected ProductoSC doInBackground() throws Exception {
+    protected ProductoSC doInBackground(){
         try {
             setProgress(0);
             consulta = new ConsultaHttpSC("http",
@@ -60,6 +60,7 @@ public class ProductoDetalleWorkerSC extends SwingWorker<ProductoSC, String> imp
             for (int i = 0; i < respuesta.length(); i++) {
 
                 JSONObject object = respuesta.getJSONObject(i);
+               
                 productoSC.loadJSONConsulta(object);
                 setProgress(((i + 1) * 100) / cantidad);
                 //Thread.sleep(50); //JUST FOR TESTING
@@ -69,7 +70,7 @@ public class ProductoDetalleWorkerSC extends SwingWorker<ProductoSC, String> imp
         } catch (Exception e) {
             error = true;
 
-            publish("Error desconocido al consultar: " + productoSC.getCodigo());
+            publish("Error desconocido al consultar: " + productoSC.getId());
             System.out.println("EX " + e);
         }
         return productosSC;

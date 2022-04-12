@@ -24,6 +24,9 @@ public class CuotasSC {
         this.importe_cuota = importe_cuota;
     }
 
+    public CuotasSC() {
+    }
+
     public Integer getId() {
         return id;
     }

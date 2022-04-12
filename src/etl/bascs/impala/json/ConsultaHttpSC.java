@@ -81,7 +81,7 @@ public class ConsultaHttpSC {
             in.close();
             
             jason = new JSONArray(response.toString());
-           
+            
             error = false;
           
             debugMessage = con.getHeaderField(0);

@@ -23,7 +23,9 @@ public class ProductoCuotasVictoria {
     private Double precio_cuota;
     private Double precio_credito;
     public Boolean cargado;
+    public String codigo;
     public Integer cantidad;
+    public Integer producto_id;
 
     
     public ProductoCuotasVictoria(Properties propiedades) {
@@ -45,16 +47,17 @@ public class ProductoCuotasVictoria {
             this.precio_credito = precio_credito;
            
     }
+
+    public ProductoCuotasVictoria() {
+    }
     
     public void loadJSONConsulta(JSONObject cuotasJ){
       
         try{
             //setCodigo((getCodigo() == null ? cuotasJ.optString("codigo_interno_ws"):getCodigo())); 
             setNumero((getNumero() == null ? cuotasJ.optInt("numero"):getNumero())); 
-            setPrecio_cuota((getPrecio_cuota() == null ? cuotasJ.optDouble("precio_cuota"):getPrecio_cuota())); 
-            setPrecio_contado((getPrecio_contado() == null ? cuotasJ.optDouble("precio_contado"):getPrecio_contado())); 
-            setPrecio_credito((getPrecio_credito() == null ? cuotasJ.optDouble("precio_credito"):getPrecio_credito())); 
-          
+            setCodigo((getCodigo() == null ? cuotasJ.optString("codigo_interno_ws"):getCodigo()));
+            setPrecio_cuota((getPrecio_cuota() == null ? cuotasJ.optDouble("precio_cuota"):getPrecio_cuota()));            
             cargado = true;
             cantidad = cuotasJ.length();
         
@@ -101,6 +104,35 @@ public class ProductoCuotasVictoria {
     public void setProducto(ProductoVictoria producto) {
         this.producto = producto;
     }
-    
+
+    public Integer getProducto_id() {
+        return producto_id;
+    }
+
+    public void setProducto_id(Integer producto_id) {
+        this.producto_id = producto_id;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+      public JSONObject getJSON(){
+        JSONObject object;
+        object = new JSONObject();
+              
+        object.put("importe_cuota", "100000");
+        object.put("numero", "11");
+        object.put("posee_descuento", "0");
+        object.put("porcentaje_descuento", "0");
+      
+        return object;
+        
+        
+          
+    }
     
 }

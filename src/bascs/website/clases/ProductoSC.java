@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,7 +30,8 @@ public class ProductoSC{
     private String marca;
     private Integer precio;
     private Integer stock;
-    
+    private Integer visible;
+    private Integer habilitado;
     public Boolean cargado;
     
     private String rubro;
@@ -69,7 +71,10 @@ public class ProductoSC{
             MarcaSC marSC = new MarcaSC();
             marSC.setId(productoJ.optInt("marca_id"));
             setMarcaSC(marSC);
-             
+            setVisible((getVisible() == null ? productoJ.optInt("visible") : getVisible()));
+            setHabilitado((getHabilitado() == null ? productoJ.optInt("habilitado") : getHabilitado())); 
+          
+              
             
             cargado = true;
            
@@ -77,6 +82,7 @@ public class ProductoSC{
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
  }
+  
      public void loadJSONMaestro(JSONObject productoJ){
         try {
             setId(productoJ.optInt("id"));
@@ -87,8 +93,8 @@ public class ProductoSC{
             setPrecio(productoJ.optInt("precio"));
             setMarcaSC(new MarcaSC(productoJ.getJSONObject("marca")));
             setRubroSC(new RubroSC(productoJ.getJSONObject("rubro")));
-            
-         
+            setVisible(productoJ.optInt("visible"));
+            setHabilitado(productoJ.optInt("habilitado"));
             cargado = true;
         } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
@@ -190,7 +196,40 @@ public class ProductoSC{
         this.precio = precio;
     }
 
-    
-  
+    public Integer getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Integer visible) {
+        this.visible = visible;
+    }
+
+    public Integer getHabilitado() {
+        return habilitado;
+    }
+
+    public void setHabilitado(Integer habilitado) {
+        this.habilitado = habilitado;
+    }
+
+      public JSONObject getJSON(){
+        JSONObject object;
+        object = new JSONObject();
+        
+        object.put("codigo_interno_ws", getCodigo());
+        object.put("nombre", getNombre());
+    //    object.put("descripcion", getDescripcion());
+        object.put("marca_id", getMarcaSC().getId());
+        object.put("rubro_id", getRubroSC().getId());
+        object.put("precio", getPrecio());
+        object.put("stock",  getStock());
+        object.put("habilitado",  getHabilitado());
+        object.put("visible",  getVisible());
+        
+        // SE CREA UN JSON OBJECT PARA ACTUALIZAR LOS PRODUCTOS QUE HAN SIDO BUSCADOS DESDE EL PANEL 'DETALLES' DE LA WEBSITE
+        
+        return object;
+    }
+
            
 }

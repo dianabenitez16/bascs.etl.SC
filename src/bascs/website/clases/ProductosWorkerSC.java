@@ -38,6 +38,7 @@ public class ProductosWorkerSC extends SwingWorker<ProductoSC[], String> impleme
    
     @Override
     protected ProductoSC[] doInBackground(){
+        
       try{
              setProgress(0);
              consulta = new ConsultaHttpSC("http",
@@ -49,19 +50,20 @@ public class ProductosWorkerSC extends SwingWorker<ProductoSC[], String> impleme
                 JSONArray respuesta = consulta.getJason();
                cantidad = consulta.getJason().length();
                productosSC = new ProductoSC[respuesta.length()];
-                         for (int i = 0; i < respuesta.length(); i++) {
+                         for (int i = 0; i <= respuesta.length(); i++) { // 20 para limitar el numero de productos
                             JSONObject object = respuesta.getJSONObject(i);
                             productoSC = new ProductoSC(propiedades);
-                            productoSC.loadJSONConsulta(object);
+                            productoSC.loadJSONMaestro(object);
                             
                             //productoSC.setCuotas(cuotas);
                             productosSC[i] = productoSC;
                             
-                            setProgress(((i+1)*100)/cantidad);
+                            
+                       //    setProgress(((i+1)*100)/cantidad); debe ser 100 por eso
                             //Thread.sleep(50); //JUST FOR TESTING
                             //publish(producto.getCodigo());
                         }
-                         
+                 
                 } catch (Exception ex) {
             Logger.getLogger(ProductosWorkerSC.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("_ERROR" + ex);

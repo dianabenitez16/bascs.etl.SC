@@ -71,3 +71,5 @@ public class SCWorker extends SwingWorker<ProductoSC[], String> implements Prope
     }
     
 }
+// se debe hacer un victoriaWorker para cuotas de Sara asi evitar el TOO MANY REQUEST, tambien le limite el 
+//rango de productos de SC para poder hacer las pruebas de comparacion, y aparentemente funciona.

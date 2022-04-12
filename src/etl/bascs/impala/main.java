@@ -16,7 +16,6 @@ import bascs.website.clases.RubroSC;
 import etl.bascs.impala.clases.RubroVictoria;
 import etl.bascs.impala.clases.Scalr;
 import etl.bascs.impala.config.Propiedades;
-import etl.bascs.impala.worker.DetalleWorker;
 import etl.bascs.impala.worker.MaestroWorker;
 import bascs.website.clases.MarcasWorkerSC;
 import bascs.website.clases.ProductoDetalleWorkerSC;
@@ -25,6 +24,8 @@ import bascs.website.clases.ProductosWorkerSC;
 import bascs.website.clases.RubrosWorkerSC;
 import etl.bascs.impala.clases.CuotaVictoria;
 import etl.bascs.impala.clases.MarcaSC;
+import etl.bascs.impala.clases.ProductoCuotasVictoria;
+import etl.bascs.impala.worker.DetalleWorker;
 import etl.bascs.impala.worker.PrestashopWorker;
 import etl.bascs.victoria.clases.CuotasVictoriaWorker;
 import etl.bascs.victoria.clases.ProductoVictoriaWorker;
@@ -41,15 +42,18 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -248,25 +252,34 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             System.out.println("NO SE HA PODIDO CARGAR LAS CUOTAS, PQ? NO HAY PQ");
         }
     }
+    
+    public void buscarCuotasSC(ProductoSC productoSC){ // SE BUSCAN LAS CUOTAS POR ID DENTRO DEL WORKER
+    
+        cuotasSCW = new CuotasWorkerSC(productoSC, propSC);
+        cuotasSCW.addPropertyChangeListener(this);
+        cuotasSCW.execute();
+   
+    }
     public void buscarProductoVictoria (ProductoVictoria productoV){
        if(!tProductoIDV.getText().isEmpty()){
             productoW = new ProductoVictoriaWorker(productoV, getPropiedades());
             productoW.addPropertyChangeListener(this);
             productoW.execute();
+            
         }else{
             JOptionPane.showMessageDialog(null, "Ingrese un codigo de producto válido.");
         }
     }
-    public void buscarProductoWebsite (ProductoSC productoSCW){
+    public void buscarProductoWebsite (ProductoSC producto){
        if(!tProductoIDSC.getText().isEmpty()){
-            productoSC = new ProductoDetalleWorkerSC(productoSCW, getPropiedades());
+            productoSC = new ProductoDetalleWorkerSC(producto, getPropiedades());
             productoSC.addPropertyChangeListener(this);
             productoSC.execute();
         }else{
             JOptionPane.showMessageDialog(null, "Ingrese un codigo de producto válido.");
         }
     } 
-     
+   //CARGAR PRODUCTOS EN DETALLE  
     public void cargarProducto(Producto producto){
         if(producto.cargado){
             tProductoID.setText(producto.getCodigo());
@@ -331,26 +344,66 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         
         }
     }
+  public void addCheckbox(int column, JTable table){
+     //CONTINUAR CON EL CHECKBOX
+  }
   public void cargarProductosSC(ProductoSC producto){
       if(producto.cargado){
+        
            tProductoIDSC.setText(formatInt.format(producto.getId()));
            tProductoSC.setText(producto.getCodigo());
            tProductoNombre.setText(producto.getNombre());
            taProductoDescripcionSC.setText(producto.getDescripcion());
-           tProductoSCMarca.setText(formatInt.format(producto.getMarcaSC().getId()));
-           tProductoSCRubro.setText(formatInt.format(producto.getRubroSC().getId()));
-            Object cuotas[][] = new Object[producto.getCuotas().length][4];
-            for (int i = 0; i < cuotas.length; i++){
-                cuotas[i][0] = producto.getCuotas()[i].getNumero();
-                cuotas[i][1] = producto.getCuotas()[i].getImporte_cuota();
-                cuotas[i][2] = producto.getCuotas()[i].getProducto_id();
+           tProductoMarcaSCCodigo.setText(formatInt.format(producto.getMarcaSC().getId()));
+           tProductoRubroSCCodigo.setText(formatInt.format(producto.getRubroSC().getId()));
+           tProductoStockSC.setText(formatInt.format(producto.getStock()));
+           if(producto.getVisible() == 0){
+               tVisibleSC.setSelected(false);
+           }else{
+               tVisibleSC.setSelected(true);
+           }
+           if(producto.getHabilitado() == 0){
+               tHabilitadoSC.setSelected(false);
+           }else{
+               tHabilitadoSC.setSelected(true);
+           }
+           
+      }
+      
+           CuotasSC[] cuota = new CuotasSC[0];
+    Object cuotas[][] = new Object[cuota.length][3];
+          
+            for (int i = 0; i < cuota.length; i++){
+                cuotas[i][0] = cuota[i].getNumero();
+                cuotas[i][1] = cuota[i].getImporte_cuota();
+                cuotas[i][2] = cuota[i].getProducto_id();
                 
             }
              cargarTablaCuotasSC(cuotas);
         
-        }
+      }
   
-  }
+    public void actualizarProductoSC(ProductoSC prodv){
+           
+        if (!prodv.equals(tProductoSC.getText())
+                || !prodv.equals(tProductoNombre.getText()) || !prodv.getDescripcion().equals(taProductoDescripcionSC.getText()) || !prodv.getMarcaSC().equals(tProductoSCMarca.getText())
+                || !prodv.equals(tProductoSCRubro.getText()) || !prodv.getVisible().equals(tVisibleSC.isSelected()) || !prodv.getHabilitado().equals(tHabilitadoSC.isSelected())) {
+            prodv.setCodigo(tProductoIDSC.getText());
+            prodv.setNombre(tProductoSC.getText());
+            prodv.setDescripcion(taProductoDescripcionSC.getText());
+            if (tVisibleSC.isSelected()) {
+                prodv.setVisible(1);
+            } else {
+                prodv.setVisible(0);
+            }
+            if (tHabilitadoSC.isSelected()) {
+                prodv.setHabilitado(1);
+            } else {
+                prodv.setHabilitado(0);
+            }
+            PUTproductoSC(Integer.valueOf(tProductoIDSC.getText()), prodv);
+        }
+    }
     public void cargarTablaCuotasV(Object[][] contenido){
        tbProductoCuotas.setModel(new javax.swing.table.DefaultTableModel(contenido,new String [] {"CUOTA", "PRECIO CONTADO", "PRECIO CREDITO", "PRECIO CUOTA"}));
         tbProductoCuotas.getColumnModel().getColumn(0).setPreferredWidth(130);
@@ -363,7 +416,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tbProductoCuotasSC.getColumnModel().getColumn(0).setPreferredWidth(130);
         tbProductoCuotasSC.getColumnModel().getColumn(1).setPreferredWidth(130);
         tbProductoCuotasSC.getColumnModel().getColumn(2).setPreferredWidth(130);
-        tbProductoCuotasSC.getColumnModel().getColumn(3).setPreferredWidth(130);
+       
     }
     public void cargarTablaImagenes(Object[][] contenido){
         tbProductoImagenes.setModel(new javax.swing.table.DefaultTableModel(contenido,new String [] {"ID", "URL"}));
@@ -540,17 +593,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         rubrosSC.addPropertyChangeListener(this);
         rubrosSC.execute();
     }
-     public void buscarCuotasSC(){
-        cargarTablaRubrosSC(new Object[0][0]);
-        
-        Properties propiedades = new Properties();
-        propiedades.putAll(propSC);
-        propiedades.putAll(propGenerales);
-        
-        cuotasSCW = new CuotasWorkerSC(propiedades);
-        cuotasSCW.addPropertyChangeListener(this);
-        cuotasSCW.execute();
-    }
+     
     public void buscarMarcasSC(){
         Properties propiedades = new Properties();
         propiedades.putAll(propSC);
@@ -588,13 +631,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         productosW.addPropertyChangeListener(this);
         productosW.execute();
     }
-    public void buscarProductoWebsite(){
+    public void buscarProductosWebsite(){
         limpiarMaestro();
         
         Properties propiedades = new Properties();
         propiedades.putAll(propSC);
         propiedades.putAll(propGenerales);
-        
         productosSC = new ProductosWorkerSC(propiedades);
         productosSC.addPropertyChangeListener(this);
         productosSC.execute();
@@ -638,6 +680,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         for (int i = 0; i < tbProductosSC.getColumnCount(); i++) {
             tbProductosSC.getColumnModel().getColumn(i).setPreferredWidth(tablaWithProductosSC[i]);
         }
+        
     }
     public void cargarTablaMarcas(Object[][] contenidos){
         tMarcasVictoria.setModel(new javax.swing.table.DefaultTableModel(contenidos,tablaHeaderMarcas));
@@ -655,6 +698,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
        
    }
    /*********************RECORRIDOS**************************************/
+   
    public void rubrosRecorrido(){
          isClicked = true;        
         Boolean rubroEliminar;      
@@ -790,14 +834,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         }    
    }
    
-   public synchronized void productosRecorrido(){
+   public void productosRecorrido(){
        Integer productosOmitidos = 0;
         Boolean productoNuevo = false;
         // PUT - ACTUALIZA
         // POST - CREA
         try{
             //RECORRIDO VICTORIA
-            for (ProductoVictoria prodVictoria : productosW.get()) {
+            for (ProductoVictoria prodVictoria : victoriaW.get()) {
                 productoNuevo = true;
                 prendido = false;
                 for (ProductoSC podSC : productosSC.get()) {
@@ -806,27 +850,29 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         productoNuevo = false;
                         
                         prodVictoria.setProducto_id(podSC.getId());
-                        
-                        for(CuotasSC cuoSC : cuotasSCW.get()){
+                        for (CuotaVictoria cuotaV : prodVictoria.getCuotas()) {
+                        for(CuotasSC cuotaSC : podSC.getCuotas()){
                             
-                            if(prodVictoria.getProducto_id() == cuoSC.getProducto_id()){
-                                System.out.println("PRODUCTO ID " + cuoSC.getProducto_id());
-                            }
+                          if(prodVictoria.getProducto_id() == cuotaSC.getProducto_id()){
+                              System.out.println("PRODUCTO ID = " + cuotaSC.getProducto_id());
+                              System.out.println("IMPORTE = " + cuotaSC.getImporte_cuota());
+                          }
+                            
                             
                         }
+                    }
+                        System.out.println("CUOTA " + prodVictoria.getCuotas() + "del producto " + podSC.getId());
                         
                         if(!prodVictoria.getNombre().trim().equals(podSC.getNombre().trim())){
+                     //       productosWSPUT(podSC.getId(), prodVictoria);
                             System.out.println("PUT DE PRODUCTO. Nombres diferentes. CODIGO: "+prodVictoria.getCodigo());
                             //System.out.println("VT: "+prodVictoria.getNombre()+"|"+"SC: "+podSC.getNombre());
                             
                         }else{
                             productosOmitidos++;
                         }
-                    }else{
-                        System.out.println("POST DE PRODUCTO. No existe el codigo. CODIGO: "+prodVictoria.getCodigo());
                     }
-                    
-                    
+                   
                     // SE ASIGNA A LOS PRODUCTOS VICTORIA, LOS RUBROS SC CORRESPONDIENTES
                     if(rubrosSC.obtenerRubro(prodVictoria.getRubroVictoria().getCodigo()) != null){
                         prodVictoria.setRubroSC(rubrosSC.obtenerRubro(prodVictoria.getRubroVictoria().getCodigo()));
@@ -867,7 +913,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 taVictoriaSincronizar.append("Productos a ser insertados: " + prodVictoria.getJSON());
                 
                 if(productoNuevo){
-            //        ProductosWSPOST(prodVictoria);
+                    ProductosWSPOST(prodVictoria);
                     taVictoriaSincronizar.append("SE INSERTARON " + prodVictoria.getCodigo());
                 }else{
                     
@@ -879,255 +925,406 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             taVictoriaSincronizar.append("\nSe completo la sincronizacion de PRODUCTOS.");
 
 
-        } catch (Exception e) {
+        }catch (Exception e) {
             e.printStackTrace();
         }
    }
-   public void recorridoCuotas(){
-       Boolean cuotaNueva = true; 
-       try {
-            for (ProductoVictoria prodVictoria : victoriaW.get()) {
-                prendido = false;
+    public void recorridoCuotas() {
+        Boolean cuotaNueva = false;
+        Integer cuotaOmitida = 0;
+        try {
+            for (ProductoCuotasVictoria cuotasVictoria : cuotasW.get()) {
                 for (ProductoSC podSC : productosSC.get()) {
-                 if(prodVictoria.getCodigo().equals(podSC.getCodigo())){
-                     prodVictoria.setProducto_id(podSC.getId());
-                        
-                 }
+                    for(CuotasSC cuotasSC : podSC.getCuotas()){
+                    if (cuotasVictoria.getCodigo().equals(podSC.getCodigo())){
+                        cuotasVictoria.setProducto_id(podSC.getId());
+                        cuotasWSPOST(podSC.getId(), cuotasVictoria);
                     
+                    }else if(cuotasVictoria.getProducto_id() == cuotasSC.getProducto_id()){
+                        cuotaOmitida++;
+                    }
+                }
                 }
             }
+
         } catch (InterruptedException ex) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ExecutionException ex) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         }
-   }
-    /**/
+    }
+    /*POST - PUT - DELETE DEL WEBSERVICE*/
+    private void cuotasWSPOST(Integer id, ProductoCuotasVictoria cuotasVT) {
+
+        try {
+            ProductoCuotasVictoria cuotaVT = new ProductoCuotasVictoria();
+            String url = "http://www.saracomercial.com/panel/api/loader/productos/"+id+"/cuotas";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            
+            //add reuqest header
+   //         con.setRequestMethod("POST");
+            con.setRequestProperty("Content-type", "application/json");
+            con.setRequestProperty("Accept", "application/json");
+   //         con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+            
+            String urlParameters = cuotaVT.getJSON().toString();
+            System.out.println("CUOTAS A INSERTAR " + urlParameters);
+            // Send post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+   //        wr.writeBytes(urlParameters);
+            wr.flush();
+            wr.close();
+            
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'POST' request to URL : " + url);
+            System.out.println("Post parameters : " + urlParameters);
+            //  System.out.println("Response Code : " + responseCode);
+            System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
+            System.out.println("Accept: " + con.getRequestProperty("Accept"));
+            System.out.println("Authorization: " + propSC.getProperty("clave"));
+            System.out.println("Method: " + con.getRequestMethod());
+
+            
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            
+            //print result
+            System.out.println(response.toString());
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ProtocolException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+}
+    private void PUTproductoSC(Integer id, ProductoSC producto) {
+
+        try {
+           
+            String url = "http://www.saracomercial.com/panel/api/loader/productos/"+id+"";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            
+            //add reuqest header
+            con.setRequestMethod("PUT");
+            con.setRequestProperty("Content-type", "application/json");
+            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+
+            String urlParameters = producto.getJSON().toString();
+            System.out.println("SE ACTUALIZARA " + producto.getJSON().toString() + " del ID: " + id);
+            // Send post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(urlParameters);
+            wr.flush();
+            wr.close();
+            
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'PUT' request to URL : " + url);
+            System.out.println("Post parameters : " + urlParameters);
+            System.out.println("Response Code : " + responseCode);
+            System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
+            System.out.println("Accept: " + con.getRequestProperty("Accept"));
+            System.out.println("Authorization: " + propSC.getProperty("clave"));
+            System.out.println("Method: " + con.getRequestMethod());
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            
+            //print result
+            System.out.println(response.toString());
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ProtocolException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+}
     public void marcasWSPOST(MarcaVictoria marcasVT){
         if(!DEBUG){
-            try {
-                HttpClient hc = new DefaultHttpClient();
-                HttpPost hp = new HttpPost("http://www.saracomercial.com/panel/api/loader/marcas");
+             try {
 
-         //       System.out.println("POST: "+"http://www.saracomercial.com/panel/api/loader/rubros");
-                System.out.println("OBJETO POST: "+marcasVT.getJSON().toString());
+                String url = "http://www.saracomercial.com/panel/api/loader/productos/marcas";
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-        //        hp.setEntity(new StringEntity(marcasVT.getJSON().toString(), "UTF-8"));
-                hp.setHeader("Content-type", "application/json;charset=UTF-8");
-                hp.setHeader("Accept", "application/json");
-                hp.setHeader("Retry-After", "120");
-                hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
-                hp.setHeader("Connection", "keep-alive");
-                hp.setHeader("Authorization", propSC.getProperty("clave"));
+                //add reuqest header
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-type", "application/json");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
-                HttpResponse resp = hc.execute(hp);
+                String urlParameters = marcasVT.getJSON().toString();
 
-                resp.getEntity().consumeContent();
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
 
-                if (resp != null) {
-                    switch (resp.getStatusLine().getStatusCode()){
-                        case 200: // INGRESADO CORRECTAMENTE
-                            break;
-                        case 422: //SUPUESTAMENTE YA EXISTE
-                            break;
-                        default: // CODIGO DESCONOCIDO
-                            break;
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+                System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
+                System.out.println("Accept: " + con.getRequestProperty("Accept"));
+                System.out.println("Authorization: " + propSC.getProperty("clave"));
+                System.out.println("Method: " + con.getRequestMethod());
 
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
 
-                    }
-                    System.out.println("RESPUESTA: " + resp.toString());
-
-                }else{
-                    debugRubros.append("Respuesta NULL");
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
                 }
+                in.close();
+
+                //print result
+                System.out.println(response.toString());
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ProtocolException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-            } 
-        }else{
-            System.out.println("DEBUG: marcasWSPOST");
+            }
+
         }
-   }
+    }
+  
     public void rubrosWSPUT(Integer id, RubroSC rubroSC){
         
         //ACTUALIZAR EN EL WS
         if(!DEBUG){
+          try {  
+        String url = "http://www.saracomercial.com/panel/api/loader/rubros/"+id+"";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             
-        
-            try {
-                HttpClient hc = new DefaultHttpClient();
-                HttpPut hp = new HttpPut("http://www.saracomercial.com/panel/api/loader/rubros/"+ id);
+            //add reuqest header
+            con.setRequestMethod("PUT");
+            con.setRequestProperty("Content-type", "application/json");
+            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
-      //          System.out.println("PUT: "+"http://www.saracomercial.com/panel/api/loader/rubros/"+ id);
-                System.out.println("OBJETO PUT: "+rubroSC.getJSON().toString());
-
-      //          hp.setEntity(new StringEntity(rubroSC.getJSON().toString(), "UTF-8"));
-                hp.setHeader("Content-type", "application/json;charset=UTF-8");
-                hp.setHeader("Accept", "application/json");
-                hp.setHeader("Retry-After", "120");
-                hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
-                hp.setHeader("Connection", "keep-alive");
-                hp.setHeader("Authorization", propSC.getProperty("clave"));
-
-                HttpResponse resp = hc.execute(hp);
-
-                resp.getEntity().consumeContent();
-
-                if (resp != null) {
-                    switch (resp.getStatusLine().getStatusCode()){
-                        case 200: // INGRESADO CORRECTAMENTE
-                            break;
-                        case 422: //SUPUESTAMENTE YA EXISTE
-                            break;
-                        default: // CODIGO DESCONOCIDO
-                            break;
-
-
-                    }
-                   System.out.println("RESPUESTA: " + resp.toString());
-
-                }else{
-                    debugRubros.append("Respuesta NULL");
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            String urlParameters = rubroSC.getJSON().toString();
+            System.out.println("SE ACTUALIZARA " + rubroSC.getJSON().toString() + " del ID: " + id);
+            // Send post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(urlParameters);
+            wr.flush();
+            wr.close();
+            
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'PUT' request to URL : " + url);
+            System.out.println("Post parameters : " + urlParameters);
+            System.out.println("Response Code : " + responseCode);
+            System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
+            System.out.println("Accept: " + con.getRequestProperty("Accept"));
+            System.out.println("Authorization: " + propSC.getProperty("clave"));
+            System.out.println("Method: " + con.getRequestMethod());
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
             }
-        }else{
-            System.out.println("DEBUG: rubrosWSPUT");
+            in.close();
+            
+            //print result
+            System.out.println(response.toString());
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ProtocolException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
     }
      public void productosWSPUT(Integer id, ProductoVictoria podVictoria){
         if(!DEBUG){
             
+            try {  
+        String url = "http://www.saracomercial.com/panel/api/loader/productos/"+id+"";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            
+            //add reuqest header
+            con.setRequestMethod("PUT");
+            con.setRequestProperty("Content-type", "application/json");
+            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
-            //ACTUALIZAR EN EL WS
-            try {
-                HttpClient hc = new DefaultHttpClient();
-                HttpPut hp = new HttpPut("http://www.saracomercial.com/panel/api/loader/productos/"+ id);
-
-      //          System.out.println("PUT: "+"http://www.saracomercial.com/panel/api/loader/rubros/"+ id);
-                System.out.println("OBJETO PUT: "+podVictoria.getJSON().toString());
-
-      //          hp.setEntity(new StringEntity(podVictoria.getJSON().toString(), "UTF-8"));
-                hp.setHeader("Content-type", "application/json;charset=UTF-8");
-                hp.setHeader("Accept", "application/json");
-                hp.setHeader("Retry-After", "120");
-                hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
-                hp.setHeader("Connection", "keep-alive");
-                hp.setHeader("Authorization", propSC.getProperty("clave"));
-
-                HttpResponse resp = hc.execute(hp);
-
-                resp.getEntity().consumeContent();
-
-                if (resp != null) {
-                    switch (resp.getStatusLine().getStatusCode()){
-                        case 200: // INGRESADO CORRECTAMENTE
-                            break;
-                        case 422: //SUPUESTAMENTE YA EXISTE
-                            break;
-                        default: // CODIGO DESCONOCIDO
-                            break;
-
-
-                    }
-                   System.out.println("RESPUESTA: " + resp.toString());
-
-                }else{
-                    debugRubros.append("Respuesta NULL");
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            String urlParameters = podVictoria.getJSON().toString();
+            System.out.println("SE ACTUALIZARA " + podVictoria.getJSON().toString() + " del ID: " + id);
+            // Send post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(urlParameters);
+            wr.flush();
+            wr.close();
+            
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'PUT' request to URL : " + url);
+            System.out.println("Post parameters : " + urlParameters);
+            System.out.println("Response Code : " + responseCode);
+            System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
+            System.out.println("Accept: " + con.getRequestProperty("Accept"));
+            System.out.println("Authorization: " + propSC.getProperty("clave"));
+            System.out.println("Method: " + con.getRequestMethod());
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
             }
-        }else{
-            System.out.println("DEBUG: productosWSPUT");
+            in.close();
+            
+            //print result
+            System.out.println(response.toString());
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ProtocolException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
     }
      
-    public synchronized void ProductosWSPOST(ProductoVictoria productoVT){
+    public void ProductosWSPOST(ProductoVictoria productoVT){
         if(!DEBUG){
-            try {
-                HttpClient hc = new DefaultHttpClient();
-                HttpPost hp = new HttpPost("http://www.saracomercial.com/panel/api/loader/productos");
+          try {
 
-    //            hp.setEntity(new StringEntity(productoVT.getJSON().toString(), "UTF-8"));
-                hp.setHeader("User-Agent", USER_AGENT);
-                hp.setHeader("Content-type", "application/json;charset=UTF-8");
-                hp.setHeader("Accept", "application/json");
-                hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
-                hp.setHeader("Connection", "keep-alive");
-                hp.setHeader("Authorization", propSC.getProperty("clave"));
+                String url = "http://www.saracomercial.com/panel/api/loader/productos";
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                HttpResponse resp = hc.execute(hp);
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-type", "application/json");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
+                String urlParameters = productoVT.getJSON().toString();
 
-                resp.getEntity().consumeContent();
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
 
-                if (resp != null) {
-                    switch (resp.getStatusLine().getStatusCode()){
-                        case 200: // INGRESADO CORRECTAMENTE
-                            break;
-                        case 422: //SUPUESTAMENTE YA EXISTE
-                            break;
-                        default: // CODIGO DESCONOCIDO
-                            break;
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+                System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
+                System.out.println("Accept: " + con.getRequestProperty("Accept"));
+                System.out.println("Authorization: " + propSC.getProperty("clave"));
+                System.out.println("Method: " + con.getRequestMethod());
 
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
 
-                    }
-                    System.out.println("\nOBJ: " + productoVT.getJSON().toString() + "\nRESPUESTA: " + resp.toString() );
-
-                }else{
-                    debugRubros.append("Respuesta NULL");
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
                 }
+                in.close();
+
+                //print result
+                System.out.println(response.toString());
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ProtocolException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-
             }
-        }else{
-            System.out.println("DEBUG: ProductosWSPOST");
+
         }
     }
-    public synchronized void rubrosWSPOST(RubroVictoria rubroVT){
+    public void rubrosWSPOST(RubroVictoria rubroVT){
         if(!DEBUG){
             try {
-                HttpClient hc = new DefaultHttpClient();
-                HttpPost hp = new HttpPost("http://www.saracomercial.com/panel/api/loader/rubros");
+               
+                String url = "http://www.saracomercial.com/panel/api/loader/rubros";
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                //System.out.println("POST: "+"http://www.saracomercial.com/panel/api/loader/rubros");
-                System.out.println("OBJETO POST: "+rubroVT.getJSON().toString());
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-type", "application/json");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
-  //              hp.setEntity(new StringEntity(rubroVT.getJSON().toString(), "UTF-8"));
-                hp.setHeader("Content-type", "application/json;charset=UTF-8");
-                hp.setHeader("Accept", "application/json");
-                hp.setHeader("Retry-After", "120");
-                hp.setHeader("Accept-enconding", "gzip,deflate,sdch");
-                hp.setHeader("Connection", "keep-alive");
-                hp.setHeader("Authorization", propSC.getProperty("clave"));
+                String urlParameters = rubroVT.getJSON().toString();
 
-                HttpResponse resp = hc.execute(hp);
+                // Send post request
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(urlParameters);
+                wr.flush();
+                wr.close();
 
-                resp.getEntity().consumeContent();
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+                System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
+                System.out.println("Accept: " + con.getRequestProperty("Accept"));
+                System.out.println("Authorization: " + propSC.getProperty("clave"));
+                System.out.println("Method: " + con.getRequestMethod());
 
-                if (resp != null) {
-                    switch (resp.getStatusLine().getStatusCode()){
-                        case 200: // INGRESADO CORRECTAMENTE
-                            break;
-                        case 422: //SUPUESTAMENTE YA EXISTE
-                            break;
-                        default: // CODIGO DESCONOCIDO
-                            break;
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
 
-
-                    }
-                    System.out.println("RESPUESTA: " + resp.toString());
-
-                }else{
-                    debugRubros.append("Respuesta NULL");
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
                 }
+                in.close();
+
+                //print result
+                System.out.println(response.toString());
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ProtocolException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else{
-            System.out.println("DEBUG: rubrosWSPOST");
+
         }
     }
     
@@ -1443,13 +1640,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     tpVictoria.setSelectedIndex(0);
                     tProductoIDV.setText(tablaContenidoProductos[(int) table.getValueAt(row, 0)][2].toString());
                     buscarProductoVictoria((ProductoVictoria) tablaContenidoProductos[(int) table.getValueAt(row, 0)][0]);
+                    
                 } 
                
             }
         });
         tbVictoriaProductos.setDefaultEditor(Object.class, null);
         tbVictoriaProductos.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-       
+       //TABLA DE SARA COMERCIAL 
           tbProductosSC.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
@@ -1458,16 +1656,20 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 int row = table.rowAtPoint(point);
                 if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
                     limpiarProducto(false);
-                    tpWebsite.setSelectedIndex(0);
+                    tpWebsite.setSelectedIndex(1);
                     
-                    tProductoSC.setText(tablaContenidoProductosSC[(int) table.getValueAt(row, 0)][0].toString());
+                    tProductoIDSC.setText(tablaContenidoProductosSC[(int) table.getValueAt(row, 0)][1].toString());
+                    tProductoSCRubro.setText(tablaContenidoProductosSC[(int) table.getValueAt(row, 0)][6].toString());
+                    tProductoSCMarca.setText(tablaContenidoProductosSC[(int) table.getValueAt(row, 0)][5].toString());
                     buscarProductoWebsite((ProductoSC) tablaContenidoProductosSC[(int) table.getValueAt(row, 0)][0]);
                  }
-                
+               
             }
         });
         tbProductosSC.setDefaultEditor(Object.class, null);
         tbProductosSC.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+
+        
         // TABLA IMAGENES 
         tbProductoImagenes.addMouseListener(new MouseAdapter() {
             @Override
@@ -1752,7 +1954,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lProductoMarca2 = new javax.swing.JLabel();
         lProductoExistencia12 = new javax.swing.JLabel();
         lProductoDetallesTecnicos4 = new javax.swing.JLabel();
-        bProductoLimpiar2 = new javax.swing.JButton();
+        bProductoLimpiarSC = new javax.swing.JButton();
         bProductoBuscarSC = new javax.swing.JButton();
         tProductoSC = new javax.swing.JTextField();
         sProductoSeparador7 = new javax.swing.JSeparator();
@@ -1761,7 +1963,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         taProductoDescripcionSC = new javax.swing.JTextArea();
         tProductoMarcaSCCodigo = new javax.swing.JTextField();
         tProductoSCMarca = new javax.swing.JTextField();
-        tProductoMoneda2 = new javax.swing.JTextField();
+        tProductoStockSC = new javax.swing.JTextField();
         tProductoExistencia2 = new javax.swing.JCheckBox();
         spProductoDetallesTecnicos2 = new javax.swing.JScrollPane();
         tbProductoCuotasSC = new javax.swing.JTable();
@@ -1773,6 +1975,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoRubroSCCodigo = new javax.swing.JTextField();
         lProductoCodigo3 = new javax.swing.JLabel();
         tProductoIDSC = new javax.swing.JTextField();
+        lProductoCodigo4 = new javax.swing.JLabel();
+        tVisibleSC = new javax.swing.JCheckBox();
+        tHabilitadoSC = new javax.swing.JCheckBox();
+        lProductoCodigo5 = new javax.swing.JLabel();
+        bProductoActualizar = new javax.swing.JButton();
         pMyRSC = new javax.swing.JPanel();
         tRubrosSC = new javax.swing.JScrollPane();
         tRubroSC = new javax.swing.JTable();
@@ -4056,7 +4263,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGap(5, 5, 5)
                 .addComponent(sProductoSeparador8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(spMaestroProductos2, javax.swing.GroupLayout.DEFAULT_SIZE, 632, Short.MAX_VALUE)
+                .addComponent(spMaestroProductos2, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -4078,19 +4285,19 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lProductoMarca2.setPreferredSize(new java.awt.Dimension(80, 20));
 
         lProductoExistencia12.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lProductoExistencia12.setText("Existencia");
+        lProductoExistencia12.setText("Existencia:");
         lProductoExistencia12.setPreferredSize(new java.awt.Dimension(80, 20));
 
         lProductoDetallesTecnicos4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDetallesTecnicos4.setText("Cuotas: ");
         lProductoDetallesTecnicos4.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        bProductoLimpiar2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        bProductoLimpiar2.setText("Limpiar");
-        bProductoLimpiar2.setPreferredSize(new java.awt.Dimension(80, 20));
-        bProductoLimpiar2.addActionListener(new java.awt.event.ActionListener() {
+        bProductoLimpiarSC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        bProductoLimpiarSC.setText("Limpiar");
+        bProductoLimpiarSC.setPreferredSize(new java.awt.Dimension(80, 20));
+        bProductoLimpiarSC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bProductoLimpiar2ActionPerformed(evt);
+                bProductoLimpiarSCActionPerformed(evt);
             }
         });
 
@@ -4130,9 +4337,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoSCMarca.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoSCMarca.setPreferredSize(new java.awt.Dimension(150, 20));
 
-        tProductoMoneda2.setEditable(false);
-        tProductoMoneda2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tProductoMoneda2.setPreferredSize(new java.awt.Dimension(40, 20));
+        tProductoStockSC.setEditable(false);
+        tProductoStockSC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tProductoStockSC.setPreferredSize(new java.awt.Dimension(40, 20));
 
         tProductoExistencia2.setEnabled(false);
         tProductoExistencia2.setPreferredSize(new java.awt.Dimension(20, 20));
@@ -4152,7 +4359,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         spProductoDetallesTecnicos2.setViewportView(tbProductoCuotasSC);
 
         lProductoExistencia13.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lProductoExistencia13.setText("Stock superior a");
+        lProductoExistencia13.setText("Stock:");
         lProductoExistencia13.setPreferredSize(new java.awt.Dimension(80, 20));
 
         lProductoMarca4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -4187,6 +4394,27 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
+        lProductoCodigo4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        lProductoCodigo4.setText("Visible:");
+        lProductoCodigo4.setPreferredSize(new java.awt.Dimension(80, 20));
+
+        tVisibleSC.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        tHabilitadoSC.setPreferredSize(new java.awt.Dimension(20, 20));
+
+        lProductoCodigo5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        lProductoCodigo5.setText("Habilitado");
+        lProductoCodigo5.setPreferredSize(new java.awt.Dimension(80, 20));
+
+        bProductoActualizar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        bProductoActualizar.setText("Actualizar");
+        bProductoActualizar.setPreferredSize(new java.awt.Dimension(80, 20));
+        bProductoActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bProductoActualizarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pWebsiteDetalleLayout = new javax.swing.GroupLayout(pWebsiteDetalle);
         pWebsiteDetalle.setLayout(pWebsiteDetalleLayout);
         pWebsiteDetalleLayout.setHorizontalGroup(
@@ -4194,14 +4422,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
-                        .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lProductoDetallesTecnicos4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(spProductoDetallesTecnicos2, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
-                            .addComponent(spProductoDescripcionLarga2)))
                     .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
                         .addComponent(lProductoCodigo3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -4212,11 +4432,29 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(tProductoSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tProductoNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(343, 343, 343)
-                        .addComponent(bProductoLimpiar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lProductoCodigo4, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tVisibleSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25)
+                        .addComponent(lProductoCodigo5, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tHabilitadoSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(70, 70, 70)
+                        .addComponent(bProductoActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(bProductoLimpiarSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(bProductoBuscarSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(sProductoSeparador7, javax.swing.GroupLayout.PREFERRED_SIZE, 1248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
+                        .addComponent(lProductoDetallesTecnicos4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(spProductoDetallesTecnicos2, javax.swing.GroupLayout.PREFERRED_SIZE, 586, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
+                        .addComponent(lProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(spProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, 586, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
                         .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -4226,7 +4464,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                     .addGap(183, 183, 183)
                                     .addComponent(lProductoExistencia13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(12, 12, 12)
-                                    .addComponent(tProductoMoneda2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tProductoStockSC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(33, 33, 33)
                                     .addComponent(lProductoMarca4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
@@ -4250,41 +4488,45 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pWebsiteDetalleLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bProductoLimpiar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bProductoBuscarSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tProductoNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tProductoSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lProductoCodigo2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lProductoCodigo3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tProductoIDSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(bProductoLimpiarSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bProductoBuscarSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tProductoNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tProductoSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lProductoCodigo2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lProductoCodigo3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tProductoIDSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lProductoCodigo4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(bProductoActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tVisibleSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tHabilitadoSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lProductoCodigo5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(sProductoSeparador7, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(spProductoDescripcionLarga2, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
-                        .addGap(3, 3, 3)
-                        .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lProductoDetallesTecnicos4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spProductoDetallesTecnicos2, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                        .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pWebsiteDetalleLayout.createSequentialGroup()
-                                .addComponent(tProductoExistencia2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(104, 104, 104))
-                            .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
-                                .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tProductoSCRubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lProductoMarca5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lProductoMarca4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tProductoRubroSCCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(66, 66, 66))))
-                    .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
-                        .addComponent(lProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(spProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lProductoDetallesTecnicos4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spProductoDetallesTecnicos2, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pWebsiteDetalleLayout.createSequentialGroup()
+                            .addComponent(tProductoExistencia2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(104, 104, 104))
+                        .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
+                            .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tProductoSCRubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lProductoMarca5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(18, 18, 18)
+                            .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lProductoMarca4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tProductoRubroSCCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(66, 66, 66)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pWebsiteDetalleLayout.createSequentialGroup()
                         .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lProductoMarca2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tProductoSCMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -4294,7 +4536,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                             .addComponent(tProductoMarcaSCCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lProductoMarca6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lProductoExistencia13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tProductoMoneda2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tProductoStockSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(66, 66, 66))))
         );
 
@@ -4458,22 +4700,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         tpWebsite.addTab("Marcas/Rubros", pMyRSC);
 
-        javax.swing.GroupLayout pWebsiteLayout = new javax.swing.GroupLayout(pWebsite);
-        pWebsite.setLayout(pWebsiteLayout);
-        pWebsiteLayout.setHorizontalGroup(
-            pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pWebsiteLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        pWebsiteLayout.setVerticalGroup(
-            pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE)
-        );
-
-        tpPrincipal.addTab("Website", pWebsite);
-
         tProductoEstado.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoEstado.setEnabled(false);
         tProductoEstado.setPreferredSize(new java.awt.Dimension(600, 20));
@@ -4482,6 +4708,27 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 tProductoEstadoActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout pWebsiteLayout = new javax.swing.GroupLayout(pWebsite);
+        pWebsite.setLayout(pWebsiteLayout);
+        pWebsiteLayout.setHorizontalGroup(
+            pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pWebsiteLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(tProductoEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        pWebsiteLayout.setVerticalGroup(
+            pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pWebsiteLayout.createSequentialGroup()
+                .addComponent(tpWebsite, javax.swing.GroupLayout.PREFERRED_SIZE, 625, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(tProductoEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 42, Short.MAX_VALUE))
+        );
+
+        tpPrincipal.addTab("Website", pWebsite);
 
         cbOrigen.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         cbOrigen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Impala", "Jellyfish", "Victoria", "Sara Comercial", " " }));
@@ -4501,8 +4748,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 1271, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(tProductoEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(cbOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         layout.setVerticalGroup(
@@ -4510,9 +4756,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             .addGroup(layout.createSequentialGroup()
                 .addComponent(tpPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 732, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tProductoEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbOrigen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(cbOrigen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -4742,7 +4986,14 @@ buscarMaestro();
     }//GEN-LAST:event_tVictoriaHilosActionPerformed
 
     private void debugRubroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugRubroActionPerformed
-productosRecorrido();
+/*
+buscarCuotas();
+buscarProductoWebsite();
+recorridoCuotas();
+buscarProductosVictoria();
+*/
+
+
     }//GEN-LAST:event_debugRubroActionPerformed
 
     private void btRubrosVTPostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRubrosVTPostActionPerformed
@@ -4817,12 +5068,12 @@ productosRecorrido();
 
     private void bVictoriaBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bVictoriaBuscarActionPerformed
         //hilosWorker();
-        buscarProductoWebsite();
+        buscarProductosWebsite();
         buscarMarcasVictoria();
         buscarRubrosVictoria();
         buscarRubrosSC();
         buscarMarcasSC();
-        buscarCuotasSC();
+        
         buscarProductosVictoria();
 
     }//GEN-LAST:event_bVictoriaBuscarActionPerformed
@@ -4853,7 +5104,7 @@ productosRecorrido();
             
             buscarRubrosSC();
             buscarMarcasSC();
-            buscarProductoWebsite();
+            buscarProductosWebsite();
             
             
             while (!rubrosW.isDone() || !rubrosSC.isDone() || !marcasSC.isDone() || !marcasW.isDone()) {
@@ -4878,13 +5129,13 @@ productosRecorrido();
 
     private void bProductoBuscarSCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoBuscarSCActionPerformed
         productoBusquedaSC = new ProductoSC();
-        productoBusquedaSC.setId(Integer.valueOf(tProductoSC.getText()));
+        productoBusquedaSC.setId(Integer.valueOf(tProductoIDSC.getText()));
         buscarProductoWebsite(productoBusquedaSC);         // TODO add your handling code here:
     }//GEN-LAST:event_bProductoBuscarSCActionPerformed
 
-    private void bProductoLimpiar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoLimpiar2ActionPerformed
+    private void bProductoLimpiarSCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoLimpiarSCActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_bProductoLimpiar2ActionPerformed
+    }//GEN-LAST:event_bProductoLimpiarSCActionPerformed
 
     private void btRubrosSCDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRubrosSCDeleteActionPerformed
         int row = tRubroSC.getSelectedRow();
@@ -4959,13 +5210,13 @@ productosRecorrido();
             System.out.println("ELIMINAR. Error al eliminar, no se selecciono ninguna linea.");
         }
 
-        buscarProductoWebsite();           // TODO add your handling code here:
+        buscarProductosWebsite();           // TODO add your handling code here:
     }//GEN-LAST:event_bBorrarWSActionPerformed
 
     private void bMaestroBuscar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMaestroBuscar2ActionPerformed
         buscarMarcasSC();
         buscarRubrosSC();        // TODO add your handling code here:
-        buscarProductoWebsite();        // TODO add your handling code here:
+        buscarProductosWebsite();        // TODO add your handling code here:
     }//GEN-LAST:event_bMaestroBuscar2ActionPerformed
 
     private void bMaestroLimpiar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMaestroLimpiar2ActionPerformed
@@ -4975,6 +5226,10 @@ productosRecorrido();
     private void tProductoIDSCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tProductoIDSCActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tProductoIDSCActionPerformed
+
+    private void bProductoActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bProductoActualizarActionPerformed
+actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code here:
+    }//GEN-LAST:event_bProductoActualizarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -5014,11 +5269,12 @@ productosRecorrido();
     private javax.swing.JButton bPrestashopLimpiar;
     private javax.swing.JButton bPrestashopProcesar;
     private javax.swing.JButton bPrestashopSeleccionar;
+    private javax.swing.JButton bProductoActualizar;
     private javax.swing.JButton bProductoBuscar;
     private javax.swing.JButton bProductoBuscarSC;
     private javax.swing.JButton bProductoBuscarV;
     private javax.swing.JButton bProductoLimpiar;
-    private javax.swing.JButton bProductoLimpiar2;
+    private javax.swing.JButton bProductoLimpiarSC;
     private javax.swing.JButton bProductoLimpiarV;
     private javax.swing.JButton bVictoriaBuscar;
     private javax.swing.JButton bVictoriaLimpiar;
@@ -5117,6 +5373,8 @@ productosRecorrido();
     private javax.swing.JLabel lProductoCodigo1;
     private javax.swing.JLabel lProductoCodigo2;
     private javax.swing.JLabel lProductoCodigo3;
+    private javax.swing.JLabel lProductoCodigo4;
+    private javax.swing.JLabel lProductoCodigo5;
     private javax.swing.JLabel lProductoDescripcionLarga;
     private javax.swing.JLabel lProductoDescripcionLarga1;
     private javax.swing.JLabel lProductoDescripcionLarga2;
@@ -5196,6 +5454,7 @@ productosRecorrido();
     private javax.swing.JTextField tGeneralesEnviosHasta;
     private javax.swing.JTextField tGeneralesEnviosImporte;
     private javax.swing.JCheckBox tGeneralesEnviosSumar;
+    private javax.swing.JCheckBox tHabilitadoSC;
     private javax.swing.JPasswordField tImpalaClave;
     private javax.swing.JTextField tImpalaCliente;
     private javax.swing.JTextField tImpalaHilos;
@@ -5250,7 +5509,6 @@ productosRecorrido();
     private javax.swing.JTextField tProductoMarcaVictoriaCodigo;
     private javax.swing.JTextField tProductoMarcaVictoriaNombre;
     private javax.swing.JTextField tProductoMoneda;
-    private javax.swing.JTextField tProductoMoneda2;
     private javax.swing.JTextField tProductoNombre;
     private javax.swing.JTextField tProductoNombreV;
     private javax.swing.JTextField tProductoPrecioCosto;
@@ -5265,6 +5523,7 @@ productosRecorrido();
     private javax.swing.JTextField tProductoSCRubro;
     private javax.swing.JTextField tProductoStock;
     private javax.swing.JTextField tProductoStock1;
+    private javax.swing.JTextField tProductoStockSC;
     private javax.swing.JTable tRubroSC;
     private javax.swing.JScrollPane tRubrosSC;
     private javax.swing.JTable tRubrosVictoria;
@@ -5277,6 +5536,7 @@ productosRecorrido();
     private javax.swing.JTextField tVictoriaPuerto;
     private javax.swing.JTextField tVictoriaRubro;
     private javax.swing.JTextField tVictoriaSServidor;
+    private javax.swing.JCheckBox tVisibleSC;
     private javax.swing.JTextArea taDebug;
     private javax.swing.JTextArea taProductoDescripcionLarga;
     private javax.swing.JTextArea taProductoDescripcionSC;
@@ -5464,13 +5724,8 @@ productosRecorrido();
                         }
                         
                         if(productosFinalizados != null){
-                            /*
-                            for (ProductoVictoria productosFinalizado : productosFinalizados) {
-                                //
-                                //System.out.println("CODIGO " + productosFinalizado.getCodigo());
-                            }
-                            */
-
+                            
+                           
                             if(victoriaW.getHilosConError()>0){
                                 lVictoriaEstado.setText("Finalizado con errores.");
 
@@ -5479,14 +5734,17 @@ productosRecorrido();
                             }else{
                                 lVictoriaEstado.setText("Listo.");
                                 taVictoriaSincronizar.append("\nSe finalizo el proceso de VICTORIA WORKER.");
-                            }
+                            
 
                             
                             // CONSULTAR WEB SERVICE ETC.
+                             
+                            }
                             productosRecorrido();
                             rubrosRecorrido();
                             marcasRecorrido();
-                            
+                          
+                        
                         }else{
                             taVictoriaSincronizar.append("\nNo se pudo obtener los productos finalizados VICTORIA WORKER.");
                             lVictoriaEstado.setText("Error");
@@ -5762,7 +6020,6 @@ productosRecorrido();
                 System.out.println("e n t r o ______");
                  tProductoEstado.setText("Cargando maestro...");
                 appendMensaje("\nCONSULTA: "+productosSC.consulta.getCon().getURL());
-                
                 try { 
                     if(productosSC.isDone()){
                     if(productosSC.isCancelled()){
@@ -5785,7 +6042,8 @@ productosRecorrido();
                                 tablaContenidoProductosSC[i][6] = productos.getMarcaSC().getNombre();
                                 tablaContenidoProductosSC[i][7] = productos.getPrecio();
                                 tablaContenidoProductosSC[i][8] = productos.getStock();
-                                
+                      //           buscarCuotasSC(productos); //SE CARGAN LOS IDS PARA REALIZAR LA BUSQUEDA DENTRO DE CUOTAS WORKER
+                                         
                                 
                                  i++;
                               }  
@@ -5798,17 +6056,15 @@ productosRecorrido();
                     }else{
                         System.out.println("Proceso no terminado: "+productosSC.consulta.getDebugMessage());
                     }
-            } catch (InterruptedException | ExecutionException | JSONException ex){
+                } catch (InterruptedException | ExecutionException | JSONException ex){
                     System.out.println("Error desconocido: "+productosSC.consulta.getDebugMessage());
                     System.err.println(ex.getMessage());
-                }
-            
-            }
-      }else if("ProductoDetalleWorkerSC".equals(source)){
+             }
+      } /*else if("ProductoDetalleWorkerSC".equals(source)){
          
             if(value.equals("STARTED")){
-                bProductoBuscarV.setEnabled(false);
-                bProductoLimpiarV.setText("Detener");
+                bProductoBuscarSC.setEnabled(false);
+                bProductoLimpiarSC.setText("Detener");
                 tProductoEstado.setText("Buscando producto...");
             }else if(value.equals("DONE")){
                 bProductoBuscarSC.setEnabled(true);
@@ -5816,7 +6072,7 @@ productosRecorrido();
                 tProductoEstado.setText("Cargando producto...");
                 
                 appendMensaje("\nCONSULTA: "+productoSC.consulta.getCon().getURL());
-                System.out.println("ENTRO EN DETALLES ");
+                
                 if(productoSC.isDone()){
                     if(productoSC.isCancelled()){
                         
@@ -5843,9 +6099,44 @@ productosRecorrido();
                 tProductoEstado.setText("Cargando producto "+value+"%");
             }
                 tProductoEstado.setText("Cargando maestro "+value+"%");
+            }*/
+    } 
+        else if("ProductoDetalleWorkerSC".equals(source)){
+         
+            if(value.equals("STARTED")){
+                bProductoBuscarV.setEnabled(false);
+                bProductoLimpiarV.setText("Detener");
+                tProductoEstado.setText("Buscando producto...");
+            }else if(value.equals("DONE")){
+                bProductoBuscarV.setEnabled(true);
+                bProductoLimpiarV.setText("Limpiar");
+                tProductoEstado.setText("Cargando producto...");
+                
+                appendMensaje("\nCONSULTA: "+productoSC.consulta.getCon().getURL());
+                
+                if(productoSC.isDone()){
+                    if(productoSC.isCancelled()){            
+                        tProductoEstado.setText("Busqueda cancelada.");
+                        System.out.println("Proceso de busqueda cancelado.");
+                        
+                    }else{
+                        productoBusquedaSC = productoSC.productoSC;
+                        
+                        cargarProductosSC(productoBusquedaSC);
+                        
+                        
+                        tProductoEstado.setText(productoSC.consulta.getErrorMessage());
+                        appendMensaje("RESPUESTA: "+productoSC.consulta.getDebugMessage()+" | "+productoSC.consulta.getJason().toString());
+                    }
+                }else{
+                    System.out.println("Error desconocido: "+productoSC.consulta.getDebugMessage());
+                }
+            }else{
+                tProductoEstado.setText("Cargando producto "+value+"%");
             }
+                tProductoEstado.setText("Cargando maestro "+value+"%");
     }
-
+    }
     public Integer extraeEntero(String cadena){
         System.out.println("ORIG: "+cadena);
         String numeros = "0";

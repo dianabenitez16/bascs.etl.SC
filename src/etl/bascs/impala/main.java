@@ -177,6 +177,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         setLocationRelativeTo(null);
         iniciarPropiedades();
         iniciarListeners();
+      
 //        getVictoriaRubros();   
         contadorVolumetrico = 0;
     }
@@ -254,7 +255,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }
     
     public void buscarCuotasSC(ProductoSC productoSC){ // SE BUSCAN LAS CUOTAS POR ID DENTRO DEL WORKER
-        if (!tProductoID.getText().isEmpty()) {
+        if (!tProductoIDSC.getText().isEmpty()) {
             cuotasSCW = new CuotasWorkerSC(productoSC, propSC);
             cuotasSCW.addPropertyChangeListener(this);
             cuotasSCW.execute();
@@ -359,6 +360,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
            tProductoMarcaSCCodigo.setText(formatInt.format(producto.getMarcaSC().getId()));
            tProductoRubroSCCodigo.setText(formatInt.format(producto.getRubroSC().getId()));
            tProductoStockSC.setText(formatInt.format(producto.getStock()));
+                    
            if(producto.getVisible() == 0){
                tVisibleSC.setSelected(false);
            }else{
@@ -370,21 +372,19 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                tHabilitadoSC.setSelected(true);
            }
            
+          CuotasSC[] cuota = new CuotasSC[0];
+          Object cuotas[][] = new Object[cuota.length][3];
+
+          for (int i = 0; i < cuota.length; i++) {
+              cuotas[i][0] = cuota[i].getNumero();
+              cuotas[i][1] = cuota[i].getImporte_cuota();
+              cuotas[i][2] = cuota[i].getProducto_id();
+
+          }
+          cargarTablaCuotasSC(cuotas);
+
       }
-      
-           CuotasSC[] cuota = new CuotasSC[0];
-    Object cuotas[][] = new Object[cuota.length][3];
-          
-            for (int i = 0; i < cuota.length; i++){
-                cuotas[i][0] = cuota[i].getNumero();
-                cuotas[i][1] = cuota[i].getImporte_cuota();
-                cuotas[i][2] = cuota[i].getProducto_id();
-                
-            }
-             cargarTablaCuotasSC(cuotas);
-        
-      }
-  
+  }
     public void actualizarProductoSC(ProductoSC prodv){
        
         if (!prodv.equals(tProductoSC.getText())
@@ -1992,18 +1992,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         jLabel7 = new javax.swing.JLabel();
         btRubrosSCPost = new javax.swing.JButton();
         btRubrosSCDelete = new javax.swing.JButton();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        tCodigoM = new javax.swing.JTextField();
-        tNombreM = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
-        tCodigoR = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        tNombreR = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         tProductoEstado = new javax.swing.JTextField();
         cbOrigen = new javax.swing.JComboBox<>();
 
@@ -4098,13 +4086,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         pVictoriaDebug.setLayout(pVictoriaDebugLayout);
         pVictoriaDebugLayout.setHorizontalGroup(
             pVictoriaDebugLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pVictoriaDebugLayout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 849, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pVictoriaDebugLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(766, Short.MAX_VALUE)
                 .addComponent(debugRubro, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(364, 364, 364))
+            .addGroup(pVictoriaDebugLayout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         pVictoriaDebugLayout.setVerticalGroup(
             pVictoriaDebugLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -4589,22 +4577,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        jLabel8.setText("Marca: ");
-
-        jLabel9.setText("Codigo:");
-
-        jLabel10.setText("Codigo:");
-
-        jLabel11.setText("Rubro:");
-
-        jButton1.setText("Buscar");
-
-        jButton2.setText("Actualizar");
-
-        jButton3.setText("Buscar");
-
-        jButton4.setText("Actualizar");
-
         javax.swing.GroupLayout pMyRSCLayout = new javax.swing.GroupLayout(pMyRSC);
         pMyRSC.setLayout(pMyRSCLayout);
         pMyRSCLayout.setHorizontalGroup(
@@ -4616,47 +4588,17 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(234, 234, 234))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pMyRSCLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(21, 21, 21)
+                .addComponent(tMarcasSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
                 .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pMyRSCLayout.createSequentialGroup()
-                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tCodigoM, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                            .addComponent(tNombreM))
-                        .addGap(18, 18, 18)
-                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 548, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pMyRSCLayout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(tMarcasSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btRubrosSCPost, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                                .addComponent(btRubrosSCDelete, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(btRubrosSCCargar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(27, 27, 27)))
-                .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tRubrosSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pMyRSCLayout.createSequentialGroup()
-                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tCodigoR)
-                            .addComponent(tNombreR, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(60, 60, 60)))
-                .addGap(37, 37, 37))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btRubrosSCPost, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                        .addComponent(btRubrosSCDelete, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btRubrosSCCargar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(81, 81, 81)
+                .addComponent(tRubrosSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(140, 140, 140))
         );
         pMyRSCLayout.setVerticalGroup(
             pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -4681,23 +4623,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     .addGroup(pMyRSCLayout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(tCodigoM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(tCodigoR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tNombreM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel11)
-                    .addComponent(tNombreR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton4))
-                .addGap(28, 28, 28))
+                .addContainerGap(196, Short.MAX_VALUE))
         );
 
         tpWebsite.addTab("Marcas/Rubros", pMyRSC);
@@ -4716,18 +4642,21 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         pWebsiteLayout.setHorizontalGroup(
             pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pWebsiteLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pWebsiteLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(tpWebsite, javax.swing.GroupLayout.DEFAULT_SIZE, 1259, Short.MAX_VALUE))
+                    .addGroup(pWebsiteLayout.createSequentialGroup()
+                        .addGap(127, 127, 127)
+                        .addComponent(tProductoEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addComponent(tProductoEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         pWebsiteLayout.setVerticalGroup(
             pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pWebsiteLayout.createSequentialGroup()
                 .addComponent(tpWebsite, javax.swing.GroupLayout.PREFERRED_SIZE, 625, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(tProductoEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 42, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addComponent(tProductoEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         tpPrincipal.addTab("Website", pWebsite);
@@ -5289,19 +5218,11 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
     private javax.swing.JComboBox<String> cbOrigen;
     private javax.swing.JButton debugRubro;
     private javax.swing.JTextArea debugRubros;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -5450,8 +5371,6 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
     private javax.swing.JScrollPane spProductoDetallesTecnicos1;
     private javax.swing.JScrollPane spProductoDetallesTecnicos2;
     private javax.swing.JScrollPane spProductoImagenes;
-    private javax.swing.JTextField tCodigoM;
-    private javax.swing.JTextField tCodigoR;
     private javax.swing.JTextField tGeneralesEnviosDesde;
     private javax.swing.JTextField tGeneralesEnviosHasta;
     private javax.swing.JTextField tGeneralesEnviosImporte;
@@ -5486,8 +5405,6 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
     private javax.swing.JTable tMarcaSC;
     private javax.swing.JScrollPane tMarcasSC;
     private javax.swing.JTable tMarcasVictoria;
-    private javax.swing.JTextField tNombreM;
-    private javax.swing.JTextField tNombreR;
     private javax.swing.JTextField tPrestashopExportColumnas;
     private javax.swing.JTextField tPrestashopExportLineas;
     private javax.swing.JTextField tPrestashopFileExport;
@@ -6125,6 +6042,7 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
                         productoBusquedaSC = productoSC.productoSC;
                         
                         cargarProductosSC(productoBusquedaSC);
+                        buscarCuotasSC(productoBusquedaSC);
                         
                         
                         tProductoEstado.setText(productoSC.consulta.getErrorMessage());

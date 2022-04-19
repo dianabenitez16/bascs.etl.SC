@@ -257,9 +257,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         }
     }
     public void buscarCuotasSC(List codigos){ 
+        for (Object codigo : codigos) {
+            System.out.print(codigo+",");
+        }
+        /*
         cuotasSCW = new CuotasWorkerSC(codigos, propSC);
         cuotasSCW.addPropertyChangeListener(this);
         cuotasSCW.execute();
+        */
 
     }
     public void buscarCuotaSC(String[] codigo){ // SE BUSCAN LAS CUOTAS POR CODIGO INTERNO DENTRO DEL WORKER
@@ -5788,7 +5793,8 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
                     System.out.println("Error desconocido: "+productosW.consulta.getDebugMessage());
                     System.err.println(ex.getMessage());
                 }
-            }}else if("RubrosVictoriaWorker".equals(source)){
+            }
+        }else if("RubrosVictoriaWorker".equals(source)){
             if(value.equals("STARTED")){
                 bVictoriaBuscar.setEnabled(false);
                 bVictoriaLimpiar.setText("Detener");
@@ -5834,8 +5840,8 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
                     System.out.println("Error desconocido: "+rubrosW.consulta.getDebugMessage());
                     System.err.println(ex.getMessage());
                 }
-                }
-            }else if("MarcasVictoriaWorker".equals(source)){
+            }
+        }else if("MarcasVictoriaWorker".equals(source)){
             if(value.equals("STARTED")){
                 bVictoriaBuscar.setEnabled(false);
                 bVictoriaLimpiar.setText("Detener");
@@ -5876,10 +5882,8 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
                     System.out.println("Error desconocido: "+maestroW.consulta.getDebugMessage());
                     System.err.println(ex.getMessage());
                 }
-            
-    }
             }
-        else if("ProductoVictoriaWorker".equals(source)){
+        }else if("ProductoVictoriaWorker".equals(source)){
          
             if(value.equals("STARTED")){
                 bProductoBuscarV.setEnabled(false);
@@ -5919,8 +5923,8 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
             }else{
                 tProductoEstado.setText("Cargando producto "+value+"%");
             }
-                tProductoEstado.setText("Cargando maestro "+value+"%");
-            }else if("MarcasWorkerSC".equals(source)){
+            tProductoEstado.setText("Cargando maestro "+value+"%");
+        }else if("MarcasWorkerSC".equals(source)){
             if(value.equals("STARTED")){
                  tProductoEstado.setText("Descargando maestro...");
             }else if(value.equals("DONE")){
@@ -5958,7 +5962,8 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
                     System.out.println("Error desconocido: "+marcasSC.consulta.getDebugMessage());
                     System.err.println(ex.getMessage());
                 }
-            } }else if("RubrosWorkerSC".equals(source)){
+            } 
+        }else if("RubrosWorkerSC".equals(source)){
             if(value.equals("STARTED")){
                  tProductoEstado.setText("Descargando maestro...");
             }else if(value.equals("DONE")){
@@ -5997,7 +6002,8 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
                     System.out.println("Error desconocido: "+rubrosSC.consulta.getDebugMessage());
                     System.err.println(ex.getMessage());
                 }
-            }}else if("ProductosWorkerSC".equals(source)){
+            }
+        }else if("ProductosWorkerSC".equals(source)){
             if(value.equals("STARTED")){
                  tProductoEstado.setText("Descargando maestro...");
             }else if(value.equals("DONE")){
@@ -6006,15 +6012,15 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
                 appendMensaje("\nCONSULTA: "+productosSC.consulta.getCon().getURL());
                 try { 
                     if(productosSC.isDone()){
-                    if(productosSC.isCancelled()){
+                        if(productosSC.isCancelled()){
                             System.out.println("Proceso de busqueda cancelado.");
                         }else{
-                         
-                    
-                          tVictoriaCantidad.setText(productosSC.getCantidad().toString()); //WORKER SARAA
+                            tVictoriaCantidad.setText(productosSC.getCantidad().toString()); //WORKER SARAA
                             tablaContenidoProductosSC = new Object[productosSC.getCantidad()][tablaHeaderProductosSC.length];
+                            codigosSC = new ArrayList();
                             
                             int i = 0;
+                            
                             for (ProductoSC productos : productosSC.get()) {
                                 tablaContenidoProductosSC[i][0] = productos; //Se utiliza para pasar despues a la consulta.
                                 //Se utiliza para asociar desde el Modelo al array de contenidos.
@@ -6026,13 +6032,13 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
                                 tablaContenidoProductosSC[i][6] = productos.getMarcaSC().getNombre();
                                 tablaContenidoProductosSC[i][7] = productos.getPrecio();
                                 tablaContenidoProductosSC[i][8] = productos.getStock();
-                                codigosSC = new ArrayList();
+                                codigosSC.add(productos.getCodigo());
                                   
                                   i++;
                               }
                            
                               
-                            //    buscarCuotasSC(codigosSC); //SE DEBE MANDAR UNA LISTA, YA QUE EL GET FUNCIONA COMO CODIGO: ["100","102"]
+                             buscarCuotasSC(codigosSC); //SE DEBE MANDAR UNA LISTA, YA QUE EL GET FUNCIONA COMO CODIGO: ["100","102"]
                             //AL MANDAR UN STRING[] EL RESULTADO SERA POR CADA CODIGO, UN ARRAY, CODIGO:["100"], CODIGO["102"]. SOBRECARGA EL SERVIDOR
                             //AL BUSCAR TODOS LOS PRODUCTOS DE LA WEBSITE, SE VA A IR CARGANDO LOS CODIGOS PARA LAS CUOTAS
                             cargarTablaProductoSC(tablaContenidoProductosSC);

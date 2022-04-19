@@ -22,6 +22,8 @@ public class ProductoCuotasVictoria {
     private Double precio_contado;
     private Double precio_cuota;
     private Double precio_credito;
+    private Integer porcentaje_descuento;
+    private Integer posee_descuento;
     public Boolean cargado;
     public String codigo;
     public Integer cantidad;
@@ -29,22 +31,16 @@ public class ProductoCuotasVictoria {
 
     
     public ProductoCuotasVictoria(Properties propiedades) {
-       try{
-            this.numero = Integer.valueOf(numero);
-            this.precio_contado = Double.valueOf(precio_cuota);
-            this.precio_cuota = Double.valueOf(precio_contado);
-            this.precio_credito = Double.valueOf(precio_credito);
-            
-        }catch (NumberFormatException ex){
-            System.out.println("ERROR " +ex);
-        }
+      
     }
 
-    ProductoCuotasVictoria(int numero, double precio_contado, double precio_cuota, double precio_credito) {
+    ProductoCuotasVictoria(int numero, double precio_contado, double precio_cuota, double precio_credito, int posee_descuento, int porcentaje_descuento) {
             this.numero = numero;
             this.precio_contado = precio_cuota;
             this.precio_cuota = precio_contado;
             this.precio_credito = precio_credito;
+            this.porcentaje_descuento = porcentaje_descuento;
+            this.posee_descuento = posee_descuento;
            
     }
 
@@ -57,7 +53,10 @@ public class ProductoCuotasVictoria {
             //setCodigo((getCodigo() == null ? cuotasJ.optString("codigo_interno_ws"):getCodigo())); 
             setNumero((getNumero() == null ? cuotasJ.optInt("numero"):getNumero())); 
             setCodigo((getCodigo() == null ? cuotasJ.optString("codigo_interno_ws"):getCodigo()));
-            setPrecio_cuota((getPrecio_cuota() == null ? cuotasJ.optDouble("precio_cuota"):getPrecio_cuota()));            
+            setPrecio_cuota((getPrecio_cuota() == null ? cuotasJ.optDouble("precio_cuota"):getPrecio_cuota()));
+            setPosee_descuento((getPosee_descuento() == null ? cuotasJ.optInt("posee_descuento"):getPosee_descuento()));
+            setPorcentaje_descuento((getPorcentaje_descuento() == null ? cuotasJ.optInt("porcentaje_descuento"):getPorcentaje_descuento()));
+            
             cargado = true;
             cantidad = cuotasJ.length();
         
@@ -120,14 +119,31 @@ public class ProductoCuotasVictoria {
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
+
+    public Integer getPorcentaje_descuento() {
+        return porcentaje_descuento;
+    }
+
+    public void setPorcentaje_descuento(Integer porcentaje_descuento) {
+        this.porcentaje_descuento = porcentaje_descuento;
+    }
+
+    public Integer getPosee_descuento() {
+        return posee_descuento;
+    }
+
+    public void setPosee_descuento(Integer posee_descuento) {
+        this.posee_descuento = posee_descuento;
+    }
+    
       public JSONObject getJSON(){
         JSONObject object;
         object = new JSONObject();
               
-        object.put("importe_cuota", "100000");
-        object.put("numero", "11");
-        object.put("posee_descuento", "0");
-        object.put("porcentaje_descuento", "0");
+        object.put("importe_cuota", getPrecio_contado());
+        object.put("numero", getNumero());
+        object.put("posee_descuento", getPosee_descuento());
+        object.put("porcentaje_descuento", getPorcentaje_descuento());
       
         return object;
         

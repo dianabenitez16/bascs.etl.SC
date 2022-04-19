@@ -58,10 +58,6 @@ public class ConsultaHttp {
     private void conectar() {
         try {
             url = new URL(protocolo+"://"+servidor+":"+puerto+recurso);
-            System.out.println("PROT " + protocolo);
-            System.out.println("SER " + servidor);
-            System.out.println("PUER " + puerto);
-            System.out.println("RECUR " + recurso);
             
             con = url.openConnection();
             

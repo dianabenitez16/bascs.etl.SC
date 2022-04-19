@@ -5,6 +5,12 @@
  */
 package bascs.website.clases;
 
+import etl.bascs.impala.main;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  *
  * @author User
@@ -13,19 +19,42 @@ public class CuotasSC {
     private Integer id;
     private Integer producto_id;
     private Integer numero;
+    private String codigo;
     private Integer posee_descuento;
     private Integer importe_cuota;
     private Integer porcentaje_descuento;
-
-    public CuotasSC( Integer producto_id, Integer cuotas, Integer importe_cuota) {
+    public CuotasSC[] cuotas;
+    public CuotasSC cuota;
+    public Boolean cargado = false;
+    public CuotasSC( int producto_id, int cuotas, int importe_cuota, int posee_descuento, int porcentaje_descuento) {
        
         this.producto_id = producto_id;
         this.numero = cuotas;
         this.importe_cuota = importe_cuota;
+        this.porcentaje_descuento = porcentaje_descuento;
+        this.posee_descuento = posee_descuento;
     }
 
     public CuotasSC() {
     }
+     public void loadJSONConsulta(JSONObject cuotasJ){
+      
+        try{
+            //setCodigo((getCodigo() == null ? cuotasJ.optString("codigo_interno_ws"):getCodigo())); 
+            setNumero((getNumero() == null ? cuotasJ.optInt("numero"):getNumero())); 
+            setId((getId() == null ? cuotasJ.optInt("id"):getId()));
+            setProducto_id((getProducto_id() == null ? cuotasJ.optInt("precio_cuota"):getProducto_id())); 
+            setImporte_cuota((getImporte_cuota() == null ? cuotasJ.optInt("importe_cuota"):getImporte_cuota())); 
+            setPorcentaje_descuento((getPorcentaje_descuento() == null ? cuotasJ.optInt("porcentaje_descuento"):getPorcentaje_descuento())); 
+            setPosee_descuento((getPosee_descuento() == null ? cuotasJ.optInt("posee_descuento"):getPosee_descuento())); 
+            
+            cargado = true;
+            
+        
+        } catch (JSONException e) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
+        }     
+   } 
 
     public Integer getId() {
         return id;
@@ -73,6 +102,22 @@ public class CuotasSC {
 
     public void setPorcentaje_descuento(Integer porcentaje_descuento) {
         this.porcentaje_descuento = porcentaje_descuento;
+    }
+
+    public Boolean getCargado() {
+        return cargado;
+    }
+
+    public void setCargado(Boolean cargado) {
+        this.cargado = cargado;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
     
     

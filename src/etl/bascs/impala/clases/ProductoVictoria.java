@@ -33,7 +33,7 @@ public class ProductoVictoria {
     private Integer producto_id;
     public Boolean cargado = false;
      
-    public CuotaVictoria[] cuotas;
+    public ProductoCuotasVictoria[] cuotas;
     public CuotasVictoriaWorker cuotasW;
    
     private RubroVictoria rubroVictoria; 
@@ -61,15 +61,17 @@ public class ProductoVictoria {
          
           
              
-            cuotas = new CuotaVictoria[0];
+            cuotas = new ProductoCuotasVictoria[0];
             if(productoJ.has("cuotas")){
                 JSONArray cuota = productoJ.optJSONArray("cuotas");
-                cuotas = new CuotaVictoria[cuota.length()];
+                cuotas = new ProductoCuotasVictoria[cuota.length()];
                 for (int i = 0; i < cuotas.length; i++) {
-            cuotas[i] = new CuotaVictoria(cuota.optJSONObject(i).getInt("numero"),
-                    cuota.optJSONObject(i).getInt("precio_cuota"),
-                    cuota.optJSONObject(i).getInt("precio_contado"),
-                    cuota.optJSONObject(i).getInt("precio_credito"));
+            cuotas[i] = new ProductoCuotasVictoria(cuota.optJSONObject(i).getInt("numero"),
+                    cuota.optJSONObject(i).getDouble("precio_cuota"),
+                    cuota.optJSONObject(i).getDouble("precio_contado"),
+                    cuota.optJSONObject(i).getDouble("precio_credito"),
+                    cuota.optJSONObject(i).getInt("posee_descuento"),
+                    cuota.optJSONObject(i).getInt("porcentaje_descuento"));
                     //System.out.println("CUOTAS " + cuotas[i]);
                 }
                 
@@ -173,11 +175,11 @@ public class ProductoVictoria {
 
     
     
-    public CuotaVictoria[] getCuotas() {
+    public ProductoCuotasVictoria[] getCuotas() {
         return cuotas;
     }
 
-    public void setCuotas(CuotaVictoria[] cuotas) {
+    public void setCuotas(ProductoCuotasVictoria[] cuotas) {
         this.cuotas = cuotas;
     }
 

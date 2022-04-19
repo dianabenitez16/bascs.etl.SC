@@ -5,7 +5,7 @@
 package etl.bascs.victoria.clases;
 
 import bascs.website.clases.ProductoSC;
-import etl.bascs.impala.clases.CuotaVictoria;
+import etl.bascs.impala.clases.ProductoCuotasVictoria;
 import etl.bascs.impala.clases.ProductoVictoria;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -57,7 +57,7 @@ public class SCWorker extends SwingWorker<ProductoSC[], String> implements Prope
         for (ProductoVictoria productoVictoria : productosVictoria) {
             for (ProductoSC productoSC : productosSC) {
                 if(productoVictoria.getCodigo().equals(productoSC.getCodigo())){
-                    for (CuotaVictoria cuota : productoVictoria.getCuotas()) {
+                    for (ProductoCuotasVictoria cuota : productoVictoria.getCuotas()) {
                         
                         
 

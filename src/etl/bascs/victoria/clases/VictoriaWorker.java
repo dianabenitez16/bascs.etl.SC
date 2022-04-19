@@ -5,7 +5,7 @@
  */
 package etl.bascs.victoria.clases;
 
-import etl.bascs.impala.clases.CuotaVictoria;
+
 import etl.bascs.impala.clases.ProductoVictoria;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -70,8 +70,8 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
             publish("LOADING");
             productosWorker.execute();
             
-            //hilosACorrer = productosWorker.get().length;   
-            hilosACorrer = 20;   
+            hilosACorrer = productosWorker.get().length;   
+            //hilosACorrer = 20;   
             
             productosFinalizados = new ProductoVictoria[hilosACorrer];
             productosDetalleWorker = new ProductoVictoriaWorker[hilosACorrer];

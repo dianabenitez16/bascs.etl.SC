@@ -5,7 +5,6 @@
  */
 package etl.bascs.victoria.clases;
 
-import etl.bascs.impala.clases.CuotaVictoria;
 import etl.bascs.impala.clases.ProductoCuotasVictoria;
 import etl.bascs.impala.clases.ProductoVictoria;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
@@ -103,8 +102,10 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
    @Override
      protected void done() {
         System.out.println("Cuotas obtenidas. Se encontraron "+cuotasV.length+"");
+        
     }
-    
+  
+  
     protected void process(List<String> chunks) {
         for (String key : chunks) {
             System.out.println(key);

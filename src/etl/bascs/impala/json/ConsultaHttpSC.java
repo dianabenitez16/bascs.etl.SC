@@ -22,11 +22,12 @@ import org.json.JSONObject;
  */
 public class ConsultaHttpSC {
     private URL url;
-    private URLConnection con;
+    public URLConnection con;
     private DataOutputStream wr;
     private BufferedReader in;
     private StringBuilder response;
     private JSONArray jason ;
+    private JSONObject json ;
     
     public Boolean get = true;
     
@@ -81,7 +82,7 @@ public class ConsultaHttpSC {
             in.close();
             
             jason = new JSONArray(response.toString());
-            
+           
             error = false;
           
             debugMessage = con.getHeaderField(0);
@@ -209,6 +210,14 @@ public class ConsultaHttpSC {
 
     public void setDebugMessage(String debugMessage) {
         this.debugMessage = debugMessage;
+    }
+
+    public JSONObject getJson() {
+        return json;
+    }
+
+    public void setJson(JSONObject json) {
+        this.json = json;
     }
     
      public static void main(String[] args) {

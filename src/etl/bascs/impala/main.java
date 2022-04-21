@@ -123,12 +123,17 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public VictoriaWorker victoriaW;
     public CuotasVictoriaWorker cuotasW;
     public CuotasWorkerSC cuotasSCW;
-    public List codigosSC;
+    public ArrayList<String> codigosSC;
+    public ArrayList<String> codigo;
+    public CuotasSC cuotasSC;
+    public ProductoSC productoSCW;
     
     public PrestashopWorker prestashopW;
     public MaestroWorker maestroW;
     public DetalleWorker detalleW;
     public ProductoVictoriaWorker productoW;
+    public ProductoVictoria productoVT;
+    
     
     public RubroVictoria rubVt;
     public RubroSC rubScl;
@@ -256,17 +261,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             System.out.println("Error. No se han podido cargar las cuotas.");
         }
     }
-    public void buscarCuotasSC(List codigos){ 
-        for (Object codigo : codigos) {
-            System.out.print(codigo+",");
-        }
-        /*
-        cuotasSCW = new CuotasWorkerSC(codigos, propSC);
+    public void buscarCuotasSC(ArrayList<String> codigo){ 
+       productosRecorrido();
+        cuotasSCW = new CuotasWorkerSC(codigo, propSC);
         cuotasSCW.addPropertyChangeListener(this);
         cuotasSCW.execute();
-        */
-
-    }
+       
+      }
+    
     public void buscarCuotaSC(String[] codigo){ // SE BUSCAN LAS CUOTAS POR CODIGO INTERNO DENTRO DEL WORKER
         if (!tProductoIDSC.getText().isEmpty()) { //OBS: PARA PODER HACER UN POST/OBTENCIÓN DE MÚLTIPLES CUOTAS, SE DEBEN SEPARAR POR COMAS EJ: CODIGO: ["100","704"]
             cuotasSCW = new CuotasWorkerSC(codigo, propSC);
@@ -865,42 +867,66 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
    }
    
    public void productosRecorrido(){
-       Integer productosOmitidos = 0;
+        Integer productosOmitidos = 0;
         Boolean productoNuevo = false;
+        ProductoSC productoSC = new ProductoSC();
         // PUT - ACTUALIZA
         // POST - CREA
         try{
-            //RECORRIDO VICTORIA
-            for (ProductoVictoria prodVictoria : victoriaW.get()) {
-                productoNuevo = true;
-                prendido = false;
-                for (ProductoSC podSC : productosSC.get()) {
-                    // Verificamos si ya existe el CODIGO
-                    if(prodVictoria.getCodigo().equals(podSC.getCodigo())){
-                        productoNuevo = false;
-                        
-                 
-                        if(!prodVictoria.getNombre().trim().equals(podSC.getNombre().trim())){
-                            productosWSPUT(podSC.getId(), prodVictoria);
-                            System.out.println("PUT DE PRODUCTO. Nombres diferentes. CODIGO: "+prodVictoria.getCodigo());
-                            //System.out.println("VT: "+prodVictoria.getNombre()+"|"+"SC: "+podSC.getNombre());
-                            
-                        }else{
-                            productosOmitidos++;
-                        }
-                        
-                    }else if(!podSC.getCodigo().equals(prodVictoria.getCodigo())){
-                        System.out.println("PRODUCTO QUE SERÁ SIN STOCK");
-                    }
+           //RECORRIDO VICTORIA
+           for (ProductoVictoria prodVictoria : productosW.get()) {
+               productoNuevo = true;
+               prendido = false;
+               for (ProductoSC podSC : productosSC.get()) {
                    
-                    // SE ASIGNA A LOS PRODUCTOS VICTORIA, LOS RUBROS SC CORRESPONDIENTES
-                    if(rubrosSC.obtenerRubro(prodVictoria.getRubroVictoria().getCodigo()) != null){
-                        prodVictoria.setRubroSC(rubrosSC.obtenerRubro(prodVictoria.getRubroVictoria().getCodigo()));
-                    }else{
-                        taVictoriaSincronizar.append("RUBRO ID: No se encuentra el RUBRO "+prodVictoria.getRubroVictoria().getNombre()+ "en el WS.");
-                    }
-                                        
-                    /*
+                     if (prodVictoria.getCodigo().equals(podSC.getCodigo())) {
+                          prodVictoria.setProducto_id(podSC.getId());
+                          productoNuevo = false;
+                           
+                           if (!prodVictoria.getNombre().trim().equals(podSC.getNombre().trim())) {
+                               //        productosWSPUT(podSC.getId(), prodVictoria);
+
+                           } else {
+                               productosOmitidos++;
+                           }
+                       }
+                   
+               // SI LOS IDS Y NUMEROS DE CUOTA DE VICTORIA LOS IGUALES A LOS DE CUOTASSC NO SE INSERTAN
+             }    
+                   /*
+                 for (ProductoCuotasVictoria cuotasVictoria : cuotasW.get()){
+                     for(CuotasSC cuotasSC : cuotasSCW.get()){
+                     cuotasVictoria.setProducto_id(productoSC.getId());
+                 if (cuotasVictoria.getCodigo().equals(productoSC.getCodigo()) && 
+                         cuotasVictoria.getProducto_id() == cuotasSC.getId()) {
+                     
+                     System.out.println("A INSERTAR " + cuotasVictoria.getCodigo() + "ID " + cuotasVictoria.getProducto_id());
+                
+                 }else{
+                     productosOmitidos++;
+                     
+                       }
+                   }
+               
+               }
+               */      /*
+                   for (ProductoCuotasVictoria cuotasVictoria : cuotasW.get()) {
+                       for (CuotasSC cuotasSC : cuotasSCW.get()) {
+                           if (prodVictoria.getProducto_id() == (cuotasSC.getProducto_id())
+                                   && cuotasSC.getNumero() != cuotasVictoria.getNumero()) {
+                               System.out.println("A INSERTAR " + cuotasVictoria.getCodigo());
+                           }
+                       }
+                   }
+                   
+                    */       // SE ASIGNA A LOS PRODUCTOS VICTORIA, LOS RUBROS SC CORRESPONDIENTES
+                           if (rubrosSC.obtenerRubro(prodVictoria.getRubroVictoria().getCodigo()) != null) {
+                               prodVictoria.setRubroSC(rubrosSC.obtenerRubro(prodVictoria.getRubroVictoria().getCodigo()));
+                           } else {
+                               taVictoriaSincronizar.append("RUBRO ID: No se encuentra el RUBRO " + prodVictoria.getRubroVictoria().getNombre() + "en el WS.");
+                           }
+
+                           /*
                     for (RubroSC rubSC : rubrosSC.get()) {
                         // Verifico si el rubro del producto victoria, existe en SC
                         if(prodVictoria.getRubroVictoria().getCodigo().equals(rubSC.getCodigo())){
@@ -908,16 +934,15 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                             
                         }
                     }
-                    */
-                    
-                    // SE ASIGNA A LOS PRODUCTOS VICTORIA, LAS MARCAS SC CORRESPONDIENTES
-                    if(marcasSC.obtenerMarca(prodVictoria.getMarca()) != null){
-                        prodVictoria.setMarca_id(marcasSC.obtenerMarca(prodVictoria.getMarca()).getId());
-                    }else{
-                        taVictoriaSincronizar.append("MARCA ID: No se encuentra la MARCA "+prodVictoria.getMarca()+ "en el WS.");
-                    }
-                    
-                    /*
+                            */
+                           // SE ASIGNA A LOS PRODUCTOS VICTORIA, LAS MARCAS SC CORRESPONDIENTES
+                           if (marcasSC.obtenerMarca(prodVictoria.getMarca()) != null) {
+                               prodVictoria.setMarca_id(marcasSC.obtenerMarca(prodVictoria.getMarca()).getId());
+                           } else {
+                               taVictoriaSincronizar.append("MARCA ID: No se encuentra la MARCA " + prodVictoria.getMarca() + "en el WS.");
+                           }
+
+                           /*
                     for (MarcasSC marSC : marcasSC.get()) {
                         if(prodVictoria.getMarca().equals(marSC.getCodigo())){
                             if(marcasSC.obtenerMarca(prodVictoria.getMarca()) != null){
@@ -928,55 +953,61 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                             }
                         }
                     }
-                    */
-                }
+                            */
+                       
+
+                       if (productoNuevo) {
+                           //      ProductosWSPOST(prodVictoria);
+                           taVictoriaSincronizar.append("SE INSERTARON " + prodVictoria.getCodigo());
+                       } else {
+
+                       }
+                 
                
-                if(productoNuevo){
-                    ProductosWSPOST(prodVictoria);
-                    taVictoriaSincronizar.append("SE INSERTARON " + prodVictoria.getCodigo());
-                }else{
-                    
-                }
+           }
 
-            }
-            
-            taVictoriaSincronizar.append("\nSe omitieron " + productosOmitidos + " PRODUCTOS.");
-            taVictoriaSincronizar.append("\nSe completo la sincronizacion de PRODUCTOS.");
+           taVictoriaSincronizar.append("\nSe omitieron " + productosOmitidos + " PRODUCTOS.");
+           taVictoriaSincronizar.append("\nSe completo la sincronizacion de PRODUCTOS.");
 
-
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
    }
-    public void recorridoCuotas() { // RECORRE LAS CUOTASVICTORIA, Y COMPARA SU CODIGO CON EL CODIGO DE LOS PRODUCTOS DEL WS
-       if(!DEBUG){
-        Integer cuotaOmitida = 0;
-        try {
-            for (ProductoCuotasVictoria cuotasVictoria : cuotasW.get()) {
-                for(CuotasSC cuotasSC : cuotasSCW.get()){
-                    if (cuotasVictoria.getCodigo().equals(cuotasSC.getCodigo())){
-                        System.out.println("CUOTAS CODIGO " + cuotasSC.getCodigo());
-                   
-                    }else if(cuotasVictoria.getProducto_id() == cuotasSC.getProducto_id()){
-                        cuotaOmitida++;
-                    }
-                }
-                
-            }
-
+    public void cuotasRecorrido() { // RECORRE LAS CUOTASVICTORIA, Y COMPARA SU CODIGO CON EL CODIGO DE LOS PRODUCTOS DEL WS
+     Integer cuotaOmitida = 0;
+         try {
+             for (ProductoVictoria prodVictoria : productosW.get()) {
+             prendido = false;
+               for (ProductoSC podSC : productosSC.get()) {
+                     if (prodVictoria.getCodigo().equals(podSC.getCodigo())) {
+                          prodVictoria.setProducto_id(podSC.getId());
+                     }
+             for (ProductoCuotasVictoria cuotasVictoria : cuotasW.get()){
+                 if (prodVictoria.getProducto_id() != (cuotasSC.getProducto_id())
+                         && cuotasSC.getNumero() != cuotasVictoria.getNumero()) {
+                     System.out.println("A INSERTAR " + cuotasVictoria.getCodigo());
+                 }else{
+                     System.out.println("volver a verificar");
+                 }
+               // SI LOS IDS Y NUMEROS DE CUOTA DE VICTORIA LOS IGUALES A LOS DE CUOTASSC NO SE INSERTAN
+             } 
+                     }
+               
+             }
         } catch (InterruptedException ex) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ExecutionException ex) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         }
+     
     }
-    }
-    /*POST - PUT - DELETE DEL WEBSERVICE*/
-    private void cuotasWSPOST(ProductoCuotasVictoria cuotas) {
-   
+     
+    //POST - PUT - DELETE DEL WEBSERVICE*/
+    private void cuotasWSPOST(Integer id, ProductoCuotasVictoria cuotas) {
+   if(!DEBUG){
             try {
                 ProductoCuotasVictoria cuotaVT = new ProductoCuotasVictoria();
-                String url = "http://www.saracomercial.com/panel/api/loader/productos/2/cuotas";
+                String url = "http://www.saracomercial.com/panel/api/loader/productos/"+id+"/cuotas";
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -1021,10 +1052,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-       
+   }
     }
     private void PUTproductoSC(Integer id, ProductoSC producto) {
-
+if(!DEBUG){
         try {
            
             String url = "http://www.saracomercial.com/panel/api/loader/productos/"+id+"";
@@ -1035,7 +1066,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             con.setRequestMethod("PUT");
             con.setRequestProperty("Content-type", "application/json");
             con.setRequestProperty("Accept", "application/json");
-            con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+   //         con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
             String urlParameters = producto.getJSON().toString();
             System.out.println("SE ACTUALIZARA " + producto.getJSON().toString() + " del ID: " + id);
@@ -1073,7 +1104,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         } catch (IOException ex) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+}
 }
     public void marcasWSPOST(MarcaVictoria marcasVT){
         if(!DEBUG){
@@ -1087,7 +1118,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Content-type", "application/json");
                 con.setRequestProperty("Accept", "application/json");
-                con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+     //           con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
                 String urlParameters = marcasVT.getJSON().toString();
 
@@ -1143,7 +1174,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             con.setRequestMethod("PUT");
             con.setRequestProperty("Content-type", "application/json");
             con.setRequestProperty("Accept", "application/json");
-            con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+    //        con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
             String urlParameters = rubroSC.getJSON().toString();
             System.out.println("SE ACTUALIZARA " + rubroSC.getJSON().toString() + " del ID: " + id);
@@ -1195,7 +1226,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             con.setRequestMethod("PUT");
             con.setRequestProperty("Content-type", "application/json");
             con.setRequestProperty("Accept", "application/json");
-            con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+  //          con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
             String urlParameters = podVictoria.getJSON().toString();
             System.out.println("SE ACTUALIZARA " + podVictoria.getJSON().toString() + " del ID: " + id);
@@ -1247,7 +1278,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Content-type", "application/json");
                 con.setRequestProperty("Accept", "application/json");
-                con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+   //             con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
                 String urlParameters = productoVT.getJSON().toString();
 
@@ -1300,7 +1331,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Content-type", "application/json");
                 con.setRequestProperty("Accept", "application/json");
-                con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+  //              con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
                 String urlParameters = rubroVT.getJSON().toString();
 
@@ -5065,9 +5096,9 @@ buscarProductosVictoria();
         buscarRubrosVictoria();
         buscarRubrosSC();
         buscarMarcasSC();
-        
+        buscarCuotas();
         buscarProductosVictoria();
-
+        
     }//GEN-LAST:event_bVictoriaBuscarActionPerformed
 
     private void bVictoriaLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bVictoriaLimpiarActionPerformed
@@ -6017,7 +6048,7 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
                         }else{
                             tVictoriaCantidad.setText(productosSC.getCantidad().toString()); //WORKER SARAA
                             tablaContenidoProductosSC = new Object[productosSC.getCantidad()][tablaHeaderProductosSC.length];
-                            codigosSC = new ArrayList();
+                            codigosSC = new ArrayList<>();
                             
                             int i = 0;
                             
@@ -6036,23 +6067,26 @@ actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code her
                                   
                                   i++;
                               }
-                           
-                              
                              buscarCuotasSC(codigosSC); //SE DEBE MANDAR UNA LISTA, YA QUE EL GET FUNCIONA COMO CODIGO: ["100","102"]
                             //AL MANDAR UN STRING[] EL RESULTADO SERA POR CADA CODIGO, UN ARRAY, CODIGO:["100"], CODIGO["102"]. SOBRECARGA EL SERVIDOR
                             //AL BUSCAR TODOS LOS PRODUCTOS DE LA WEBSITE, SE VA A IR CARGANDO LOS CODIGOS PARA LAS CUOTAS
+                           
                             cargarTablaProductoSC(tablaContenidoProductosSC);
+                            
                             tProductoEstado.setText(productosSC.consulta.getErrorMessage());
                             appendMensaje("RESPUESTA: "+ productosSC.consulta.getDebugMessage()+ " | "+ productosSC.consulta.getJason()); 
                             appendMensaje("Se obtuvieron "+productosSC.getCantidad()+" registros.");
                             }
+                        
                     }else{
                         System.out.println("Proceso no terminado: "+productosSC.consulta.getDebugMessage());
                     }
+                   
                 } catch (InterruptedException | ExecutionException | JSONException ex){
                     System.out.println("Error desconocido: "+productosSC.consulta.getDebugMessage());
                     System.err.println(ex.getMessage());
              }
+                 
       } /*else if("ProductoDetalleWorkerSC".equals(source)){
          
             if(value.equals("STARTED")){

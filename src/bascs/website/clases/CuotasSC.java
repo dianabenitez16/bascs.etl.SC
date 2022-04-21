@@ -43,7 +43,7 @@ public class CuotasSC {
             //setCodigo((getCodigo() == null ? cuotasJ.optString("codigo_interno_ws"):getCodigo())); 
             setNumero((getNumero() == null ? cuotasJ.optInt("numero"):getNumero())); 
             setId((getId() == null ? cuotasJ.optInt("id"):getId()));
-            setProducto_id((getProducto_id() == null ? cuotasJ.optInt("precio_cuota"):getProducto_id())); 
+            setProducto_id((getProducto_id() == null ? cuotasJ.optInt("producto_id"):getProducto_id()));
             setImporte_cuota((getImporte_cuota() == null ? cuotasJ.optInt("importe_cuota"):getImporte_cuota())); 
             setPorcentaje_descuento((getPorcentaje_descuento() == null ? cuotasJ.optInt("porcentaje_descuento"):getPorcentaje_descuento())); 
             setPosee_descuento((getPosee_descuento() == null ? cuotasJ.optInt("posee_descuento"):getPosee_descuento())); 

@@ -40,9 +40,9 @@ public class CuotasWorkerSC extends SwingWorker<CuotasSC[], String> implements P
     private Properties propiedades;
     private Integer cantidad;
     private Integer id;
-    private List codigos;
+    private ArrayList<String> codigos;
     public String[] codigo;
-    
+    public main main;
     private ProductoSC[] productosSC;
     private CuotasSC[] cuotasSC;
     private ProductoSC productoSC; 
@@ -50,11 +50,11 @@ public class CuotasWorkerSC extends SwingWorker<CuotasSC[], String> implements P
     private JSONObject jsonCodigo;
     public JSONObject jsonResponse;
     
-    public CuotasWorkerSC(List producto, Properties propSC){
-        this.codigos = producto;
+    public CuotasWorkerSC(ArrayList codigo, Properties propSC){
+        this.codigos = codigo;
         this.propiedades = propSC;
     }
- public CuotasWorkerSC(String[] producto, Properties propSC){
+public CuotasWorkerSC(String[] producto, Properties propSC){
         this.codigo = producto;
         this.propiedades = propSC;
     }
@@ -76,13 +76,11 @@ public class CuotasWorkerSC extends SwingWorker<CuotasSC[], String> implements P
                 con.setRequestProperty("Content-type", "application/json");
                 con.setRequestProperty("Accept", "application/json");
                 con.setRequestProperty("Authorization", propiedades.getProperty("clave"));
-                
-                
+            
                jsonCodigo = new JSONObject();
-               jsonCodigo.put("productos_codigo_interno_ws", Arrays.asList(codigos));  //BODY DEL POST, DENTRO VA LA LISTA DE CODIGOS, SEPARADOS POR COMA
-                //DEBE IR "productos_codigo_interno_ws", ["11111", "PROD2006"].
-                
-                // Send post request
+               jsonCodigo.put("productos_codigo_interno_ws" , codigos);  //BODY DEL POST, DENTRO VA LA LISTA DE CODIGOS, SEPARADOS POR COMA
+             
+               
                 con.setDoOutput(true);
                 DataOutputStream wr = new DataOutputStream(con.getOutputStream());
                 wr.writeBytes(jsonCodigo.toString());
@@ -108,33 +106,32 @@ public class CuotasWorkerSC extends SwingWorker<CuotasSC[], String> implements P
                 }
                 in.close();
           jsonResponse = new JSONObject(response.toString());
-              if (jsonResponse.has("data")) {
+              if (jsonResponse.has("data")) {           
                   JSONArray respuesta = jsonResponse.getJSONArray("data");
                   cuotasSC = new CuotasSC[respuesta.length()];
-                  for (int i = 0; i < respuesta.length(); i++) {
-                      Iterator keys = respuesta.getJSONObject(i).keys();
-                      String key = keys.next().toString();
+                  for (int i = 0; i < response.length(); i++) {
                       JSONObject cuotasJ = respuesta.getJSONObject(i);
+                      System.out.println("CANTIDAD " + cuotasJ.length()); 
                       cuotaSC = new CuotasSC();
                       cuotaSC.loadJSONConsulta(cuotasJ);
-                      productoSC.setCuotas(cuotasSC);
                       cuotasSC[i] = cuotaSC;
+                     // productoSC.setCuotas(cuotasSC);
+                      
                       setProgress(((i + 1) * 100) / cantidad);
                       //Thread.sleep(50); //JUST FOR TESTING
                       //publish(producto.getCodigo());
-
-                  }
+      //print result
               
+              }
           }
-                //print result
-                System.out.println(response.toString());
-            } catch (MalformedURLException ex) {
+   } catch (MalformedURLException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ProtocolException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
+    
         return cuotasSC;
 
      
@@ -183,11 +180,11 @@ public class CuotasWorkerSC extends SwingWorker<CuotasSC[], String> implements P
         this.codigo = codigo;
     }
 
-    public List getCodigos() {
+    public ArrayList getCodigos() {
         return codigos;
     }
 
-    public void setCodigos(List codigos) {
+    public void setCodigos(ArrayList codigos) {
         this.codigos = codigos;
     }
 

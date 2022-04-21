@@ -49,6 +49,7 @@ public class ProductoSC{
         this.precio = precio;
         this.marca = marca;
         this.rubro = rubro;
+        this.cuotas = cuotas;
  
     }     
 
@@ -95,6 +96,7 @@ public class ProductoSC{
             setRubroSC(new RubroSC(productoJ.getJSONObject("rubro")));
             setVisible(productoJ.optInt("visible"));
             setHabilitado(productoJ.optInt("habilitado"));
+            
             cargado = true;
         } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
@@ -103,7 +105,7 @@ public class ProductoSC{
     }
 
     public CuotasSC[] getCuotas() {
-        return cuotas;
+      return cuotas;
     }
 
     public void setCuotas(CuotasSC[] cuotas) {

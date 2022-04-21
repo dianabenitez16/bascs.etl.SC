@@ -70,8 +70,6 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
                         JSONArray respuesta = consultaV.getJson().getJSONArray("cuotas");
                         cuotasV = new ProductoCuotasVictoria[respuesta.length()];
                        for (int i = 0; i < respuesta.length(); i++) {
-                            Iterator keys = respuesta.getJSONObject(i).keys();
-                            String key = keys.next().toString();
                             JSONObject cuotasJ = respuesta.getJSONObject(i);
                             cuotaV = new ProductoCuotasVictoria();
                             cuotaV.loadJSONConsulta(cuotasJ);

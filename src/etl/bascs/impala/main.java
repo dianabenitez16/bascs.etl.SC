@@ -5,7 +5,7 @@
  */
 package etl.bascs.impala;
 
-import bascs.website.clases.CuotasSC;
+import bascs.website.clases.CuotaSC;
 import bascs.website.clases.CuotasWorkerSC;
 import com.formdev.flatlaf.IntelliJTheme;
 import etl.bascs.impala.clases.MarcaVictoria;
@@ -123,7 +123,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public CuotasWorkerSC cuotasSCW;
     public ArrayList<String> codigosSC;
     public ArrayList<String> codigo;
-    public CuotasSC cuotasSC;
+    public CuotaSC cuotasSC;
     public ProductoSC productoSCW;
 
     public PrestashopWorker prestashopW;
@@ -190,13 +190,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
 //        getVictoriaRubros();   
         contadorVolumetrico = 0;
-        
-        
+
     }
 
     /* PRODUCTO */
     /**
-     * @param limpiarCodigo*******************************************************************************************************
+     * @param
+     * limpiarCodigo*******************************************************************************************************
      */
     public void limpiarProducto(Boolean limpiarCodigo) {
         if (limpiarCodigo) {
@@ -349,23 +349,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 cargarImagen(imagenes[0][1].toString());
             }
         }
-    }
-
-    public void paginator() {
-        try {
-            URL url = new URL("http://192.168.192.60:8080/WS/webapi/victoria/rubros/page/");
-            HttpURLConnection http = (HttpURLConnection) url.openConnection();
-            http.setRequestProperty("Accept", "application/json");
-
-            System.out.println(http.getResponseCode() + " " + http.getResponseMessage());
-
-            http.disconnect();
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
     }
 
     public void cargarProductosdeVictoria(ProductoVictoria producto) {
@@ -756,7 +739,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     /**
      * *******************RECORRIDOS*************************************
      */
-
     public void rubrosRecorrido() {
         isClicked = true;
         Boolean rubroEliminar;
@@ -1000,75 +982,74 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             Boolean nuevo = true;
             productosXSC = new ArrayList<>();
             productosXVT = new ArrayList<>();
-            
+
             //CUOTAS SC
-            for (CuotasSC cuotasSC : cuotasSCW.get()) {
+            for (CuotaSC cuotasSC : cuotasSCW.get()) {
                 nuevo = true;
                 for (ProductoSC productoXSC : productosXSC) {
-                    if(productoXSC.getId().equals(cuotasSC.getProducto_id())){
+                    if (productoXSC.getId().equals(cuotasSC.getProducto_id())) {
                         nuevo = false;
                         productoXSC.getCuotas().add(cuotasSC);
                     }
                 }
-                
-                if(nuevo){
+
+                if (nuevo) {
                     ProductoSC producto;
-                    List<CuotasSC> cuotas = new ArrayList<>();
-                    
+                    List<CuotaSC> cuotas = new ArrayList<>();
+
                     producto = productosSC.obtenerProducto(cuotasSC.getProducto_id());
                     cuotas.add(cuotasSC);
-                    
+
                     producto.setCuotas(cuotas);
                     productosXSC.add(producto);
                 }
             }
-            
+
             //CUOTAS VICTORIA
             for (ProductoCuotasVictoria cuotasVT : cuotasW.get()) {
                 nuevo = true;
                 for (ProductoVictoria productoXVT : productosXVT) {
-                    if(productoXVT.getCodigo().equals(cuotasVT.getCodigo())){
+                    if (productoXVT.getCodigo().equals(cuotasVT.getCodigo())) {
                         nuevo = false;
                         productoXVT.getCuotas().add(cuotasVT);
                     }
                 }
-                
-                if(nuevo){
+
+                if (nuevo) {
                     ProductoVictoria producto;
                     List<ProductoCuotasVictoria> cuotas = new ArrayList<>();
-                    
+
                     producto = productosW.obtenerProducto(cuotasVT.getCodigo());
                     cuotas.add(cuotasVT);
-                    
+
                     producto.setCuotas(cuotas);
                     productosXVT.add(producto);
                 }
             }
-            
+            System.out.println("ENTRO ");
             //PRODUCTOS
             for (ProductoVictoria productoVictoria : productosXVT) {
                 for (ProductoSC productoSC : productosXSC) {
-                    if(productoSC.getCodigo().equals(productoVictoria.getCodigo())){
+                    if (productoSC.getCodigo().equals(productoVictoria.getCodigo())) {
                         for (ProductoCuotasVictoria cuotaVT : productoVictoria.getCuotas()) {
                             nuevo = true;
-                            for (CuotasSC cuotaSC : productoSC.getCuotas()) {
-                                if(cuotaVT.getNumero().equals(cuotaSC.getNumero())){
+                            for (CuotaSC cuotaSC : productoSC.getCuotas()) {
+                                if (cuotaVT.getNumero().equals(cuotaSC.getNumero())) {
                                     nuevo = false;
-                                    if(!cuotaVT.getPrecio_contado().equals(cuotaSC.getImporte_cuota())){ //AGREGAR COMPARACION DE PORCENTAJE DE DESCUENTO ETC
+                                    if (!cuotaVT.getPrecio_contado().equals(cuotaSC.getImporte_cuota())) { //AGREGAR COMPARACION DE PORCENTAJE DE DESCUENTO ETC
                                         // PUT CUOTA
                                     }
                                 }
                             }
-                            
-                            if(nuevo){
-                                //POST CUOTA
+
+                            if (nuevo) {
+                                cuotasWSPOST(productoSC.getId(), cuotaVT);
                             }
                         }
                     }
                 }
             }
-            
-                
+
         } catch (InterruptedException ex) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ExecutionException ex) {
@@ -1079,54 +1060,51 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
     //POST - PUT - DELETE DEL WEBSERVICE*/
     private void cuotasWSPOST(Integer id, ProductoCuotasVictoria cuotas) {
-        if (!DEBUG) {
-            try {
-                ProductoCuotasVictoria cuotaVT = new ProductoCuotasVictoria();
-                String url = "http://www.saracomercial.com/panel/api/loader/productos/" + id + "/cuotas";
-                URL obj = new URL(url);
-                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        try {
+            String url = "http://www.saracomercial.com/panel/api/loader/productos/" + id + "/cuotas";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                //add reuqest header
-                con.setRequestMethod("POST");
-                con.setRequestProperty("Content-type", "application/json");
-                con.setRequestProperty("Accept", "application/json");
-                con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+            //add reuqest header
+            //     con.setRequestMethod("POST");
+            con.setRequestProperty("Content-type", "application/json");
+            con.setRequestProperty("Accept", "application/json");
+            //     con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
-                String urlParameters = cuotaVT.getJSON().toString();
-                System.out.println("CUOTAS A INSERTAR " + urlParameters);
-                // Send post request
-                con.setDoOutput(true);
-                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                wr.writeBytes(urlParameters);
-                wr.flush();
-                wr.close();
+            String urlParameters = cuotas.getJSON().toString();
+            System.out.println("CUOTAS A INSERTAR " + urlParameters);
+            // Send post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(urlParameters);
+            wr.flush();
+            wr.close();
 
-                int responseCode = con.getResponseCode();
-                System.out.println("\nSending 'POST' request to URL : " + url);
-                System.out.println("Post parameters : " + urlParameters);
-                System.out.println("Response Code : " + responseCode);
-                System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
-                System.out.println("Accept: " + con.getRequestProperty("Accept"));
-                System.out.println("Authorization: " + propSC.getProperty("clave"));
-                System.out.println("Method: " + con.getRequestMethod());
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'POST' request to URL : " + url);
+            System.out.println("Post parameters : " + urlParameters);
+            System.out.println("Response Code : " + responseCode);
+            System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
+            System.out.println("Accept: " + con.getRequestProperty("Accept"));
+            System.out.println("Authorization: " + propSC.getProperty("clave"));
+            System.out.println("Method: " + con.getRequestMethod());
 
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
 
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-                System.out.println(response.toString());
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ProtocolException ex) {
-                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
             }
+            in.close();
+            System.out.println(response.toString());
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ProtocolException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1472,7 +1450,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }
 
     /**/
-
     public void generarArchivoContenido(Object[] headers, Object[][] contenido, String filename) {
         File carpeta = new File("export/");
         Writer out;
@@ -1588,7 +1565,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         // create an instance of BufferedReader
         // using try with resource, Java 7 feature to close resources
-        try (BufferedReader br = Files.newBufferedReader(pathToFile,
+        try ( BufferedReader br = Files.newBufferedReader(pathToFile,
                 StandardCharsets.US_ASCII)) {
 
             // read the first line from the text file
@@ -1725,7 +1702,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     /**
      * *******************************************************************************************************
      */
-
     private void iniciarListeners() {
         // TABLA MAESTRO
         tbMaestroProductos.addMouseListener(new MouseAdapter() {
@@ -1808,7 +1784,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
     /* DEBUG */
     /**
-     * @param mensaje*******************************************************************************************************
+     * @param
+     * mensaje*******************************************************************************************************
      */
     public void appendMensaje(String mensaje) {
         //System.out.println("______"+mensaje);
@@ -6134,7 +6111,8 @@ buscarProductosVictoria();
 
                                 i++;
                             }
-                            buscarCuotasSC(codigosSC); //SE DEBE MANDAR UNA LISTA, YA QUE EL GET FUNCIONA COMO CODIGO: ["100","102"]
+                            buscarCuotasSC(codigosSC);
+                            //SE DEBE MANDAR UNA LISTA, YA QUE EL GET FUNCIONA COMO CODIGO: ["100","102"]
                             //AL MANDAR UN STRING[] EL RESULTADO SERA POR CADA CODIGO, UN ARRAY, CODIGO:["100"], CODIGO["102"]. SOBRECARGA EL SERVIDOR
                             //AL BUSCAR TODOS LOS PRODUCTOS DE LA WEBSITE, SE VA A IR CARGANDO LOS CODIGOS PARA LAS CUOTAS
 
@@ -6154,46 +6132,52 @@ buscarProductosVictoria();
                     System.err.println(ex.getMessage());
                 }
 
-            } else if ("ProductoDetalleWorkerSC".equals(source)) {
-                if (value.equals("STARTED")) {
-                    bProductoBuscarV.setEnabled(false);
-                    bProductoLimpiarV.setText("Detener");
-                    tProductoEstado.setText("Buscando producto...");
-                } else if (value.equals("DONE")) {
-                    bProductoBuscarV.setEnabled(true);
-                    bProductoLimpiarV.setText("Limpiar");
-                    tProductoEstado.setText("Cargando producto...");
+            }
+        } else if ("ProductoDetalleWorkerSC".equals(source)) {
+            if (value.equals("STARTED")) {
+                bProductoBuscarV.setEnabled(false);
+                bProductoLimpiarV.setText("Detener");
+                tProductoEstado.setText("Buscando producto...");
+            } else if (value.equals("DONE")) {
+                bProductoBuscarV.setEnabled(true);
+                bProductoLimpiarV.setText("Limpiar");
+                tProductoEstado.setText("Cargando producto...");
 
-                    appendMensaje("\nCONSULTA: " + productoSC.consulta.getCon().getURL());
+                appendMensaje("\nCONSULTA: " + productoSC.consulta.getCon().getURL());
 
-                    if (productoSC.isDone()) {
-                        if (productoSC.isCancelled()) {
-                            tProductoEstado.setText("Busqueda cancelada.");
-                            System.out.println("Proceso de busqueda cancelado.");
+                if (productoSC.isDone()) {
+                    if (productoSC.isCancelled()) {
+                        tProductoEstado.setText("Busqueda cancelada.");
+                        System.out.println("Proceso de busqueda cancelado.");
 
-                        } else {
-                            productoBusquedaSC = productoSC.productoSC;
-
-                            cargarProductosSC(productoBusquedaSC);
-                            String arrnum[] = {productoBusquedaSC.getCodigo()};
-                            buscarCuotaSC(arrnum);
-
-                            tProductoEstado.setText(productoSC.consulta.getErrorMessage());
-                            appendMensaje("RESPUESTA: " + productoSC.consulta.getDebugMessage() + " | " + productoSC.consulta.getJason().toString());
-                        }
                     } else {
-                        System.out.println("Error desconocido: " + productoSC.consulta.getDebugMessage());
+                        productoBusquedaSC = productoSC.productoSC;
+
+                        cargarProductosSC(productoBusquedaSC);
+                        String arrnum[] = {productoBusquedaSC.getCodigo()};
+                        buscarCuotaSC(arrnum);
+
+                        tProductoEstado.setText(productoSC.consulta.getErrorMessage());
+                        appendMensaje("RESPUESTA: " + productoSC.consulta.getDebugMessage() + " | " + productoSC.consulta.getJason().toString());
                     }
                 } else {
-                    tProductoEstado.setText("Cargando producto " + value + "%");
+                    System.out.println("Error desconocido: " + productoSC.consulta.getDebugMessage());
                 }
-                tProductoEstado.setText("Cargando maestro " + value + "%");
-            } else if ("CuotasWorkerSC".equals(source)) {
-                if (value.equals("STARTED")) {
+            } else {
+                tProductoEstado.setText("Cargando producto " + value + "%");
+            }
+            tProductoEstado.setText("Cargando maestro " + value + "%");
+        } else if ("CuotasWorkerSC".equals(source)) {
+            if (value.equals("STARTED")) {
+
+            } else if (value.equals("DONE")) {
+                if (cuotasSCW.isDone()) {
                     
-                } else if (value.equals("DONE")) {
                     cuotasRecorrido();
+                } else {
+                    System.out.println("NOT DONE");
                 }
+
             }
         }
     }

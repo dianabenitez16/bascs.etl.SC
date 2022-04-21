@@ -140,7 +140,7 @@ public class ProductoCuotasVictoria {
         JSONObject object;
         object = new JSONObject();
               
-        object.put("importe_cuota", getPrecio_contado());
+        object.put("importe_cuota", getPrecio_cuota());
         object.put("numero", getNumero());
         object.put("posee_descuento", getPosee_descuento());
         object.put("porcentaje_descuento", getPorcentaje_descuento());

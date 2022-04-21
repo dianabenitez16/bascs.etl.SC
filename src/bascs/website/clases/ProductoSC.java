@@ -1,6 +1,6 @@
 package bascs.website.clases;
 
-import bascs.website.clases.CuotasSC;
+import bascs.website.clases.CuotaSC;
 import etl.bascs.impala.clases.MarcaSC;
 import etl.bascs.impala.main;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class ProductoSC {
     public Boolean cargado;
 
     private String rubro;
-    private List<CuotasSC> cuotas;
+    private List<CuotaSC> cuotas;
     private MarcaSC marcaSC;
     private RubroSC rubroSC;
     private MarcaSC[] marcasSC;
@@ -101,11 +101,11 @@ public class ProductoSC {
 
     }
 
-    public List<CuotasSC> getCuotas() {
+    public List<CuotaSC> getCuotas() {
         return cuotas;
     }
 
-    public void setCuotas(List<CuotasSC> cuotas) {
+    public void setCuotas(List<CuotaSC> cuotas) {
         this.cuotas = cuotas;
     }
 

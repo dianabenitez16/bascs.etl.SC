@@ -35,7 +35,8 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class CuotasWorkerSC extends SwingWorker<CuotasSC[], String> implements PropertyChangeListener{
+public class CuotasWorkerSC extends SwingWorker<CuotaSC[], String> implements PropertyChangeListener {
+
     public ConsultaHttpSC consulta;
     private Properties propiedades;
     private Integer cantidad;
@@ -44,110 +45,112 @@ public class CuotasWorkerSC extends SwingWorker<CuotasSC[], String> implements P
     public String[] codigo;
     public main main;
     private ProductoSC[] productosSC;
-    private CuotasSC[] cuotasSC;
-    private ProductoSC productoSC; 
-    private CuotasSC cuotaSC;
+    private CuotaSC[] cuotasSC;
+    private ProductoSC productoSC;
+    private CuotaSC cuotaSC;
     private JSONObject jsonCodigo;
     public JSONObject jsonResponse;
-    
-    public CuotasWorkerSC(ArrayList codigo, Properties propSC){
+
+    public CuotasWorkerSC(ArrayList codigo, Properties propSC) {
         this.codigos = codigo;
         this.propiedades = propSC;
     }
-public CuotasWorkerSC(String[] producto, Properties propSC){
+
+    public CuotasWorkerSC(String[] producto, Properties propSC) {
         this.codigo = producto;
         this.propiedades = propSC;
     }
+
     public CuotasWorkerSC() {
     }
-    
- @Override
-    protected CuotasSC[] doInBackground(){
-      
-      try{
-         
-             setProgress(0);
-           
-                String url = "http://www.saracomercial.com/panel/api/loader/cuotas/filtrar?page=1";
-                URL obj = new URL(url);
-                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                con.setRequestMethod("POST");
-                con.setRequestProperty("Content-type", "application/json");
-                con.setRequestProperty("Accept", "application/json");
-                con.setRequestProperty("Authorization", propiedades.getProperty("clave"));
-            
-               jsonCodigo = new JSONObject();
-               jsonCodigo.put("productos_codigo_interno_ws" , codigos);  //BODY DEL POST, DENTRO VA LA LISTA DE CODIGOS, SEPARADOS POR COMA
-             
-               
-                con.setDoOutput(true);
-                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                wr.writeBytes(jsonCodigo.toString());
-                wr.flush();
-                wr.close();
-                
-                int responseCode = con.getResponseCode();
-                System.out.println("\nSending 'POST' request to URL : " + url);
-                System.out.println("Post parameters : " + jsonCodigo.toString());
-                System.out.println("Response Code : " + responseCode);
-                System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
-                System.out.println("Accept: " + con.getRequestProperty("Accept"));
-                System.out.println("Authorization: " + propiedades.getProperty("clave"));
-                System.out.println("Method: " + con.getRequestMethod());
-                
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
+    @Override
+    protected CuotaSC[] doInBackground() {
 
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-          jsonResponse = new JSONObject(response.toString());
-              if (jsonResponse.has("data")) {           
-                  JSONArray respuesta = jsonResponse.getJSONArray("data");
-                  cuotasSC = new CuotasSC[respuesta.length()];
-                  for (int i = 0; i < response.length(); i++) {
-                      JSONObject cuotasJ = respuesta.getJSONObject(i);
-                      System.out.println("CANTIDAD " + cuotasJ.length()); 
-                      cuotaSC = new CuotasSC();
-                      cuotaSC.loadJSONConsulta(cuotasJ);
-                      cuotasSC[i] = cuotaSC;
-                     // productoSC.setCuotas(cuotasSC);
-                      
-                      setProgress(((i + 1) * 100) / cantidad);
-                      //Thread.sleep(50); //JUST FOR TESTING
-                      //publish(producto.getCodigo());
-      //print result
-              
-              }
-          }
-   } catch (MalformedURLException ex) {
-                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ProtocolException ex) {
-                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        try {
+
+            setProgress(0);
+
+            String url = "http://www.saracomercial.com/panel/api/loader/cuotas/filtrar?page=1";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-type", "application/json");
+            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("Authorization", propiedades.getProperty("clave"));
+
+            jsonCodigo = new JSONObject();
+            jsonCodigo.put("productos_codigo_interno_ws", codigos);  //BODY DEL POST, DENTRO VA LA LISTA DE CODIGOS, SEPARADOS POR COMA
+
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(jsonCodigo.toString());
+            wr.flush();
+            wr.close();
+
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'POST' request to URL : " + url);
+            System.out.println("Post parameters : " + jsonCodigo.toString());
+            System.out.println("Response Code : " + responseCode);
+            System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
+            System.out.println("Accept: " + con.getRequestProperty("Accept"));
+            System.out.println("Authorization: " + propiedades.getProperty("clave"));
+            System.out.println("Method: " + con.getRequestMethod());
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
             }
-    
+            in.close();
+            jsonResponse = new JSONObject(response.toString());
+            if (jsonResponse.has("data")) {
+                JSONArray respuesta = jsonResponse.getJSONArray("data");
+                cuotasSC = new CuotaSC[respuesta.length()];
+                System.out.println("TAMANO DE ARRAY:"+cuotasSC.length);
+                for (int i = 0; i < response.length(); i++) {
+                    JSONObject cuotasJ = respuesta.getJSONObject(i);
+                    //System.out.println("CANTIDAD " + cuotasJ.length());
+                    cuotaSC = new CuotaSC();
+                    cuotaSC.loadJSONConsulta(cuotasJ);
+                    cuotasSC[i] = cuotaSC;
+                    // productoSC.setCuotas(cuotasSC);
+
+                    setProgress(((i + 1) * 100) / cantidad);
+                    //Thread.sleep(50); //JUST FOR TESTING
+                    //publish(producto.getCodigo());
+                    //print result
+
+                }
+            }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ProtocolException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return cuotasSC;
 
-     
-}
- 
-@Override
-    protected void done() {
-        System.out.println("Productos obtenidos. Se encontraron "+cuotasSC.length+" cuotas del producto ");
     }
-    
+
+    @Override
+    protected void done() {
+        System.out.println("Productos obtenidos. Se encontraron " + cuotasSC.length + " cuotas del producto ");
+    }
+
     @Override
     protected void process(List<String> prods) {
         for (String prod : prods) {
             System.out.println(prod);
         }
     }
+
     public Integer getCantidad() {
         return cantidad;
     }
@@ -188,31 +191,32 @@ public CuotasWorkerSC(String[] producto, Properties propSC){
         this.codigos = codigos;
     }
 
-  
-      public ProductoSC obtenerRubro(String codigo){
+    public ProductoSC obtenerRubro(String codigo) {
         for (ProductoSC productoRubro : productosSC) {
-            if(productoRubro.getCodigo().equals(codigo)){
+            if (productoRubro.getCodigo().equals(codigo)) {
                 return productoRubro;
             }
         }
         return null;
     }
-      public ProductoSC obtenerMarca(String codigo){
+
+    public ProductoSC obtenerMarca(String codigo) {
         for (ProductoSC productoMarca : productosSC) {
-            if(productoMarca.getCodigo().equals(codigo)){
+            if (productoMarca.getCodigo().equals(codigo)) {
                 return productoMarca;
             }
         }
         return null;
     }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        String clase = getClass().getName().substring(getClass().getName().lastIndexOf(".")+1, getClass().getName().length()).toUpperCase();
-        String source = evt.getSource().toString().substring(evt.getSource().toString().lastIndexOf(".")+1, evt.getSource().toString().indexOf("@"));
+        String clase = getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1, getClass().getName().length()).toUpperCase();
+        String source = evt.getSource().toString().substring(evt.getSource().toString().lastIndexOf(".") + 1, evt.getSource().toString().indexOf("@"));
         String value = evt.getNewValue().toString();
         evt.setPropagationId(clase);
-        
-        System.out.println(clase+">> "+source+" > "+value);
+
+        System.out.println(clase + ">> " + source + " > " + value);
     }
-    
+
 }

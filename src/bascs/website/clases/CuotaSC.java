@@ -15,7 +15,7 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class CuotasSC {
+public class CuotaSC {
     private Integer id;
     private Integer producto_id;
     private Integer numero;
@@ -26,7 +26,7 @@ public class CuotasSC {
     
     
     public Boolean cargado = false;
-    public CuotasSC( int producto_id, int cuotas, int importe_cuota, int posee_descuento, int porcentaje_descuento) {
+    public CuotaSC( int producto_id, int cuotas, int importe_cuota, int posee_descuento, int porcentaje_descuento) {
        
         this.producto_id = producto_id;
         this.numero = cuotas;
@@ -35,7 +35,7 @@ public class CuotasSC {
         this.posee_descuento = posee_descuento;
     }
 
-    public CuotasSC() {
+    public CuotaSC() {
     }
      public void loadJSONConsulta(JSONObject cuotasJ){
       

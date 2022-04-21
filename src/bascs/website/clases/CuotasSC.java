@@ -23,8 +23,8 @@ public class CuotasSC {
     private Integer posee_descuento;
     private Integer importe_cuota;
     private Integer porcentaje_descuento;
-    public CuotasSC[] cuotas;
-    public CuotasSC cuota;
+    
+    
     public Boolean cargado = false;
     public CuotasSC( int producto_id, int cuotas, int importe_cuota, int posee_descuento, int porcentaje_descuento) {
        

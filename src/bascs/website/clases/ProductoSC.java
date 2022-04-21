@@ -4,6 +4,7 @@ import bascs.website.clases.CuotasSC;
 import etl.bascs.impala.clases.MarcaSC;
 import etl.bascs.impala.main;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,13 +17,12 @@ import org.json.JSONObject;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
 /**
  *
  * @author User
  */
-public class ProductoSC{
+public class ProductoSC {
+
     private Integer id;
     private String codigo;
     private String descripcion;
@@ -33,15 +33,15 @@ public class ProductoSC{
     private Integer visible;
     private Integer habilitado;
     public Boolean cargado;
-    
+
     private String rubro;
-    private CuotasSC[] cuotas;
+    private List<CuotasSC> cuotas;
     private MarcaSC marcaSC;
     private RubroSC rubroSC;
     private MarcaSC[] marcasSC;
     private RubroSC[] rubrosSC;
-    
-     public ProductoSC(Properties propiedades) {
+
+    public ProductoSC(Properties propiedades) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
@@ -50,18 +50,17 @@ public class ProductoSC{
         this.marca = marca;
         this.rubro = rubro;
         this.cuotas = cuotas;
- 
-    }     
+
+    }
 
     public ProductoSC() {
     }
-     
-    
-    public void loadJSONConsulta(JSONObject productoJ){
-        try{
-   //         setCodigo((getId() == null ? productoJ.optInt("id"):getId()));
-            setId((getId() == null ? productoJ.optInt("id"):getId()));
-            setCodigo((getCodigo() == null ? productoJ.optString("codigo_interno_ws"):getCodigo()));
+
+    public void loadJSONConsulta(JSONObject productoJ) {
+        try {
+            //         setCodigo((getId() == null ? productoJ.optInt("id"):getId()));
+            setId((getId() == null ? productoJ.optInt("id") : getId()));
+            setCodigo((getCodigo() == null ? productoJ.optString("codigo_interno_ws") : getCodigo()));
             setNombre((getNombre() == null ? productoJ.optString("nombre") : getNombre()));
             setDescripcion((getDescripcion() == null ? productoJ.optString("descripcion") : getDescripcion()));
             setPrecio((getPrecio() == null ? productoJ.optInt("precio") : getPrecio()));
@@ -73,18 +72,16 @@ public class ProductoSC{
             marSC.setId(productoJ.optInt("marca_id"));
             setMarcaSC(marSC);
             setVisible((getVisible() == null ? productoJ.optInt("visible") : getVisible()));
-            setHabilitado((getHabilitado() == null ? productoJ.optInt("habilitado") : getHabilitado())); 
-       
-              
-            
+            setHabilitado((getHabilitado() == null ? productoJ.optInt("habilitado") : getHabilitado()));
+
             cargado = true;
-           
-            } catch (JSONException e) {
+
+        } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
- }
-  
-     public void loadJSONMaestro(JSONObject productoJ){
+    }
+
+    public void loadJSONMaestro(JSONObject productoJ) {
         try {
             setId(productoJ.optInt("id"));
             setCodigo(productoJ.optString("codigo_interno_ws"));
@@ -96,33 +93,32 @@ public class ProductoSC{
             setRubroSC(new RubroSC(productoJ.getJSONObject("rubro")));
             setVisible(productoJ.optInt("visible"));
             setHabilitado(productoJ.optInt("habilitado"));
-            
+
             cargado = true;
         } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
-        
+
     }
 
-    public CuotasSC[] getCuotas() {
-      return cuotas;
+    public List<CuotasSC> getCuotas() {
+        return cuotas;
     }
 
-    public void setCuotas(CuotasSC[] cuotas) {
+    public void setCuotas(List<CuotasSC> cuotas) {
         this.cuotas = cuotas;
     }
-     
-    
-     public MarcaSC obtenerMarca(String codigo){
+
+    public MarcaSC obtenerMarca(String codigo) {
         for (MarcaSC marcasSC1 : marcasSC) {
-            if(marcasSC1.getCodigo().equals(codigo)){
-           
+            if (marcasSC1.getCodigo().equals(codigo)) {
+
                 return marcasSC1;
             }
         }
         return null;
     }
-     
+
     public String getCodigo() {
         return codigo;
     }
@@ -139,7 +135,6 @@ public class ProductoSC{
         this.descripcion = descripcion;
     }
 
-   
     public String getNombre() {
         return nombre;
     }
@@ -147,8 +142,6 @@ public class ProductoSC{
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
-   
 
     public MarcaSC getMarcaSC() {
         return marcaSC;
@@ -214,24 +207,22 @@ public class ProductoSC{
         this.habilitado = habilitado;
     }
 
-      public JSONObject getJSON(){
+    public JSONObject getJSON() {
         JSONObject object;
         object = new JSONObject();
-        
+
         object.put("codigo_interno_ws", getCodigo());
         object.put("nombre", getNombre());
-    //    object.put("descripcion", getDescripcion());
+        //    object.put("descripcion", getDescripcion());
         object.put("marca_id", getMarcaSC().getId());
         object.put("rubro_id", getRubroSC().getId());
         object.put("precio", getPrecio());
-        object.put("stock",  getStock());
-        object.put("habilitado",  getHabilitado());
-        object.put("visible",  getVisible());
-        
+        object.put("stock", getStock());
+        object.put("habilitado", getHabilitado());
+        object.put("visible", getVisible());
+
         // SE CREA UN JSON OBJECT PARA ACTUALIZAR LOS PRODUCTOS QUE HAN SIDO BUSCADOS DESDE EL PANEL 'DETALLES' DE LA WEBSITE
-        
         return object;
     }
 
-           
 }

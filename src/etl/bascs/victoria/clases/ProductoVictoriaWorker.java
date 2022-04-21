@@ -5,8 +5,6 @@ package etl.bascs.victoria.clases;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
 import etl.bascs.impala.clases.Producto;
 import etl.bascs.impala.clases.ProductoVictoria;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
@@ -22,9 +20,9 @@ import org.json.JSONObject;
 /**
  *
  * @author User
- */ 
+ */
+public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String> implements PropertyChangeListener {
 
-public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String> implements PropertyChangeListener{
     public ConsultaHttpVictoria consulta;
     public ProductoVictoria productosV;
     public Properties propiedades;
@@ -33,34 +31,33 @@ public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String
     public ProductoVictoria producto;
     public Boolean error;
     public JSONObject productoJ;
-    
-    public ProductoVictoriaWorker(ProductoVictoria producto,Properties propVictoria) {
+
+    public ProductoVictoriaWorker(ProductoVictoria producto, Properties propVictoria) {
         this.producto = producto;
         this.propiedades = propVictoria;
         this.error = false;
     }
 
-    
     @Override
-    protected ProductoVictoria doInBackground(){
- 
+    protected ProductoVictoria doInBackground() {
+
         try {
             setProgress(0);
             consulta = new ConsultaHttpVictoria("http",
                     propiedades.getProperty("servidor"),
                     propiedades.getProperty("puerto"),
                     propiedades.getProperty("metodoGET"),
-                    propiedades.getProperty("detalle")+producto.getCodigo());
-                
-            if(main.DEBUG){
+                    propiedades.getProperty("detalle") + producto.getCodigo());
+
+            if (main.DEBUG) {
                 /*
                 System.out.println("SER: " + propiedades.getProperty("servidor"));
                 System.out.println("PUER: " + propiedades.getProperty("puerto"));
                 System.out.println("MET: " + propiedades.getProperty("metodoGET"));
                 System.out.println("DETALLE: " + propiedades.getProperty("detalle"));
-*/
+                 */
             }
-           
+
             if (!consulta.getError()) {
                 if (consulta.getJson().has("items")) {
                     productoJ = consulta.getJson().getJSONObject("items");
@@ -85,12 +82,14 @@ public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String
         }
         return producto;
     }
+    
     @Override
     protected void process(List<String> chunks) {
         for (String key : chunks) {
             System.out.println(key);
         }
     }
+    
     public Properties getPropImpala() {
         return propiedades;
     }
@@ -122,38 +121,38 @@ public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String
     public void setError(Boolean error) {
         this.error = error;
     }
-      @Override
+
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        String clase = getClass().getName().substring(getClass().getName().lastIndexOf(".")+1, getClass().getName().length()).toUpperCase();
-        String source = evt.getSource().toString().substring(evt.getSource().toString().lastIndexOf(".")+1, evt.getSource().toString().indexOf("@"));
+        String clase = getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1, getClass().getName().length()).toUpperCase();
+        String source = evt.getSource().toString().substring(evt.getSource().toString().lastIndexOf(".") + 1, evt.getSource().toString().indexOf("@"));
         String value = evt.getNewValue().toString();
         evt.setPropagationId(clase);
-        
-        System.out.println(clase+">> "+source+" > "+value);
+
+        System.out.println(clase + ">> " + source + " > " + value);
     }
-    public JSONObject getJSON(){
+
+    public JSONObject getJSON() {
         JSONObject object;
         object = new JSONObject();
-      ProductoVictoria  pro = new ProductoVictoria();
+        ProductoVictoria pro = new ProductoVictoria();
         for (int i = 0; i < productoJ.length(); i++) {
-        
-        object.put("codigo_interno_ws", getCodigo());
-        
-        System.out.println("CODIGO DE WORKER " + getCodigo());
-        object.put("nombre", pro.getNombre());
-        object.put("marca_id", pro.getMarca_id());
-        object.put("rubro_id", pro.getRubroSC().getId());
-        if(productoJ.has("cuotas")){
-            JSONArray cuota = productoJ.optJSONArray("cuotas");
-        object.put("cuotas", cuota.optJSONObject(i).getInt("precio_contado"));
+
+            object.put("codigo_interno_ws", getCodigo());
+
+            System.out.println("CODIGO DE WORKER " + getCodigo());
+            object.put("nombre", pro.getNombre());
+            object.put("marca_id", pro.getMarca_id());
+            object.put("rubro_id", pro.getRubroSC().getId());
+            if (productoJ.has("cuotas")) {
+                JSONArray cuota = productoJ.optJSONArray("cuotas");
+                object.put("cuotas", cuota.optJSONObject(i).getInt("precio_contado"));
+            }
+            System.out.println("rubro_id del json " + pro.getRubroSC().getId());
+            System.out.println("marca_id del json " + pro.getMarca_id());
+
         }
-        System.out.println("rubro_id del json " + pro.getRubroSC().getId());
-        System.out.println("marca_id del json " + pro.getMarca_id());
-       
-        }
-        
+
         return object;
     }
 }
-  
-    

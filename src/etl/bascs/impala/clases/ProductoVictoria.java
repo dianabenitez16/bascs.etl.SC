@@ -10,6 +10,8 @@ import etl.bascs.impala.main;
 import etl.bascs.victoria.clases.CuotasVictoriaWorker;
 import etl.bascs.victoria.clases.ProductoVictoriaWorker;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONArray;
@@ -21,69 +23,65 @@ import org.json.JSONObject;
  * @author User
  */
 public class ProductoVictoria {
-    
-    
+
     private String codigo;
     private String descripcion;
     private String nombre;
     private String marca;
     private Integer precio_contado;
     private Integer marca_id;
-    private Integer stock ;
+    private Integer stock;
     private Integer producto_id;
     public Boolean cargado = false;
-     
-    public ProductoCuotasVictoria[] cuotas;
-    public CuotasVictoriaWorker cuotasW;
-   
-    private RubroVictoria rubroVictoria; 
-    private RubroSC rubroSC; 
-    
+
+    public List<ProductoCuotasVictoria> cuotas;
+
+    private RubroVictoria rubroVictoria;
+    private RubroSC rubroSC;
+
     private MarcaVictoria marcaVictoria;
     private MarcaSC marcaSC;
-    
 
     public ProductoVictoria() {
     }
 
-   
-    
-    public void loadJSONDetalle(JSONObject productoJ){
-        try{
-            
-            setCodigo((getCodigo() == null ? productoJ.optString("codigo_interno_ws"):getCodigo()));
+    public void loadJSONDetalle(JSONObject productoJ) {
+        try {
+            ProductoCuotasVictoria cuota;
+
+            setCodigo((getCodigo() == null ? productoJ.optString("codigo_interno_ws") : getCodigo()));
             setNombre((getNombre() == null ? productoJ.optString("nombre") : getNombre()));
             setDescripcion((getDescripcion() == null ? productoJ.optString("descripcion") : getDescripcion()));
             setMarcaVictoria(new MarcaVictoria(productoJ.getJSONObject("marca")));
             setRubroVictoria(new RubroVictoria(productoJ.getJSONObject("rubro")));
-            
+
             setPrecio_contado((getPrecio_contado() == null ? productoJ.optInt("precio") : getPrecio_contado()));
-         
-          
-             
-            cuotas = new ProductoCuotasVictoria[0];
-            if(productoJ.has("cuotas")){
-                JSONArray cuota = productoJ.optJSONArray("cuotas");
-                cuotas = new ProductoCuotasVictoria[cuota.length()];
-                for (int i = 0; i < cuotas.length; i++) {
-            cuotas[i] = new ProductoCuotasVictoria(cuota.optJSONObject(i).getInt("numero"),
-                    cuota.optJSONObject(i).getDouble("precio_cuota"),
-                    cuota.optJSONObject(i).getDouble("precio_contado"),
-                    cuota.optJSONObject(i).getDouble("precio_credito"),
-                    cuota.optJSONObject(i).getInt("posee_descuento"),
-                    cuota.optJSONObject(i).getInt("porcentaje_descuento"));
+
+            cuotas = new ArrayList<>();
+            if (productoJ.has("cuotas")) {
+                JSONArray cuotaJ = productoJ.optJSONArray("cuotas");
+                
+                for (int i = 0; i < cuotaJ.length(); i++) {
+                    cuota = new ProductoCuotasVictoria(
+                            cuotaJ.optJSONObject(i).getInt("numero"),
+                            cuotaJ.optJSONObject(i).getDouble("precio_cuota"),
+                            cuotaJ.optJSONObject(i).getDouble("precio_contado"),
+                            cuotaJ.optJSONObject(i).getDouble("precio_credito"),
+                            cuotaJ.optJSONObject(i).getInt("posee_descuento"),
+                            cuotaJ.optJSONObject(i).getInt("porcentaje_descuento"));
+                    cuotas.add(cuota);
                     //System.out.println("CUOTAS " + cuotas[i]);
                 }
-                
+
             }
-            
-           cargado = true;
-            } catch (JSONException e) {
+
+            cargado = true;
+        } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
     }
-    
-     public void loadJSONMaestro(JSONObject productoJ){
+
+    public void loadJSONMaestro(JSONObject productoJ) {
         try {
             setCodigo(productoJ.optString("codigo_interno_ws"));
             //System.out.println("CODIGO DEL MAESTRO "  + productoJ.optString("codigo_interno_ws"));
@@ -99,13 +97,13 @@ public class ProductoVictoria {
             RubroSC rubroSC = new RubroSC();
             rubroSC.setId(productoJ.optInt("rubro"));
             setRubroSC(rubroSC);
-            */
+             */
             cargado = true;
-     //       System.out.println(" " + cargado);
+            //       System.out.println(" " + cargado);
         } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
-        
+
     }
 
     public Integer getProducto_id() {
@@ -116,7 +114,6 @@ public class ProductoVictoria {
         this.producto_id = producto_id;
     }
 
-     
     public RubroVictoria getRubroVictoria() {
         return rubroVictoria;
     }
@@ -173,15 +170,15 @@ public class ProductoVictoria {
         this.marca = marca;
     }
 
-    
-    
-    public ProductoCuotasVictoria[] getCuotas() {
+    public List<ProductoCuotasVictoria> getCuotas() {
         return cuotas;
     }
 
-    public void setCuotas(ProductoCuotasVictoria[] cuotas) {
+    public void setCuotas(List<ProductoCuotasVictoria> cuotas) {
         this.cuotas = cuotas;
     }
+
+    
 
     public Integer getPrecio_contado() {
         return precio_contado;
@@ -191,7 +188,6 @@ public class ProductoVictoria {
         this.precio_contado = precio_contado;
     }
 
-   
     public Integer getMarca_id() {
         return marca_id;
     }
@@ -200,8 +196,6 @@ public class ProductoVictoria {
         this.marca_id = marca_id;
     }
 
-    
-
     public Integer getStock() {
         return stock;
     }
@@ -209,38 +203,35 @@ public class ProductoVictoria {
     public void setStock(Integer stock) {
         this.stock = stock;
     }
-    
-    
-    public String decodeUFT(String rawString){
-        if(rawString == null || rawString.isEmpty()) {
+
+    public String decodeUFT(String rawString) {
+        if (rawString == null || rawString.isEmpty()) {
             return "";
         }
-        
+
         String stringLegible = rawString;
         try {
             stringLegible = new String(rawString.getBytes("UTF-8"));
-                       
+
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(ProductoVictoria.class.getName()).log(Level.SEVERE, null, ex);
         }
         return stringLegible;
     }
-    
-    public JSONObject getJSON(){
+
+    public JSONObject getJSON() {
         JSONObject object;
         object = new JSONObject();
-        
+
         object.put("codigo_interno_ws", getCodigo());
         object.put("nombre", getNombre());
-    //    object.put("descripcion", getDescripcion());
+        //    object.put("descripcion", getDescripcion());
         object.put("marca_id", getMarca_id());
         object.put("rubro_id", getRubroSC().getId());
         object.put("precio", getPrecio_contado());
-        object.put("stock",  "10");
-        
-        
+        object.put("stock", "10");
+
         return object;
     }
-    
-           
+
 }

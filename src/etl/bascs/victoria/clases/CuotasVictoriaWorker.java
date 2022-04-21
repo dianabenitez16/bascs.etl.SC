@@ -10,6 +10,7 @@ import etl.bascs.impala.clases.ProductoVictoria;
 import etl.bascs.impala.json.ConsultaHttpVictoria;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -134,8 +135,17 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
         this.id = id;
     }
     
+    public List<ProductoCuotasVictoria> obtenerCuotas(String codigo){
+        List<ProductoCuotasVictoria> cuotas = new ArrayList<>();
+        for (ProductoCuotasVictoria productoCuotasVictoria : cuotasV) {
+            if(productoCuotasVictoria.getCodigo().equals(codigo)){
+                cuotas.add(productoCuotasVictoria);
+            }
+        }
+        return cuotas;
+    }
     
-    
+    /*
     public ProductoCuotasVictoria obtenerCuota(Integer numeroCuota){
         for (ProductoCuotasVictoria cuotaV : cuotasV) {
             if(cuotaV.getNumero().equals(numeroCuota)){
@@ -143,7 +153,8 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
             }
         }
         return null;
-    }
+    }*/
+    
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String clase = getClass().getName().substring(getClass().getName().lastIndexOf(".")+1, getClass().getName().length()).toUpperCase();

@@ -110,11 +110,13 @@ public class CuotasWorkerSC extends SwingWorker<CuotaSC[], String> implements Pr
             jsonResponse = new JSONObject(response.toString());
             if (jsonResponse.has("data")) {
                 JSONArray respuesta = jsonResponse.getJSONArray("data");
-                cuotasSC = new CuotaSC[respuesta.length()];
+                cantidad = respuesta.length();
+                cuotasSC = new CuotaSC[cantidad];
+                
                 System.out.println("TAMANO DE ARRAY:"+cuotasSC.length);
-                for (int i = 0; i < response.length(); i++) {
+                for (int i = 0; i < cantidad; i++) {
                     JSONObject cuotasJ = respuesta.getJSONObject(i);
-                    //System.out.println("CANTIDAD " + cuotasJ.length());
+                    //System.out.println(cuotasJ.toString());
                     cuotaSC = new CuotaSC();
                     cuotaSC.loadJSONConsulta(cuotasJ);
                     cuotasSC[i] = cuotaSC;
@@ -207,6 +209,16 @@ public class CuotasWorkerSC extends SwingWorker<CuotaSC[], String> implements Pr
             }
         }
         return null;
+    }
+    
+    public List<CuotaSC> obtenerCuotas(Integer id){
+        List<CuotaSC> cuotas = new ArrayList<>();
+        for (CuotaSC cuotaSC : cuotasSC) {
+            if(cuotaSC.getProducto_id().equals(id)){
+                cuotas.add(cuotaSC);
+            }
+        }
+        return cuotas;
     }
 
     @Override

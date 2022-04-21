@@ -277,7 +277,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }
 
     public void buscarCuotaSC(String[] codigo) { // SE BUSCAN LAS CUOTAS POR CODIGO INTERNO DENTRO DEL WORKER
+        System.out.println("*/**/*/***/*/**/* BUSCANDO UNO");
         if (!tProductoIDSC.getText().isEmpty()) { //OBS: PARA PODER HACER UN POST/OBTENCIÓN DE MÚLTIPLES CUOTAS, SE DEBEN SEPARAR POR COMAS EJ: CODIGO: ["100","704"]
+            
             cuotasSCW = new CuotasWorkerSC(codigo, propSC);
             cuotasSCW.addPropertyChangeListener(this);
             cuotasSCW.execute();
@@ -600,7 +602,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         rubrosW.execute();
     }
 
-    public void buscarCuotas() {
+    public void buscarCuotasVictoria() {
         Properties propiedades = new Properties();
         propiedades.putAll(propVictoria);
         propiedades.putAll(propGenerales);
@@ -663,7 +665,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         productosW.execute();
     }
 
-    public void buscarProductosWebsite() {
+    public void buscarProductosSC() {
         limpiarMaestro();
 
         Properties propiedades = new Properties();
@@ -978,33 +980,32 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }
 
     public void cuotasRecorrido() { // RECORRE LAS CUOTASVICTORIA, Y COMPARA SU CODIGO CON EL CODIGO DE LOS PRODUCTOS DEL WS
+        productosXSC = new ArrayList<>();
+        productosXVT = new ArrayList<>();
+        
         try {
             Boolean nuevo = true;
-            productosXSC = new ArrayList<>();
-            productosXVT = new ArrayList<>();
-
+            
             //CUOTAS SC
-            for (CuotaSC cuotasSC : cuotasSCW.get()) {
-                nuevo = true;
-                for (ProductoSC productoXSC : productosXSC) {
-                    if (productoXSC.getId().equals(cuotasSC.getProducto_id())) {
-                        nuevo = false;
-                        productoXSC.getCuotas().add(cuotasSC);
-                    }
+            for (ProductoSC productoSC : productosSC.get()) {
+                productoSC.setCuotas(cuotasSCW.obtenerCuotas(productoSC.getId()));
+                if(productoSC.getCuotas() == null){
+                    productoSC.setCuotas(new ArrayList<>());
                 }
-
-                if (nuevo) {
-                    ProductoSC producto;
-                    List<CuotaSC> cuotas = new ArrayList<>();
-
-                    producto = productosSC.obtenerProducto(cuotasSC.getProducto_id());
-                    cuotas.add(cuotasSC);
-
-                    producto.setCuotas(cuotas);
-                    productosXSC.add(producto);
+                productosXSC.add(productoSC);   
+            }
+            
+            //CUOTAS VICTORIA
+            for (ProductoVictoria productoVictoria : productosW.get()) {
+                productoVictoria.setCuotas(cuotasW.obtenerCuotas(productoVictoria.getCodigo()));
+                if(productoVictoria.getCuotas() == null){
+                    productoVictoria.setCuotas(new ArrayList<>());
                 }
+                productosXVT.add(productoVictoria);   
             }
 
+            
+            /*
             //CUOTAS VICTORIA
             for (ProductoCuotasVictoria cuotasVT : cuotasW.get()) {
                 nuevo = true;
@@ -1026,15 +1027,23 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     productosXVT.add(producto);
                 }
             }
-            System.out.println("ENTRO ");
+            */
+            System.out.println("CANTIDADES:");
+            System.out.println("\tVICTORIA: "+productosXVT.size());
+            System.out.println("\tSC: "+productosXSC.size());
+            
             //PRODUCTOS
             for (ProductoVictoria productoVictoria : productosXVT) {
                 for (ProductoSC productoSC : productosXSC) {
                     if (productoSC.getCodigo().equals(productoVictoria.getCodigo())) {
+                        //System.out.println("");
+                        //System.out.print("VICTORIA: "+productoVictoria.getCodigo() + " [ID:"+(productoVictoria.getProducto_id() == null?"null":productoVictoria.getProducto_id().toString())+"]\t" );
+                        //System.out.print("SC: "+productoSC.getCodigo() + " [ID:"+productoSC.getId().toString()+"]");
                         for (ProductoCuotasVictoria cuotaVT : productoVictoria.getCuotas()) {
                             nuevo = true;
                             for (CuotaSC cuotaSC : productoSC.getCuotas()) {
                                 if (cuotaVT.getNumero().equals(cuotaSC.getNumero())) {
+                                    System.out.println("\tCUOTA: "+cuotaVT.getNumero());
                                     nuevo = false;
                                     if (!cuotaVT.getPrecio_contado().equals(cuotaSC.getImporte_cuota())) { //AGREGAR COMPARACION DE PORCENTAJE DE DESCUENTO ETC
                                         // PUT CUOTA
@@ -5145,13 +5154,17 @@ buscarProductosVictoria();
 
     private void bVictoriaBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bVictoriaBuscarActionPerformed
         //hilosWorker();
-        buscarProductosWebsite();
-        buscarMarcasVictoria();
-        buscarRubrosVictoria();
+        buscarProductosSC();
         buscarRubrosSC();
         buscarMarcasSC();
-        buscarCuotas();
+        
         buscarProductosVictoria();
+        buscarMarcasVictoria();
+        buscarRubrosVictoria();
+        
+        buscarCuotasVictoria();
+        
+        
 
     }//GEN-LAST:event_bVictoriaBuscarActionPerformed
 
@@ -5181,7 +5194,7 @@ buscarProductosVictoria();
 
             buscarRubrosSC();
             buscarMarcasSC();
-            buscarProductosWebsite();
+            buscarProductosSC();
 
             while (!rubrosW.isDone() || !rubrosSC.isDone() || !marcasSC.isDone() || !marcasW.isDone()) {
                 try {
@@ -5286,13 +5299,13 @@ buscarProductosVictoria();
             System.out.println("ELIMINAR. Error al eliminar, no se selecciono ninguna linea.");
         }
 
-        buscarProductosWebsite();           // TODO add your handling code here:
+        buscarProductosSC();           // TODO add your handling code here:
     }//GEN-LAST:event_bBorrarWSActionPerformed
 
     private void bMaestroBuscar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMaestroBuscar2ActionPerformed
         buscarMarcasSC();
         buscarRubrosSC();        // TODO add your handling code here:
-        buscarProductosWebsite();        // TODO add your handling code here:
+        buscarProductosSC();        // TODO add your handling code here:
     }//GEN-LAST:event_bMaestroBuscar2ActionPerformed
 
     private void bMaestroLimpiar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMaestroLimpiar2ActionPerformed

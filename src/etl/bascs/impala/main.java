@@ -6265,7 +6265,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             } else if (value.equals("DONE")) {
                 if (cuotasW.isDone()) {
                     isDone = true;
-                    autoclik();
+                    autoclick();
                     taVictoriaSincronizar.append("\nCUOTAS de VICTORIA cargadas.");
                 } else {
                     System.out.println("NOT DONE");

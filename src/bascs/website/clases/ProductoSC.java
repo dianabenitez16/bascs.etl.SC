@@ -73,14 +73,14 @@ public class ProductoSC {
             setMarcaSC(marSC);
             setVisible((getVisible() == null ? productoJ.optInt("visible") : getVisible()));
             setHabilitado((getHabilitado() == null ? productoJ.optInt("habilitado") : getHabilitado()));
-
+            
             cargado = true;
 
         } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
     }
-
+ 
     public void loadJSONMaestro(JSONObject productoJ) {
         try {
             setId(productoJ.optInt("id"));

@@ -35,6 +35,8 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -65,27 +67,18 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
-import static org.apache.http.HttpHeaders.USER_AGENT;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 
 /**
@@ -93,9 +86,10 @@ import org.json.JSONException;
  * @author junju
  */
 public class main extends javax.swing.JFrame implements java.beans.PropertyChangeListener {
+    
 
     public static final Boolean DEBUG = true;
-
+    public Boolean isDone = false;
     public static DecimalFormat formatInt = new DecimalFormat("#,##0");
     public static DecimalFormat formatDec = new DecimalFormat("#,##0.##");
 
@@ -177,7 +171,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
     public List<ProductoSC> productosXSC;
     public List<ProductoVictoria> productosXVT;
-
+    
     /* CONSTRUCTOR */
     /**
      * *******************************************************************************************************
@@ -187,9 +181,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         setLocationRelativeTo(null);
         iniciarPropiedades();
         iniciarListeners();
-
-//        getVictoriaRubros();   
+        tpVictoria.setSelectedIndex(3);
+        buscarCuotasVictoria();   
         contadorVolumetrico = 0;
+        
 
     }
 
@@ -198,6 +193,16 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
      * @param
      * limpiarCodigo*******************************************************************************************************
      */
+    
+    public void autoclick(){
+        
+        if (isDone) {
+            if (autosync.isSelected()) {
+                bVictoriaBuscar.addActionListener(new ClickListener());
+                bVictoriaSincronizar.doClick();
+             }
+        }
+    }
     public void limpiarProducto(Boolean limpiarCodigo) {
         if (limpiarCodigo) {
             tProductoID.setText("");
@@ -892,8 +897,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         productoNuevo = false;
 
                         if (!prodVictoria.getNombre().trim().equals(podSC.getNombre().trim())) {
-                            //        productosWSPUT(podSC.getId(), prodVictoria);
-
+                            if(prodVictoria.getPrecio_contado() != podSC.getPrecio()){
+                        productosWSPUT(podSC.getId(), prodVictoria);
+                            }
                         } else {
                             productosOmitidos++;
                         }
@@ -931,7 +937,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 if (rubrosSC.obtenerRubro(prodVictoria.getRubroVictoria().getCodigo()) != null) {
                     prodVictoria.setRubroSC(rubrosSC.obtenerRubro(prodVictoria.getRubroVictoria().getCodigo()));
                 } else {
-                    taVictoriaSincronizar.append("RUBRO ID: No se encuentra el RUBRO " + prodVictoria.getRubroVictoria().getNombre() + "en el WS.");
+                    taVictoriaSincronizar.append("\nRUBRO ID: No se encuentra el RUBRO " + prodVictoria.getRubroVictoria().getNombre() + "en el WS.");
                 }
 
                 /*
@@ -947,7 +953,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 if (marcasSC.obtenerMarca(prodVictoria.getMarca()) != null) {
                     prodVictoria.setMarca_id(marcasSC.obtenerMarca(prodVictoria.getMarca()).getId());
                 } else {
-                    taVictoriaSincronizar.append("MARCA ID: No se encuentra la MARCA " + prodVictoria.getMarca() + "en el WS.");
+                    taVictoriaSincronizar.append("\nMARCA ID: No se encuentra la MARCA " + prodVictoria.getMarca() + "en el WS.");
                 }
 
                 /*
@@ -963,8 +969,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     }
                  */
                 if (productoNuevo) {
-                    //      ProductosWSPOST(prodVictoria);
-                    taVictoriaSincronizar.append("SE INSERTARON " + prodVictoria.getCodigo());
+                   // ProductosWSPOST(prodVictoria);
+                    taVictoriaSincronizar.append("\nSE INSERTARON " + prodVictoria.getCodigo());
                 } else {
 
                 }
@@ -982,6 +988,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public void cuotasRecorrido() { // RECORRE LAS CUOTASVICTORIA, Y COMPARA SU CODIGO CON EL CODIGO DE LOS PRODUCTOS DEL WS
         productosXSC = new ArrayList<>();
         productosXVT = new ArrayList<>();
+        Integer cuotasOmitidas = 0;
+        Integer cantidadCuotas = 0;
         
         try {
             Boolean nuevo = true;
@@ -1041,24 +1049,30 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         //System.out.print("SC: "+productoSC.getCodigo() + " [ID:"+productoSC.getId().toString()+"]");
                         for (ProductoCuotasVictoria cuotaVT : productoVictoria.getCuotas()) {
                             nuevo = true;
+                            
                             for (CuotaSC cuotaSC : productoSC.getCuotas()) {
-                                if (cuotaVT.getNumero().equals(cuotaSC.getNumero())) {
-                                    System.out.println("\tCUOTA: "+cuotaVT.getNumero());
+                                if (cuotaVT.getNumero() == (cuotaSC.getNumero())) {
                                     nuevo = false;
-                                    if (!cuotaVT.getPrecio_contado().equals(cuotaSC.getImporte_cuota())) { //AGREGAR COMPARACION DE PORCENTAJE DE DESCUENTO ETC
-                                        // PUT CUOTA
+                                    if (!cuotaVT.getPrecio_cuota().equals(cuotaSC.getImporte_cuota())) { //AGREGAR COMPARACION DE PORCENTAJE DE DESCUENTO ETC
+                                        System.out.println("PRECIOVT " + cuotaVT.getPrecio_cuota() + "PRECIOSC " + cuotaSC.getImporte_cuota() );
+                                        System.out.println("UPDATE " + cuotaVT.getCodigo()); // PUT CUOTA
+                                        cuotasWSPUT(productoSC.getId(), cuotaVT, cuotaSC.getNumero());
+                                    }else{
+                                        cuotasOmitidas++;
+                              //        System.out.println("OMITIDAS " + cuotasOmitidas);
                                     }
                                 }
-                            }
-
+                                }
+                            
                             if (nuevo) {
-                                cuotasWSPOST(productoSC.getId(), cuotaVT);
+                               cuotasWSPOST(productoSC.getId(), cuotaVT);
                             }
                         }
                     }
                 }
             }
-
+         
+            taVictoriaSincronizar.append("\nSe completo la sincronizacion de CUOTAS.");
         } catch (InterruptedException ex) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ExecutionException ex) {
@@ -1069,19 +1083,21 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
     //POST - PUT - DELETE DEL WEBSERVICE*/
     private void cuotasWSPOST(Integer id, ProductoCuotasVictoria cuotas) {
-        try {
+       System.out.println("CUOTAS A INSERTAR " + cuotas.getJSON().toString() + "del ID: " + id + " con CODIGO " + cuotas.getCodigo());
+     
+       try {
             String url = "http://www.saracomercial.com/panel/api/loader/productos/" + id + "/cuotas";
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
             //add reuqest header
-            //     con.setRequestMethod("POST");
+            con.setRequestMethod("POST");
             con.setRequestProperty("Content-type", "application/json");
             con.setRequestProperty("Accept", "application/json");
-            //     con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+            con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
             String urlParameters = cuotas.getJSON().toString();
-            System.out.println("CUOTAS A INSERTAR " + urlParameters);
+   //        System.out.println("CUOTAS A INSERTAR " + urlParameters + "del ID: " + id);
             // Send post request
             con.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -1090,14 +1106,18 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             wr.close();
 
             int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'POST' request to URL : " + url);
             System.out.println("Post parameters : " + urlParameters);
             System.out.println("Response Code : " + responseCode);
-            System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
-            System.out.println("Accept: " + con.getRequestProperty("Accept"));
-            System.out.println("Authorization: " + propSC.getProperty("clave"));
-            System.out.println("Method: " + con.getRequestMethod());
-
+       /*     
+       if(responseCode == 429){
+                try {
+                    Thread.sleep(40000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.out.println("Let me rest a little bit...");
+            }
+           */
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;
@@ -1115,10 +1135,65 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         } catch (IOException ex) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+         
+        }
+ private void cuotasWSPUT(Integer id, ProductoCuotasVictoria cuotas, Integer numero) {
+       System.out.println("CUOTAS A ACTUALIZAR " + cuotas.getJSON().toString() + "del ID: " + id + " con NUMERO " + cuotas.getNumero());
+     
+       try {
+            String url = "http://www.saracomercial.com/panel/api/loader/productos/" + id + "/cuotas/" + numero;
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
+            //add reuqest header
+            con.setRequestMethod("PUT");
+            con.setRequestProperty("Content-type", "application/json");
+            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+
+            String urlParameters = cuotas.getJSON().toString();
+ 
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(urlParameters);
+            wr.flush();
+            wr.close();
+
+            int responseCode = con.getResponseCode();
+            System.out.println("Post parameters : " + urlParameters);
+            System.out.println("Response Code : " + responseCode);
+           /*
+       if(responseCode == 429){
+                try {
+                    Thread.sleep(40000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.out.println("Let me rest a little bit...");
+            }
+             */
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+             JOptionPane.showMessageDialog(null, "Cuotas Actualizados");
+            System.out.println(response.toString());
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ProtocolException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        }
     private void PUTproductoSC(Integer id, ProductoSC producto) {
-        if (!DEBUG) {
+       
             try {
 
                 String url = "http://www.saracomercial.com/panel/api/loader/productos/" + id + "";
@@ -1129,10 +1204,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 con.setRequestMethod("PUT");
                 con.setRequestProperty("Content-type", "application/json");
                 con.setRequestProperty("Accept", "application/json");
-                //         con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+                con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
                 String urlParameters = producto.getJSON().toString();
-                System.out.println("SE ACTUALIZARA " + producto.getJSON().toString() + " del ID: " + id);
+            //    System.out.println("SE ACTUALIZARA " + producto.getJSON().toString() + " del ID: " + id);
                 // Send post request
                 con.setDoOutput(true);
                 DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -1157,7 +1232,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     response.append(inputLine);
                 }
                 in.close();
-
+                JOptionPane.showMessageDialog(null, "Productos Actualizados");
                 //print result
                 System.out.println(response.toString());
             } catch (MalformedURLException ex) {
@@ -1167,7 +1242,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
+        
     }
 
     public void marcasWSPOST(MarcaVictoria marcasVT) {
@@ -1280,8 +1355,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }
 
     public void productosWSPUT(Integer id, ProductoVictoria podVictoria) {
-        if (!DEBUG) {
-
+        System.out.println("A ACTUALIZADAR " + podVictoria.getJSON().toString());
+       /*
+        if(!DEBUG){
             try {
                 String url = "http://www.saracomercial.com/panel/api/loader/productos/" + id + "";
                 URL obj = new URL(url);
@@ -1291,7 +1367,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 con.setRequestMethod("PUT");
                 con.setRequestProperty("Content-type", "application/json");
                 con.setRequestProperty("Accept", "application/json");
-                //          con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+                con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
                 String urlParameters = podVictoria.getJSON().toString();
                 System.out.println("SE ACTUALIZARA " + podVictoria.getJSON().toString() + " del ID: " + id);
@@ -1329,10 +1405,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
     }
-
+    
+        */}
     public void ProductosWSPOST(ProductoVictoria productoVT) {
+        System.out.println("PRODUCTOS A INSERTAR " + productoVT.getJSON().toString());
+        /*
         if (!DEBUG) {
             try {
 
@@ -1384,6 +1462,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
 
         }
+        */
     }
 
     public void rubrosWSPOST(RubroVictoria rubroVT) {
@@ -1722,7 +1801,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
                     limpiarProducto(false);
                     tpConsulta.setSelectedIndex(0);
-
+                    
                     tProductoID.setText(tablaContenidoMaestro[(int) table.getValueAt(row, 0)][2].toString());
                     //         System.out.println("EL VALOR DEL DETALLE ES " + tablaContenidoMaestro[(int) table.getValueAt(row, 0)][2].toString());
 
@@ -1997,6 +2076,17 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         taDebug = new javax.swing.JTextArea();
         pVictoria = new javax.swing.JPanel();
         tpVictoria = new javax.swing.JTabbedPane();
+        pVictoriaMaestro = new javax.swing.JPanel();
+        sProductoSeparador5 = new javax.swing.JSeparator();
+        bVictoriaLimpiar = new javax.swing.JButton();
+        bVictoriaBuscar = new javax.swing.JButton();
+        spMaestroProductos1 = new javax.swing.JScrollPane();
+        tbVictoriaProductos = new javax.swing.JTable();
+        lMaestroCantidad1 = new javax.swing.JLabel();
+        tVictoriaCantidad = new javax.swing.JTextField();
+        Cargar = new javax.swing.JButton();
+        tVictoriaEstado = new javax.swing.JTextField();
+        autosync = new javax.swing.JCheckBox();
         pVictoriaDetalle = new javax.swing.JPanel();
         lProductoCodigo1 = new javax.swing.JLabel();
         lProductoDescripcionLarga1 = new javax.swing.JLabel();
@@ -2018,15 +2108,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lProductoMarca3 = new javax.swing.JLabel();
         tProductoRubroVictoriaNombre = new javax.swing.JTextField();
         tProductoMarcaVictoriaCodigo = new javax.swing.JTextField();
-        pVictoriaMaestro = new javax.swing.JPanel();
-        sProductoSeparador5 = new javax.swing.JSeparator();
-        bVictoriaLimpiar = new javax.swing.JButton();
-        bVictoriaBuscar = new javax.swing.JButton();
-        spMaestroProductos1 = new javax.swing.JScrollPane();
-        tbVictoriaProductos = new javax.swing.JTable();
-        lMaestroCantidad1 = new javax.swing.JLabel();
-        tVictoriaCantidad = new javax.swing.JTextField();
-        Cargar = new javax.swing.JButton();
         pVictoriaMyR = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tRubrosVictoria = new javax.swing.JTable();
@@ -2036,17 +2117,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tMarcasVictoria = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         btRubrosVTPost = new javax.swing.JButton();
-        pVictoriaDebug = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        debugRubros = new javax.swing.JTextArea();
-        debugRubro = new javax.swing.JButton();
         pVictoriaOperaciones = new javax.swing.JPanel();
         bVictoriaSincronizar = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         taVictoriaSincronizar = new javax.swing.JTextArea();
         lVictoriaEstado = new javax.swing.JLabel();
         lVictoriaWorkerEstado = new javax.swing.JLabel();
-        bVictoriaCuotas = new javax.swing.JButton();
         pWebsite = new javax.swing.JPanel();
         tpWebsite = new javax.swing.JTabbedPane();
         pWebsiteMaestro = new javax.swing.JPanel();
@@ -2094,6 +2170,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lProductoMarca8 = new javax.swing.JLabel();
         tPorcentajeDescuento = new javax.swing.JTextField();
         tProductoExistencia3 = new javax.swing.JCheckBox();
+        spProductoDetallesTecnicos3 = new javax.swing.JScrollPane();
+        tbProductoCuotasSC1 = new javax.swing.JTable();
         pMyRSC = new javax.swing.JPanel();
         tRubrosSC = new javax.swing.JScrollPane();
         tRubroSC = new javax.swing.JTable();
@@ -3812,6 +3890,118 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tpVictoria.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tpVictoria.setPreferredSize(new java.awt.Dimension(970, 720));
 
+        pVictoriaMaestro.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        pVictoriaMaestro.setPreferredSize(new java.awt.Dimension(960, 710));
+
+        sProductoSeparador5.setPreferredSize(new java.awt.Dimension(900, 10));
+
+        bVictoriaLimpiar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        bVictoriaLimpiar.setText("Limpiar");
+        bVictoriaLimpiar.setPreferredSize(new java.awt.Dimension(80, 20));
+        bVictoriaLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bVictoriaLimpiarActionPerformed(evt);
+            }
+        });
+
+        bVictoriaBuscar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        bVictoriaBuscar.setText("Buscar");
+        bVictoriaBuscar.setPreferredSize(new java.awt.Dimension(80, 20));
+        bVictoriaBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bVictoriaBuscarActionPerformed(evt);
+            }
+        });
+
+        spMaestroProductos1.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
+        spMaestroProductos1.setPreferredSize(new java.awt.Dimension(900, 480));
+
+        tbVictoriaProductos.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
+        tbVictoriaProductos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            tablaHeaderMaestro
+        ));
+        spMaestroProductos1.setViewportView(tbVictoriaProductos);
+
+        lMaestroCantidad1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        lMaestroCantidad1.setText("Cantidad");
+        lMaestroCantidad1.setPreferredSize(new java.awt.Dimension(80, 20));
+
+        tVictoriaCantidad.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tVictoriaCantidad.setText("0");
+        tVictoriaCantidad.setEnabled(false);
+        tVictoriaCantidad.setPreferredSize(new java.awt.Dimension(100, 20));
+
+        Cargar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        Cargar.setText("Cargar");
+        Cargar.setPreferredSize(new java.awt.Dimension(80, 20));
+        Cargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CargarActionPerformed(evt);
+            }
+        });
+
+        tVictoriaEstado.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tVictoriaEstado.setEnabled(false);
+        tVictoriaEstado.setPreferredSize(new java.awt.Dimension(100, 20));
+
+        autosync.setSelected(true);
+        autosync.setText("Autosincronizar");
+        autosync.setEnabled(false);
+
+        javax.swing.GroupLayout pVictoriaMaestroLayout = new javax.swing.GroupLayout(pVictoriaMaestro);
+        pVictoriaMaestro.setLayout(pVictoriaMaestroLayout);
+        pVictoriaMaestroLayout.setHorizontalGroup(
+            pVictoriaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pVictoriaMaestroLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addGroup(pVictoriaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pVictoriaMaestroLayout.createSequentialGroup()
+                        .addGroup(pVictoriaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(sProductoSeparador5, javax.swing.GroupLayout.DEFAULT_SIZE, 1261, Short.MAX_VALUE)
+                            .addGroup(pVictoriaMaestroLayout.createSequentialGroup()
+                                .addComponent(lMaestroCantidad1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(5, 5, 5)
+                                .addComponent(tVictoriaCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tVictoriaEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(autosync, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(bVictoriaLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(Cargar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(9, 9, 9)
+                                .addComponent(bVictoriaBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(5, 5, 5))
+                    .addGroup(pVictoriaMaestroLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(spMaestroProductos1, javax.swing.GroupLayout.DEFAULT_SIZE, 1254, Short.MAX_VALUE)
+                        .addContainerGap())))
+        );
+        pVictoriaMaestroLayout.setVerticalGroup(
+            pVictoriaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pVictoriaMaestroLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pVictoriaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lMaestroCantidad1, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addGroup(pVictoriaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tVictoriaCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tVictoriaEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(autosync))
+                    .addComponent(bVictoriaBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bVictoriaLimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(Cargar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(11, 11, 11)
+                .addComponent(sProductoSeparador5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spMaestroProductos1, javax.swing.GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE))
+        );
+
+        tpVictoria.addTab("Productos", pVictoriaMaestro);
+
         pVictoriaDetalle.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         pVictoriaDetalle.setPreferredSize(new java.awt.Dimension(960, 710));
 
@@ -4002,99 +4192,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         tpVictoria.addTab("Detalle", pVictoriaDetalle);
 
-        pVictoriaMaestro.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        pVictoriaMaestro.setPreferredSize(new java.awt.Dimension(960, 710));
-
-        sProductoSeparador5.setPreferredSize(new java.awt.Dimension(900, 10));
-
-        bVictoriaLimpiar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        bVictoriaLimpiar.setText("Limpiar");
-        bVictoriaLimpiar.setPreferredSize(new java.awt.Dimension(80, 20));
-        bVictoriaLimpiar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bVictoriaLimpiarActionPerformed(evt);
-            }
-        });
-
-        bVictoriaBuscar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        bVictoriaBuscar.setText("Buscar");
-        bVictoriaBuscar.setPreferredSize(new java.awt.Dimension(80, 20));
-        bVictoriaBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bVictoriaBuscarActionPerformed(evt);
-            }
-        });
-
-        spMaestroProductos1.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
-        spMaestroProductos1.setPreferredSize(new java.awt.Dimension(900, 480));
-
-        tbVictoriaProductos.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
-        tbVictoriaProductos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            tablaHeaderMaestro
-        ));
-        spMaestroProductos1.setViewportView(tbVictoriaProductos);
-
-        lMaestroCantidad1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        lMaestroCantidad1.setText("Cantidad");
-        lMaestroCantidad1.setPreferredSize(new java.awt.Dimension(80, 20));
-
-        tVictoriaCantidad.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        tVictoriaCantidad.setText("0");
-        tVictoriaCantidad.setEnabled(false);
-        tVictoriaCantidad.setPreferredSize(new java.awt.Dimension(100, 20));
-
-        Cargar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        Cargar.setText("Cargar");
-        Cargar.setPreferredSize(new java.awt.Dimension(80, 20));
-        Cargar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CargarActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pVictoriaMaestroLayout = new javax.swing.GroupLayout(pVictoriaMaestro);
-        pVictoriaMaestro.setLayout(pVictoriaMaestroLayout);
-        pVictoriaMaestroLayout.setHorizontalGroup(
-            pVictoriaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pVictoriaMaestroLayout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addGroup(pVictoriaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(sProductoSeparador5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(pVictoriaMaestroLayout.createSequentialGroup()
-                        .addComponent(lMaestroCantidad1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5)
-                        .addComponent(tVictoriaCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(bVictoriaLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(Cargar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(9, 9, 9)
-                        .addComponent(bVictoriaBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(spMaestroProductos1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1261, Short.MAX_VALUE))
-                .addGap(5, 5, 5))
-        );
-        pVictoriaMaestroLayout.setVerticalGroup(
-            pVictoriaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pVictoriaMaestroLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pVictoriaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lMaestroCantidad1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tVictoriaCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pVictoriaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(bVictoriaLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(bVictoriaBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Cargar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sProductoSeparador5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spMaestroProductos1, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE))
-        );
-
-        tpVictoria.addTab("Productos", pVictoriaMaestro);
-
         tRubrosVictoria.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -4183,40 +4280,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         tpVictoria.addTab("Marcas/Rubros", pVictoriaMyR);
 
-        debugRubros.setColumns(20);
-        debugRubros.setRows(5);
-        jScrollPane3.setViewportView(debugRubros);
-
-        debugRubro.setText("DEBUG RUBROS");
-        debugRubro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                debugRubroActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pVictoriaDebugLayout = new javax.swing.GroupLayout(pVictoriaDebug);
-        pVictoriaDebug.setLayout(pVictoriaDebugLayout);
-        pVictoriaDebugLayout.setHorizontalGroup(
-            pVictoriaDebugLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pVictoriaDebugLayout.createSequentialGroup()
-                .addContainerGap(766, Short.MAX_VALUE)
-                .addComponent(debugRubro, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(364, 364, 364))
-            .addGroup(pVictoriaDebugLayout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        pVictoriaDebugLayout.setVerticalGroup(
-            pVictoriaDebugLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pVictoriaDebugLayout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(debugRubro, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-
-        tpVictoria.addTab("Debug", pVictoriaDebug);
-
         bVictoriaSincronizar.setText("Sincronizar");
         bVictoriaSincronizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4228,13 +4291,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         taVictoriaSincronizar.setRows(5);
         jScrollPane4.setViewportView(taVictoriaSincronizar);
 
-        bVictoriaCuotas.setText("Insertar Cuotas");
-        bVictoriaCuotas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bVictoriaCuotasActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout pVictoriaOperacionesLayout = new javax.swing.GroupLayout(pVictoriaOperaciones);
         pVictoriaOperaciones.setLayout(pVictoriaOperacionesLayout);
         pVictoriaOperacionesLayout.setHorizontalGroup(
@@ -4245,9 +4301,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     .addComponent(jScrollPane4)
                     .addGroup(pVictoriaOperacionesLayout.createSequentialGroup()
                         .addComponent(bVictoriaSincronizar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(bVictoriaCuotas, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(164, 164, 164)
                         .addComponent(lVictoriaWorkerEstado, javax.swing.GroupLayout.DEFAULT_SIZE, 834, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(lVictoriaEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -4258,14 +4312,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             .addGroup(pVictoriaOperacionesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pVictoriaOperacionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(pVictoriaOperacionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(bVictoriaSincronizar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(bVictoriaCuotas))
+                    .addComponent(bVictoriaSincronizar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lVictoriaWorkerEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lVictoriaEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(162, Short.MAX_VALUE))
+                .addContainerGap(165, Short.MAX_VALUE))
         );
 
         tpVictoria.addTab("Operaciones", pVictoriaOperaciones);
@@ -4542,6 +4594,20 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoExistencia3.setEnabled(false);
         tProductoExistencia3.setPreferredSize(new java.awt.Dimension(20, 20));
 
+        spProductoDetallesTecnicos3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        spProductoDetallesTecnicos3.setPreferredSize(new java.awt.Dimension(400, 150));
+
+        tbProductoCuotasSC1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tbProductoCuotasSC1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Numero", "Precio Crédito", "Precio Contado", "Precio Cuota"
+            }
+        ));
+        spProductoDetallesTecnicos3.setViewportView(tbProductoCuotasSC1);
+
         javax.swing.GroupLayout pWebsiteDetalleLayout = new javax.swing.GroupLayout(pWebsiteDetalle);
         pWebsiteDetalle.setLayout(pWebsiteDetalleLayout);
         pWebsiteDetalleLayout.setHorizontalGroup(
@@ -4574,14 +4640,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(bProductoBuscarSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(sProductoSeparador7, javax.swing.GroupLayout.PREFERRED_SIZE, 1248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
-                        .addComponent(lProductoDetallesTecnicos4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5)
-                        .addComponent(spProductoDetallesTecnicos2, javax.swing.GroupLayout.PREFERRED_SIZE, 586, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
-                        .addComponent(lProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(spProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, 586, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
                         .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -4619,7 +4677,19 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tProductoSCRubro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tProductoRubroSCCodigo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(tProductoRubroSCCodigo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
+                        .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pWebsiteDetalleLayout.createSequentialGroup()
+                                .addComponent(lProductoDetallesTecnicos4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spProductoDetallesTecnicos2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pWebsiteDetalleLayout.createSequentialGroup()
+                                .addComponent(lProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(spProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(spProductoDetallesTecnicos3, javax.swing.GroupLayout.PREFERRED_SIZE, 586, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pWebsiteDetalleLayout.setVerticalGroup(
@@ -4643,12 +4713,17 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(sProductoSeparador7, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lProductoDetallesTecnicos4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spProductoDetallesTecnicos2, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
+                        .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(spProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lProductoDescripcionLarga2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lProductoDetallesTecnicos4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spProductoDetallesTecnicos2, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
+                        .addGap(69, 69, 69)
+                        .addComponent(spProductoDetallesTecnicos3, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pWebsiteDetalleLayout.createSequentialGroup()
@@ -5071,17 +5146,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         // TODO add your handling code here:
     }//GEN-LAST:event_tVictoriaHilosActionPerformed
 
-    private void debugRubroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugRubroActionPerformed
-        /*
-buscarCuotas();
-buscarProductoWebsite();
-recorridoCuotas();
-buscarProductosVictoria();
-         */
-//cuotasWSPOST();
-
-    }//GEN-LAST:event_debugRubroActionPerformed
-
     private void btRubrosVTPostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRubrosVTPostActionPerformed
         rubrosRecorrido();
     }//GEN-LAST:event_btRubrosVTPostActionPerformed
@@ -5154,18 +5218,15 @@ buscarProductosVictoria();
 
     private void bVictoriaBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bVictoriaBuscarActionPerformed
         //hilosWorker();
-        buscarProductosSC();
+       
+        
         buscarRubrosSC();
         buscarMarcasSC();
         
         buscarProductosVictoria();
         buscarMarcasVictoria();
         buscarRubrosVictoria();
-        
-        buscarCuotasVictoria();
-        
-        
-
+        buscarProductosSC();
     }//GEN-LAST:event_bVictoriaBuscarActionPerformed
 
     private void bVictoriaLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bVictoriaLimpiarActionPerformed
@@ -5191,23 +5252,21 @@ buscarProductosVictoria();
 
             buscarRubrosVictoria();
             buscarMarcasVictoria();
-
+            buscarProductosVictoria();
             buscarRubrosSC();
             buscarMarcasSC();
             buscarProductosSC();
-
-            while (!rubrosW.isDone() || !rubrosSC.isDone() || !marcasSC.isDone() || !marcasW.isDone()) {
+            
+            
+            while (!rubrosW.isDone() || !rubrosSC.isDone() || !marcasSC.isDone() || !marcasW.isDone() || !cuotasW.isDone()) {
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-
-            sincronizarVictoria();
-
-        } else {
-            victoriaW.cancel(false);
+      } else {
+            cuotasSCW.cancel(false);
         }
 
     }//GEN-LAST:event_bVictoriaSincronizarActionPerformed
@@ -5320,10 +5379,6 @@ buscarProductosVictoria();
         actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code here:
     }//GEN-LAST:event_bProductoActualizarActionPerformed
 
-    private void bVictoriaCuotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bVictoriaCuotasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bVictoriaCuotasActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -5353,6 +5408,7 @@ buscarProductosVictoria();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Cargar;
+    private javax.swing.JCheckBox autosync;
     private javax.swing.JButton bBorrarWS;
     private javax.swing.JButton bMaestroBuscar;
     private javax.swing.JButton bMaestroBuscar2;
@@ -5370,7 +5426,6 @@ buscarProductosVictoria();
     private javax.swing.JButton bProductoLimpiarSC;
     private javax.swing.JButton bProductoLimpiarV;
     private javax.swing.JButton bVictoriaBuscar;
-    private javax.swing.JButton bVictoriaCuotas;
     private javax.swing.JButton bVictoriaLimpiar;
     private javax.swing.JButton bVictoriaSincronizar;
     private javax.swing.JButton btRubrosSCCargar;
@@ -5379,8 +5434,6 @@ buscarProductosVictoria();
     private javax.swing.JButton btRubrosVTCargar;
     private javax.swing.JButton btRubrosVTPost;
     private javax.swing.JComboBox<String> cbOrigen;
-    private javax.swing.JButton debugRubro;
-    private javax.swing.JTextArea debugRubros;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -5393,7 +5446,6 @@ buscarProductosVictoria();
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
@@ -5507,7 +5559,6 @@ buscarProductosVictoria();
     private javax.swing.JPanel pMyRSC;
     private javax.swing.JPanel pPrestashop;
     private javax.swing.JPanel pVictoria;
-    private javax.swing.JPanel pVictoriaDebug;
     private javax.swing.JPanel pVictoriaDetalle;
     private javax.swing.JPanel pVictoriaMaestro;
     private javax.swing.JPanel pVictoriaMyR;
@@ -5535,6 +5586,7 @@ buscarProductosVictoria();
     private javax.swing.JScrollPane spProductoDetallesTecnicos;
     private javax.swing.JScrollPane spProductoDetallesTecnicos1;
     private javax.swing.JScrollPane spProductoDetallesTecnicos2;
+    private javax.swing.JScrollPane spProductoDetallesTecnicos3;
     private javax.swing.JScrollPane spProductoImagenes;
     private javax.swing.JTextField tGeneralesEnviosDesde;
     private javax.swing.JTextField tGeneralesEnviosHasta;
@@ -5614,6 +5666,7 @@ buscarProductosVictoria();
     private javax.swing.JTable tRubrosVictoria;
     private javax.swing.JTextField tStockSC;
     private javax.swing.JTextField tVictoriaCantidad;
+    private javax.swing.JTextField tVictoriaEstado;
     private javax.swing.JTextField tVictoriaHilos;
     private javax.swing.JTextField tVictoriaMarca;
     private javax.swing.JTextField tVictoriaMet;
@@ -5635,6 +5688,7 @@ buscarProductosVictoria();
     private javax.swing.JTable tbPrestashop;
     private javax.swing.JTable tbProductoCuotas;
     private javax.swing.JTable tbProductoCuotasSC;
+    private javax.swing.JTable tbProductoCuotasSC1;
     private javax.swing.JTable tbProductoDetallesTecnicos;
     private javax.swing.JTable tbProductoImagenes;
     private javax.swing.JTable tbProductosSC;
@@ -5868,7 +5922,7 @@ buscarProductosVictoria();
                                 tablaContenidoProductos[i][6] = producto.getRubroVictoria().getCodigo();
                                 tablaContenidoProductos[i][7] = producto.getPrecio_contado();
                                 tablaContenidoProductos[i][8] = Integer.valueOf(propVictoria.getProperty("stock"));
-
+                                
                                 i++;
                             }
                             cargarTablaProductosVictoria(tablaContenidoProductos);
@@ -5876,6 +5930,9 @@ buscarProductosVictoria();
                             appendMensaje("RESPUESTA: " + productosW.consulta.getDebugMessage() + " | " + productosW.consulta.getJson().getJSONArray("items").getJSONObject(1));
                             appendMensaje("Se obtuvieron " + productosW.getCantidad() + " registros.");
                         }
+                        productosRecorrido();
+                        rubrosRecorrido();
+                        marcasRecorrido();
                     } else {
                         System.out.println("Proceso no terminado: " + productosW.consulta.getDebugMessage());
                     }
@@ -6094,12 +6151,15 @@ buscarProductosVictoria();
         } else if ("ProductosWorkerSC".equals(source)) {
             if (value.equals("STARTED")) {
                 tProductoEstado.setText("Descargando maestro...");
+                taVictoriaSincronizar.append("\nCargando PRODUCTOS de SARA COMERCIAL... ");
             } else if (value.equals("DONE")) {
                 System.out.println("e n t r o ______");
                 tProductoEstado.setText("Cargando maestro...");
                 appendMensaje("\nCONSULTA: " + productosSC.consulta.getCon().getURL());
                 try {
                     if (productosSC.isDone()) {
+                        taVictoriaSincronizar.append("PRODUCTOS de SARA COMERCIAL cargados.");
+                        taVictoriaSincronizar.append("Sincronización finalizada. ");
                         if (productosSC.isCancelled()) {
                             System.out.println("Proceso de busqueda cancelado.");
                         } else {
@@ -6182,19 +6242,41 @@ buscarProductosVictoria();
             tProductoEstado.setText("Cargando maestro " + value + "%");
         } else if ("CuotasWorkerSC".equals(source)) {
             if (value.equals("STARTED")) {
+                taVictoriaSincronizar.append("\nCargando CUOTAS de SARA COMERCIAL.");
 
             } else if (value.equals("DONE")) {
                 if (cuotasSCW.isDone()) {
-                    
+                    taVictoriaSincronizar.append("\nCUOTAS de SARA COMERCIAL cargadas.");
+                    taVictoriaSincronizar.append("\nIniciando sincronización....");
                     cuotasRecorrido();
+                    
+                } else {
+                    System.out.println("NOT DONE");
+                }
+                taVictoriaSincronizar.append("Sincronización finalizada. ");
+            }else{
+                tVictoriaEstado.setText("Cargando datos " + value + "%");
+            }
+        
+    }else if ("CuotasVictoriaWorker".equals(source)) {
+            if (value.equals("STARTED")) {
+                taVictoriaSincronizar.append("\nCargando CUOTAS de VICTORIA... ");
+
+            } else if (value.equals("DONE")) {
+                if (cuotasW.isDone()) {
+                    isDone = true;
+                    autoclik();
+                    taVictoriaSincronizar.append("\nCUOTAS de VICTORIA cargadas.");
                 } else {
                     System.out.println("NOT DONE");
                 }
 
+            }else{
+                tVictoriaEstado.setText("Cargando datos " + value + "%");
             }
         }
+        //taVictoriaSincronizar.append("\nProcesos Finalizados, puede salir del programa.");
     }
-
     public Integer extraeEntero(String cadena) {
         System.out.println("ORIG: " + cadena);
         String numeros = "0";
@@ -6210,5 +6292,10 @@ buscarProductosVictoria();
         }
         System.out.println("FORM: " + numeros);
         return Integer.valueOf(numeros);
+    }
+}
+class ClickListener implements ActionListener {
+    public void actionPerformed(ActionEvent e) {
+        System.out.println("test");
     }
 }

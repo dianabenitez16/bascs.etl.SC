@@ -64,9 +64,9 @@ public class ProductoVictoria {
                 for (int i = 0; i < cuotaJ.length(); i++) {
                     cuota = new ProductoCuotasVictoria(
                             cuotaJ.optJSONObject(i).getInt("numero"),
-                            cuotaJ.optJSONObject(i).getDouble("precio_cuota"),
-                            cuotaJ.optJSONObject(i).getDouble("precio_contado"),
-                            cuotaJ.optJSONObject(i).getDouble("precio_credito"),
+                            cuotaJ.optJSONObject(i).getInt("precio_cuota"),
+                            cuotaJ.optJSONObject(i).getInt("precio_contado"),
+                            cuotaJ.optJSONObject(i).getInt("precio_credito"),
                             cuotaJ.optJSONObject(i).getInt("posee_descuento"),
                             cuotaJ.optJSONObject(i).getInt("porcentaje_descuento"));
                     cuotas.add(cuota);
@@ -93,6 +93,7 @@ public class ProductoVictoria {
             MarcaVictoria marVictoria = new MarcaVictoria();
             marVictoria.setCodigo(productoJ.optString("marca"));
             setMarcaVictoria(marVictoria);
+            setPrecio_contado(productoJ.optInt("precio"));
             /*
             RubroSC rubroSC = new RubroSC();
             rubroSC.setId(productoJ.optInt("rubro"));
@@ -128,6 +129,14 @@ public class ProductoVictoria {
 
     public void setRubroSC(RubroSC rubroSC) {
         this.rubroSC = rubroSC;
+    }
+
+    public MarcaSC getMarcaSC() {
+        return marcaSC;
+    }
+
+    public void setMarcaSC(MarcaSC marcaSC) {
+        this.marcaSC = marcaSC;
     }
 
     public String getCodigo() {
@@ -226,8 +235,9 @@ public class ProductoVictoria {
         object.put("codigo_interno_ws", getCodigo());
         object.put("nombre", getNombre());
         //    object.put("descripcion", getDescripcion());
-        object.put("marca_id", getMarca_id());
-        object.put("rubro_id", getRubroSC().getId());
+//        object.put("marca_id", getMarcaSC().getId());
+//        System.out.println("MARCASC " + getMarcaSC().getId() + "RUBROSC " + getRubroSC().getId());
+//        object.put("rubro_id", getRubroSC().getId());
         object.put("precio", getPrecio_contado());
         object.put("stock", "10");
 

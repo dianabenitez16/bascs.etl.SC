@@ -19,9 +19,9 @@ import org.json.JSONObject;
 public class ProductoCuotasVictoria {
     private Integer numero;
     private ProductoVictoria producto;
-    private Double precio_contado;
-    private Double precio_cuota;
-    private Double precio_credito;
+    private Integer precio_contado;
+    private Integer precio_cuota;
+    private Integer precio_credito;
     private Integer porcentaje_descuento;
     private Integer posee_descuento;
     public Boolean cargado;
@@ -34,7 +34,7 @@ public class ProductoCuotasVictoria {
       
     }
 
-    ProductoCuotasVictoria(int numero, double precio_contado, double precio_cuota, double precio_credito, int posee_descuento, int porcentaje_descuento) {
+    ProductoCuotasVictoria(int numero, int precio_contado, int precio_cuota, int precio_credito, int posee_descuento, int porcentaje_descuento) {
             this.numero = numero;
             this.precio_contado = precio_cuota;
             this.precio_cuota = precio_contado;
@@ -53,7 +53,7 @@ public class ProductoCuotasVictoria {
             //setCodigo((getCodigo() == null ? cuotasJ.optString("codigo_interno_ws"):getCodigo())); 
             setNumero((getNumero() == null ? cuotasJ.optInt("numero"):getNumero())); 
             setCodigo((getCodigo() == null ? cuotasJ.optString("codigo_interno_ws"):getCodigo()));
-            setPrecio_cuota((getPrecio_cuota() == null ? cuotasJ.optDouble("precio_cuota"):getPrecio_cuota()));
+            setPrecio_cuota((getPrecio_cuota() == null ? cuotasJ.optInt("precio_cuota"):getPrecio_cuota()));
             setPosee_descuento((getPosee_descuento() == null ? cuotasJ.optInt("posee_descuento"):getPosee_descuento()));
             setPorcentaje_descuento((getPorcentaje_descuento() == null ? cuotasJ.optInt("porcentaje_descuento"):getPorcentaje_descuento()));
             
@@ -72,30 +72,31 @@ public class ProductoCuotasVictoria {
         this.numero = numero;
     }
 
-    public Double getPrecio_contado() {
+    public Integer getPrecio_contado() {
         return precio_contado;
     }
 
-    public void setPrecio_contado(Double precio_contado) {
+    public void setPrecio_contado(Integer precio_contado) {
         this.precio_contado = precio_contado;
     }
 
-    public Double getPrecio_cuota() {
+    public Integer getPrecio_cuota() {
         return precio_cuota;
     }
 
-    public void setPrecio_cuota(Double precio_cuota) {
+    public void setPrecio_cuota(Integer precio_cuota) {
         this.precio_cuota = precio_cuota;
     }
 
-    public Double getPrecio_credito() {
+    public Integer getPrecio_credito() {
         return precio_credito;
     }
 
-    public void setPrecio_credito(Double precio_credito) {
+    public void setPrecio_credito(Integer precio_credito) {
         this.precio_credito = precio_credito;
     }
 
+    
     public ProductoVictoria getProducto() {
         return producto;
     }

@@ -132,7 +132,7 @@ public class Propiedades {
                 propiedades.setProperty("productos", "/panel/api/loader/productos");
                 propiedades.setProperty("detalle", "/panel/api/loader/productos/");
                 propiedades.setProperty("clave", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
-                propiedades.setProperty("hilos", "10");
+                propiedades.setProperty("pages", "1,2,3");
                 break;
             case "prestashop":
                 propiedades.setProperty("servidor", "192.168.25.5");

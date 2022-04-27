@@ -35,7 +35,7 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class CuotasWorkerSC extends SwingWorker<CuotaSC[], String> implements PropertyChangeListener {
+public class CuotasWorkerSC extends SwingWorker<List<CuotaSC>, String> implements PropertyChangeListener {
 
     public ConsultaHttpSC consulta;
     private Properties propiedades;
@@ -45,12 +45,12 @@ public class CuotasWorkerSC extends SwingWorker<CuotaSC[], String> implements Pr
     public String[] codigo;
     public main main;
     private ProductoSC[] productosSC;
-    private CuotaSC[] cuotasSC;
+    private List<CuotaSC> cuotasSC;
     private ProductoSC productoSC;
     private CuotaSC cuotaSC;
     private JSONObject jsonCodigo;
     public JSONObject jsonResponse;
-
+    
     public CuotasWorkerSC(ArrayList codigo, Properties propSC) {
         this.codigos = codigo;
         this.propiedades = propSC;
@@ -65,68 +65,71 @@ public class CuotasWorkerSC extends SwingWorker<CuotaSC[], String> implements Pr
     }
 
     @Override
-    protected CuotaSC[] doInBackground() {
+    protected List<CuotaSC> doInBackground() {
 
         try {
+            cuotasSC = new ArrayList<>();
+            Integer page = 1;
+            Boolean haymaspaginas = true;
 
             setProgress(0);
 
-            String url = "http://www.saracomercial.com/panel/api/loader/cuotas/filtrar?page=1";
-            URL obj = new URL(url);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            String url = "http://www.saracomercial.com/panel/api/loader/cuotas/filtrar?page=";
+            
+            while (haymaspaginas) {
+                URL obj = new URL(url + page);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Content-type", "application/json");
-            con.setRequestProperty("Accept", "application/json");
-            con.setRequestProperty("Authorization", propiedades.getProperty("clave"));
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-type", "application/json");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Authorization", propiedades.getProperty("clave"));
 
-            jsonCodigo = new JSONObject();
-            jsonCodigo.put("productos_codigo_interno_ws", codigos);  //BODY DEL POST, DENTRO VA LA LISTA DE CODIGOS, SEPARADOS POR COMA
+                jsonCodigo = new JSONObject();
+                jsonCodigo.put("productos_codigo_interno_ws", codigos);  //BODY DEL POST, DENTRO VA LA LISTA DE CODIGOS, SEPARADOS POR COMA
 
-            con.setDoOutput(true);
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes(jsonCodigo.toString());
-            wr.flush();
-            wr.close();
+                con.setDoOutput(true);
+                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                wr.writeBytes(jsonCodigo.toString());
+                wr.flush();
+                wr.close();
 
-            int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'POST' request to URL : " + url);
-            System.out.println("Post parameters : " + jsonCodigo.toString());
-            System.out.println("Response Code : " + responseCode);
-            System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
-            System.out.println("Accept: " + con.getRequestProperty("Accept"));
-            System.out.println("Authorization: " + propiedades.getProperty("clave"));
-            System.out.println("Method: " + con.getRequestMethod());
+                int responseCode = con.getResponseCode();
 
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
 
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            jsonResponse = new JSONObject(response.toString());
-            if (jsonResponse.has("data")) {
-                JSONArray respuesta = jsonResponse.getJSONArray("data");
-                cantidad = respuesta.length();
-                cuotasSC = new CuotaSC[cantidad];
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                jsonResponse = new JSONObject(response.toString());
                 
-                System.out.println("TAMANO DE ARRAY:"+cuotasSC.length);
-                for (int i = 0; i < cantidad; i++) {
-                    JSONObject cuotasJ = respuesta.getJSONObject(i);
-                    //System.out.println(cuotasJ.toString());
-                    cuotaSC = new CuotaSC();
-                    cuotaSC.loadJSONConsulta(cuotasJ);
-                    cuotasSC[i] = cuotaSC;
-                    // productoSC.setCuotas(cuotasSC);
+                if (jsonResponse.has("data")) {
+                    JSONArray respuesta = jsonResponse.getJSONArray("data");
+                    cantidad = respuesta.length();
+                    
+                    if(cantidad == 0){
+                        haymaspaginas = false;
+                    }else{
+                        System.out.println("Se obtuvieron "+cantidad+" en la pagina "+page);
+                        page++;
+                        for (int i = 0; i < cantidad; i++) {
+                            JSONObject cuotasJ = respuesta.getJSONObject(i);
+                            //System.out.println(cuotasJ.toString());
+                            cuotaSC = new CuotaSC();
+                            cuotaSC.loadJSONConsulta(cuotasJ);
+                            cuotasSC.add(cuotaSC);
+                            // productoSC.setCuotas(cuotasSC);
+                            
+                            setProgress(((i + 1) * 100) / cantidad);
+                            //Thread.sleep(50); //JUST FOR TESTING
+                            //publish(producto.getCodigo());
+                            //print result
 
-                    setProgress(((i + 1) * 100) / cantidad);
-                    //Thread.sleep(50); //JUST FOR TESTING
-                    //publish(producto.getCodigo());
-                    //print result
-
+                        }
+                    }
                 }
             }
         } catch (MalformedURLException ex) {
@@ -143,7 +146,7 @@ public class CuotasWorkerSC extends SwingWorker<CuotaSC[], String> implements Pr
 
     @Override
     protected void done() {
-        System.out.println("Productos obtenidos. Se encontraron " + cuotasSC.length + " cuotas del producto ");
+        System.out.println("Productos obtenidos. Se encontraron " + cuotasSC.size() + " cuotas del producto ");
     }
 
     @Override
@@ -210,11 +213,11 @@ public class CuotasWorkerSC extends SwingWorker<CuotaSC[], String> implements Pr
         }
         return null;
     }
-    
-    public List<CuotaSC> obtenerCuotas(Integer id){
+
+    public List<CuotaSC> obtenerCuotas(Integer id) {
         List<CuotaSC> cuotas = new ArrayList<>();
         for (CuotaSC cuotaSC : cuotasSC) {
-            if(cuotaSC.getProducto_id().equals(id)){
+            if (cuotaSC.getProducto_id().equals(id)) {
                 cuotas.add(cuotaSC);
             }
         }

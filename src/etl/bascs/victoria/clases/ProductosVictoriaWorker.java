@@ -30,7 +30,7 @@ public class ProductosVictoriaWorker extends SwingWorker<ProductoVictoria[], Str
     public ConsultaHttpVictoria consulta;
     private Properties propiedades;
     private Integer cantidad;
-
+    public Exception errores;
     private ProductoVictoria[] productos;
     private ProductoVictoria producto;
 

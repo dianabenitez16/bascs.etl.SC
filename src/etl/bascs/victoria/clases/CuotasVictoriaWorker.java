@@ -27,6 +27,7 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
     public Properties propiedades;
     public Integer cantidad;
     public Boolean get = true;
+    public Exception errores;
     public String codigo;
     public Integer id;
     public ProductoVictoria producto;
@@ -91,7 +92,8 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
         } catch (Exception e) {
             error = true;
             //System.out.println("_Error desconocido al consultar: "+producto.getCodigo());
-            System.out.println("ERROR" +e);
+            System.out.println("ERROR " + e);
+            errores = e;
             publish("Error desconocido al consultar: "+cuotaV.getProducto().getCodigo());
             //Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -134,6 +136,16 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public Exception getErrores() {
+        return errores;
+    }
+
+    public void setErrores(Exception errores) {
+        this.errores = errores;
+    }
+
+   
     
     public List<ProductoCuotasVictoria> obtenerCuotas(String codigo){
         List<ProductoCuotasVictoria> cuotas = new ArrayList<>();

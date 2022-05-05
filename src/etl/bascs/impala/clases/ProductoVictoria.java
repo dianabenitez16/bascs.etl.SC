@@ -25,6 +25,7 @@ import org.json.JSONObject;
 public class ProductoVictoria {
 
     private String codigo;
+    private String codigoAlternativo;
     private String descripcion;
     private String nombre;
     private String marca;
@@ -50,6 +51,7 @@ public class ProductoVictoria {
             ProductoCuotasVictoria cuota;
 
             setCodigo((getCodigo() == null ? productoJ.optString("codigo_interno_ws") : getCodigo()));
+            setCodigoAlternativo((getCodigoAlternativo() == null ? productoJ.optString("codigoAlternativo") : getCodigoAlternativo()));
             setNombre((getNombre() == null ? productoJ.optString("nombre") : getNombre()));
             setDescripcion((getDescripcion() == null ? productoJ.optString("descripcion") : getDescripcion()));
             setMarcaVictoria(new MarcaVictoria(productoJ.getJSONObject("marca")));
@@ -84,6 +86,7 @@ public class ProductoVictoria {
     public void loadJSONMaestro(JSONObject productoJ) {
         try {
             setCodigo(productoJ.optString("codigo_interno_ws"));
+            setCodigoAlternativo(productoJ.optString("codigoAlternativo"));
             //System.out.println("CODIGO DEL MAESTRO "  + productoJ.optString("codigo_interno_ws"));
             setNombre(productoJ.optString("nombre"));
             setDescripcion(productoJ.optString("descripcion"));
@@ -213,6 +216,14 @@ public class ProductoVictoria {
         this.stock = stock;
     }
 
+    public String getCodigoAlternativo() {
+        return codigoAlternativo;
+    }
+
+    public void setCodigoAlternativo(String codigoAlternativo) {
+        this.codigoAlternativo = codigoAlternativo;
+    }
+
     public String decodeUFT(String rawString) {
         if (rawString == null || rawString.isEmpty()) {
             return "";
@@ -239,7 +250,7 @@ public class ProductoVictoria {
 //        System.out.println("MARCASC " + getMarcaSC().getId() + "RUBROSC " + getRubroSC().getId());
 //        object.put("rubro_id", getRubroSC().getId());
         object.put("precio", getPrecio_contado());
-        object.put("stock", "10");
+//        object.put("stock", "10");
 
         return object;
     }

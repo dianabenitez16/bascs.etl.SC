@@ -5,9 +5,12 @@
  */
 package bascs.website.clases;
 
+import etl.bascs.impala.clases.ProductoCuotasVictoria;
 import etl.bascs.impala.main;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,7 +26,7 @@ public class CuotaSC {
     private Integer posee_descuento;
     private Integer importe_cuota;
     private Integer porcentaje_descuento;
-    
+    public ArrayList cuotas;
     
     public Boolean cargado = false;
     public CuotaSC( int producto_id, int cuotas, int importe_cuota, int posee_descuento, int porcentaje_descuento) {
@@ -40,6 +43,7 @@ public class CuotaSC {
      public void loadJSONConsulta(JSONObject cuotasJ){
       
         try{
+           CuotaSC cuota;
             //setCodigo((getCodigo() == null ? cuotasJ.optString("codigo_interno_ws"):getCodigo())); 
             setNumero((getNumero() == null ? cuotasJ.optInt("numero"):getNumero())); 
             setId((getId() == null ? cuotasJ.optInt("id"):getId()));
@@ -47,6 +51,22 @@ public class CuotaSC {
             setImporte_cuota((getImporte_cuota() == null ? cuotasJ.optInt("importe_cuota"):getImporte_cuota())); 
             setPorcentaje_descuento((getPorcentaje_descuento() == null ? cuotasJ.optInt("porcentaje_descuento"):getPorcentaje_descuento())); 
             setPosee_descuento((getPosee_descuento() == null ? cuotasJ.optInt("posee_descuento"):getPosee_descuento())); 
+           
+            cuotas = new ArrayList<>();
+            if (cuotasJ.has("data")) {
+                JSONArray cuotaJ = cuotasJ.optJSONArray("data");
+                
+                for (int i = 0; i < cuotaJ.length(); i++) {
+                    cuota = new CuotaSC(
+                            cuotaJ.optJSONObject(i).getInt("producto_id"),
+                             cuotaJ.optJSONObject(i).getInt("numero"),
+                            cuotaJ.optJSONObject(i).getInt("importe_cuota"),
+                            cuotaJ.optJSONObject(i).getInt("posee_descuento"),
+                            cuotaJ.optJSONObject(i).getInt("porcentaje_descuento"));
+                    cuotas.add(cuota);
+                    //System.out.println("CUOTAS " + cuotas[i]);
+                }
+            }
             
             cargado = true;
             
@@ -118,6 +138,14 @@ public class CuotaSC {
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
+    }
+
+    public ArrayList getCuotas() {
+        return cuotas;
+    }
+
+    public void setCuotas(ArrayList cuotas) {
+        this.cuotas = cuotas;
     }
     
     

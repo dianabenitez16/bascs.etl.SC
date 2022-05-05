@@ -131,14 +131,14 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="lMaestroCantidad3">
               <Properties>
+                <Property name="text" type="java.lang.String" value="Archivo"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="10" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Archivo"/>
-                <Property name="toolTipText" type="java.lang.String" value="Seleccione el archivo generado con el Export de la plataforma Prestashop de Tienda Naranja. (products_...)"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[80, 20]"/>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" value="Seleccione el archivo generado con el Export de la plataforma Prestashop de Tienda Naranja. (products_...)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tPrestashopPath">
@@ -151,10 +151,10 @@
             </Component>
             <Component class="javax.swing.JButton" name="bPrestashopSeleccionar">
               <Properties>
+                <Property name="text" type="java.lang.String" value="Seleccionar archivo"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="10" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Seleccionar archivo"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[120, 20]"/>
                 </Property>
@@ -165,10 +165,10 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lMaestroCantidad4">
               <Properties>
+                <Property name="text" type="java.lang.String" value="Lineas"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="10" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Lineas"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[80, 20]"/>
                 </Property>
@@ -184,10 +184,10 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lMaestroCantidad5">
               <Properties>
+                <Property name="text" type="java.lang.String" value="Columnas"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="10" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Columnas"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[80, 20]"/>
                 </Property>
@@ -205,10 +205,10 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lMaestroCantidad6">
               <Properties>
+                <Property name="text" type="java.lang.String" value="Tienda Naranja"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="11" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Tienda Naranja"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[100, 25]"/>
                 </Property>
@@ -499,10 +499,10 @@
                   <SubComponents>
                     <Component class="javax.swing.JLabel" name="lProductoCodigo">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="C&#xf3;digo"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="C&#xf3;digo"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -510,10 +510,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoDescripcionLarga">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="M&#xe1;s informaci&#xf3;n"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="M&#xe1;s informaci&#xf3;n"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -521,10 +521,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoMarca">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Marca"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Marca"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -532,10 +532,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoCategoria">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Categoria"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Categoria"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -543,10 +543,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoDivision">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Divisi&#xf3;n"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Divisi&#xf3;n"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -554,10 +554,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoPrecio">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Precio de lista"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Precio de lista"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -565,10 +565,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoExistencia">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Existencia"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Existencia"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -576,10 +576,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoDetallesTecnicos">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Detalles T&#xe9;cnicos"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Detalles T&#xe9;cnicos"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -587,10 +587,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bProductoLimpiar">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -601,10 +601,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bProductoBuscar">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Buscar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Buscar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -784,13 +784,13 @@
                     </Container>
                     <Component class="javax.swing.JLabel" name="taProductoImagen">
                       <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Tahoma" size="10" style="0"/>
-                        </Property>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                             <EtchetBorder bevelType="0"/>
                           </Border>
+                        </Property>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="10" style="0"/>
                         </Property>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[400, 400]"/>
@@ -799,10 +799,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoPrecio1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Precio de venta"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Precio de venta"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -832,10 +832,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoExistencia1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Stock superior a"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Stock superior a"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -843,10 +843,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoPrecio2">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Precio de costo"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Precio de costo"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -865,10 +865,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoExistencia2">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Moneda"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Moneda"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -887,10 +887,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoExistencia3">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Recargo venta"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Recargo venta"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -898,10 +898,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoExistencia4">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Descuento costo"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Descuento costo"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -931,10 +931,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoDetallesTecnicos1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Detalles T&#xe9;cnicos"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Detalles T&#xe9;cnicos"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -953,10 +953,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoPrecio3">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Precio final"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Precio final"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -964,10 +964,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoExistencia5">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Recargo env&#xed;o"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Recargo env&#xed;o"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1056,10 +1056,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bMaestroLimpiar">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1070,10 +1070,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bMaestroBuscar">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Buscar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Buscar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1138,10 +1138,10 @@
                     </Container>
                     <Component class="javax.swing.JLabel" name="lMaestroCantidad">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Cantidad"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Cantidad"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1262,10 +1262,10 @@
                   <SubComponents>
                     <Component class="javax.swing.JButton" name="bPrestashopProcesar">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Procesar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Procesar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1276,10 +1276,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bPrestashopLimpiar">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1346,11 +1346,11 @@
                     </Container>
                     <Component class="javax.swing.JButton" name="bPrestashopAbrir">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Abrir archivo"/>
+                        <Property name="enabled" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Abrir archivo"/>
-                        <Property name="enabled" type="boolean" value="false"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[100, 20]"/>
                         </Property>
@@ -1388,10 +1388,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Ruta"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Ruta"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1534,10 +1534,10 @@
                   <SubComponents>
                     <Component class="javax.swing.JLabel" name="lBASCSServidor2">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Envios"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="1"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Envios"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1545,10 +1545,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lBASCSInstancia1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Sumar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Sumar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1556,10 +1556,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lBASCSUsuario1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Importe"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Importe"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1581,10 +1581,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lBASCSInstancia2">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Desde"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Desde"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1603,11 +1603,11 @@
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="tGeneralesEnviosSumar">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Agregar precio de envio en el precio final"/>
+                        <Property name="enabled" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Agregar precio de envio en el precio final"/>
-                        <Property name="enabled" type="boolean" value="false"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[200, 20]"/>
                         </Property>
@@ -1615,10 +1615,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lBASCSInstancia3">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Hasta"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Hasta"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1735,10 +1735,10 @@
                   <SubComponents>
                     <Component class="javax.swing.JLabel" name="lBASCSServidor">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Servidor"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Servidor"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1746,10 +1746,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lBASCSPuerto">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Puerto"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Puerto"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1757,10 +1757,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lBASCSInstancia">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Metodo"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Metodo"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1768,10 +1768,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lBASCSBD">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Rubro"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Rubro"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1886,10 +1886,10 @@
                           <SubComponents>
                             <Component class="javax.swing.JLabel" name="lImpalaUsuario6">
                               <Properties>
+                                <Property name="text" type="java.lang.String" value="Producto"/>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Tahoma" size="10" style="0"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Producto"/>
                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[80, 20]"/>
                                 </Property>
@@ -1897,10 +1897,10 @@
                             </Component>
                             <Component class="javax.swing.JLabel" name="lImpalaUsuario7">
                               <Properties>
+                                <Property name="text" type="java.lang.String" value="Detalles"/>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Tahoma" size="10" style="0"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Detalles"/>
                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[80, 20]"/>
                                 </Property>
@@ -1940,10 +1940,10 @@
                     </Container>
                     <Component class="javax.swing.JLabel" name="lBASCSPuerto1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Marca"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Marca"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -1965,10 +1965,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lBASCSPuerto2">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Hilos"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Hilos"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2099,10 +2099,10 @@
                   <SubComponents>
                     <Component class="javax.swing.JLabel" name="lImpalaServidor">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Servidor"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Servidor"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2110,10 +2110,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lImpalaPuerto">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Puerto"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Puerto"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2121,10 +2121,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lImpalaMetodo">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Metodo"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Metodo"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2132,10 +2132,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lImpalaCliente">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Cliente"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Cliente"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2143,10 +2143,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lImpalaUsuario">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Usuario"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Usuario"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2154,10 +2154,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lImpalaClave">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Clave"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Clave"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2312,10 +2312,10 @@
                           <SubComponents>
                             <Component class="javax.swing.JLabel" name="lImpalaUsuario1">
                               <Properties>
+                                <Property name="text" type="java.lang.String" value="Detalle"/>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Tahoma" size="10" style="0"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Detalle"/>
                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[80, 20]"/>
                                 </Property>
@@ -2323,10 +2323,10 @@
                             </Component>
                             <Component class="javax.swing.JLabel" name="lImpalaUsuario2">
                               <Properties>
+                                <Property name="text" type="java.lang.String" value="Maestro"/>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Tahoma" size="10" style="0"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Maestro"/>
                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[80, 20]"/>
                                 </Property>
@@ -2334,10 +2334,10 @@
                             </Component>
                             <Component class="javax.swing.JLabel" name="lImpalaProductosImagenes">
                               <Properties>
+                                <Property name="text" type="java.lang.String" value="Imagenes"/>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Tahoma" size="10" style="0"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Imagenes"/>
                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[80, 20]"/>
                                 </Property>
@@ -2391,10 +2391,10 @@
                     </Container>
                     <Component class="javax.swing.JLabel" name="lImpalaHilos">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Hilos"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Hilos"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2474,10 +2474,10 @@
                           <SubComponents>
                             <Component class="javax.swing.JLabel" name="lImpalaUsuario10">
                               <Properties>
+                                <Property name="text" type="java.lang.String" value="Descuento"/>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Tahoma" size="10" style="0"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Descuento"/>
                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[80, 20]"/>
                                 </Property>
@@ -2485,10 +2485,10 @@
                             </Component>
                             <Component class="javax.swing.JLabel" name="lImpalaUsuario11">
                               <Properties>
+                                <Property name="text" type="java.lang.String" value="Recargo"/>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Tahoma" size="10" style="0"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Recargo"/>
                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[80, 20]"/>
                                 </Property>
@@ -2642,10 +2642,10 @@
                   <SubComponents>
                     <Component class="javax.swing.JLabel" name="lImpalaServidor1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Servidor"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Servidor"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2653,10 +2653,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lImpalaPuerto1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Puerto"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Puerto"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2664,10 +2664,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lImpalaMetodo1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Metodo"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Metodo"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2675,10 +2675,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lImpalaCliente1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Cliente"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Cliente"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2686,10 +2686,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lImpalaUsuario3">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Usuario"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Usuario"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2697,10 +2697,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lImpalaClave1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Clave"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Clave"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -2855,10 +2855,10 @@
                           <SubComponents>
                             <Component class="javax.swing.JLabel" name="lImpalaUsuario4">
                               <Properties>
+                                <Property name="text" type="java.lang.String" value="Detalle"/>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Tahoma" size="10" style="0"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Detalle"/>
                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[80, 20]"/>
                                 </Property>
@@ -2866,10 +2866,10 @@
                             </Component>
                             <Component class="javax.swing.JLabel" name="lImpalaUsuario5">
                               <Properties>
+                                <Property name="text" type="java.lang.String" value="Maestro"/>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Tahoma" size="10" style="0"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Maestro"/>
                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[80, 20]"/>
                                 </Property>
@@ -2877,10 +2877,10 @@
                             </Component>
                             <Component class="javax.swing.JLabel" name="lImpalaProductosImagenes1">
                               <Properties>
+                                <Property name="text" type="java.lang.String" value="Imagenes"/>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Tahoma" size="10" style="0"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Imagenes"/>
                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[80, 20]"/>
                                 </Property>
@@ -2934,10 +2934,10 @@
                     </Container>
                     <Component class="javax.swing.JLabel" name="lJellyfishHilos">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Hilos"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Hilos"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3017,10 +3017,10 @@
                           <SubComponents>
                             <Component class="javax.swing.JLabel" name="lImpalaUsuario8">
                               <Properties>
+                                <Property name="text" type="java.lang.String" value="Descuento"/>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Tahoma" size="10" style="0"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Descuento"/>
                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[80, 20]"/>
                                 </Property>
@@ -3028,10 +3028,10 @@
                             </Component>
                             <Component class="javax.swing.JLabel" name="lImpalaUsuario9">
                               <Properties>
+                                <Property name="text" type="java.lang.String" value="Recargo"/>
                                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                   <Font name="Tahoma" size="10" style="0"/>
                                 </Property>
-                                <Property name="text" type="java.lang.String" value="Recargo"/>
                                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                                   <Dimension value="[80, 20]"/>
                                 </Property>
@@ -3180,10 +3180,10 @@
                     </Container>
                     <Component class="javax.swing.JLabel" name="lImpalaServidor2">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Default"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Default"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3191,10 +3191,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lImpalaServidor3">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Cargado"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Cargado"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3391,10 +3391,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bVictoriaLimpiar">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3405,10 +3405,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bVictoriaBuscar">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Buscar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Buscar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3473,10 +3473,10 @@
                     </Container>
                     <Component class="javax.swing.JLabel" name="lMaestroCantidad1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Cantidad"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Cantidad"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3496,10 +3496,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="Cargar">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Cargar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Cargar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3525,6 +3525,186 @@
                         <Property name="text" type="java.lang.String" value="Autosincronizar"/>
                         <Property name="enabled" type="boolean" value="false"/>
                       </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JPanel" name="pVictoriaMyR">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="Marcas/Rubros">
+                        <Property name="tabTitle" type="java.lang.String" value="Marcas/Rubros"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="155" max="-2" attributes="0"/>
+                              <Component id="jLabel4" min="-2" pref="78" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="353" max="-2" attributes="0"/>
+                              <Component id="jLabel5" min="-2" pref="78" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" min="-2" pref="373" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="336" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                                  <Component id="jScrollPane2" min="-2" pref="373" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                                      <Component id="jLabel4" min="-2" pref="30" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabel5" min="-2" pref="30" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Component id="jScrollPane1" min="-2" pref="354" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="97" max="-2" attributes="0"/>
+                                  <Component id="jScrollPane2" min="-2" pref="354" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                      <SubComponents>
+                        <Component class="javax.swing.JTable" name="tRubrosVictoria">
+                          <Properties>
+                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                              <Table columnCount="2" rowCount="0">
+                                <Column editable="true" title="Codigo" type="java.lang.Object"/>
+                                <Column editable="true" title="Nombre" type="java.lang.Object"/>
+                              </Table>
+                            </Property>
+                          </Properties>
+                        </Component>
+                      </SubComponents>
+                    </Container>
+                    <Component class="javax.swing.JLabel" name="jLabel4">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="MARCAS"/>
+                      </Properties>
+                    </Component>
+                    <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                      <SubComponents>
+                        <Component class="javax.swing.JTable" name="tMarcasVictoria">
+                          <Properties>
+                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                              <Table columnCount="2" rowCount="0">
+                                <Column editable="true" title="Codigo" type="java.lang.Object"/>
+                                <Column editable="true" title="Nombre" type="java.lang.Object"/>
+                              </Table>
+                            </Property>
+                          </Properties>
+                        </Component>
+                      </SubComponents>
+                    </Container>
+                    <Component class="javax.swing.JLabel" name="jLabel5">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="RUBROS"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JPanel" name="pVictoriaOperaciones">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="Operaciones">
+                        <Property name="tabTitle" type="java.lang.String" value="Operaciones"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jScrollPane4" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="bVictoriaSincronizar" min="-2" pref="120" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="164" max="-2" attributes="0"/>
+                                      <Component id="lVictoriaWorkerEstado" pref="834" max="32767" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="lVictoriaEstado" min="-2" pref="123" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="bVictoriaSincronizar" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="lVictoriaWorkerEstado" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="lVictoriaEstado" min="-2" pref="25" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jScrollPane4" min="-2" pref="470" max="-2" attributes="0"/>
+                              <EmptySpace pref="165" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JButton" name="bVictoriaSincronizar">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Sincronizar"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bVictoriaSincronizarActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Container class="javax.swing.JScrollPane" name="jScrollPane4">
+                      <AuxValues>
+                        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                      </AuxValues>
+
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                      <SubComponents>
+                        <Component class="javax.swing.JTextArea" name="taVictoriaSincronizar">
+                          <Properties>
+                            <Property name="columns" type="int" value="20"/>
+                            <Property name="rows" type="int" value="5"/>
+                          </Properties>
+                        </Component>
+                      </SubComponents>
+                    </Container>
+                    <Component class="javax.swing.JLabel" name="lVictoriaEstado">
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lVictoriaWorkerEstado">
                     </Component>
                   </SubComponents>
                 </Container>
@@ -3658,10 +3838,10 @@
                   <SubComponents>
                     <Component class="javax.swing.JLabel" name="lProductoCodigo1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="C&#xf3;digo"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="C&#xf3;digo"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3669,10 +3849,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoDescripcionLarga1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="M&#xe1;s informaci&#xf3;n:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="M&#xe1;s informaci&#xf3;n:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3680,10 +3860,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoMarca1">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Marca:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Marca:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3691,10 +3871,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bProductoLimpiarV">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3705,10 +3885,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bProductoBuscarV">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Buscar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Buscar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3819,10 +3999,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoExistencia7">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Stock superior a:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Stock superior a:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3830,10 +4010,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoDetallesTecnicos3">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Cuotas:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Cuotas:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3852,10 +4032,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoMarca3">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Rubro:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Rubro:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -3885,210 +4065,6 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JPanel" name="pVictoriaMyR">
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="Marcas/Rubros">
-                        <Property name="tabTitle" type="java.lang.String" value="Marcas/Rubros"/>
-                      </JTabbedPaneConstraints>
-                    </Constraint>
-                  </Constraints>
-
-                  <Layout>
-                    <DimensionLayout dim="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="411" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="btRubrosVTPost" pref="395" max="32767" attributes="0"/>
-                                  <Component id="btRubrosVTCargar" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jScrollPane1" min="-2" pref="373" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="155" max="-2" attributes="0"/>
-                              <Component id="jLabel4" min="-2" pref="78" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="jLabel5" min="-2" pref="78" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="232" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                                  <Component id="jScrollPane2" min="-2" pref="373" max="-2" attributes="0"/>
-                                  <EmptySpace pref="868" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                      </Group>
-                    </DimensionLayout>
-                    <DimensionLayout dim="1">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
-                                      <Component id="jLabel4" min="-2" pref="30" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="167" max="-2" attributes="0"/>
-                                      <Component id="btRubrosVTCargar" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                                      <Component id="btRubrosVTPost" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
-                                      <Component id="jLabel5" min="-2" pref="30" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="jScrollPane1" min="-2" pref="354" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace pref="228" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="97" max="-2" attributes="0"/>
-                                  <Component id="jScrollPane2" min="-2" pref="354" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                      </Group>
-                    </DimensionLayout>
-                  </Layout>
-                  <SubComponents>
-                    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
-
-                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                      <SubComponents>
-                        <Component class="javax.swing.JTable" name="tRubrosVictoria">
-                          <Properties>
-                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                              <Table columnCount="2" rowCount="0">
-                                <Column editable="true" title="Codigo" type="java.lang.Object"/>
-                                <Column editable="true" title="Nombre" type="java.lang.Object"/>
-                              </Table>
-                            </Property>
-                          </Properties>
-                        </Component>
-                      </SubComponents>
-                    </Container>
-                    <Component class="javax.swing.JLabel" name="jLabel4">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="MARCAS"/>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="btRubrosVTCargar">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="CARGAR"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRubrosVTCargarActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Container class="javax.swing.JScrollPane" name="jScrollPane2">
-
-                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                      <SubComponents>
-                        <Component class="javax.swing.JTable" name="tMarcasVictoria">
-                          <Properties>
-                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                              <Table columnCount="2" rowCount="0">
-                                <Column editable="true" title="Codigo" type="java.lang.Object"/>
-                                <Column editable="true" title="Nombre" type="java.lang.Object"/>
-                              </Table>
-                            </Property>
-                          </Properties>
-                        </Component>
-                      </SubComponents>
-                    </Container>
-                    <Component class="javax.swing.JLabel" name="jLabel5">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="RUBROS"/>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="btRubrosVTPost">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="POST TEST R"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRubrosVTPostActionPerformed"/>
-                      </Events>
-                    </Component>
-                  </SubComponents>
-                </Container>
-                <Container class="javax.swing.JPanel" name="pVictoriaOperaciones">
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="Operaciones">
-                        <Property name="tabTitle" type="java.lang.String" value="Operaciones"/>
-                      </JTabbedPaneConstraints>
-                    </Constraint>
-                  </Constraints>
-
-                  <Layout>
-                    <DimensionLayout dim="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jScrollPane4" max="32767" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <Component id="bVictoriaSincronizar" min="-2" pref="120" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="164" max="-2" attributes="0"/>
-                                      <Component id="lVictoriaWorkerEstado" pref="834" max="32767" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="lVictoriaEstado" min="-2" pref="123" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                    </DimensionLayout>
-                    <DimensionLayout dim="1">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="bVictoriaSincronizar" min="-2" pref="25" max="-2" attributes="0"/>
-                                  <Component id="lVictoriaWorkerEstado" min="-2" pref="25" max="-2" attributes="0"/>
-                                  <Component id="lVictoriaEstado" min="-2" pref="25" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jScrollPane4" min="-2" pref="470" max="-2" attributes="0"/>
-                              <EmptySpace pref="165" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                    </DimensionLayout>
-                  </Layout>
-                  <SubComponents>
-                    <Component class="javax.swing.JButton" name="bVictoriaSincronizar">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Sincronizar"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bVictoriaSincronizarActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Container class="javax.swing.JScrollPane" name="jScrollPane4">
-                      <AuxValues>
-                        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                      </AuxValues>
-
-                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                      <SubComponents>
-                        <Component class="javax.swing.JTextArea" name="taVictoriaSincronizar">
-                          <Properties>
-                            <Property name="columns" type="int" value="20"/>
-                            <Property name="rows" type="int" value="5"/>
-                          </Properties>
-                        </Component>
-                      </SubComponents>
-                    </Container>
-                    <Component class="javax.swing.JLabel" name="lVictoriaEstado">
-                    </Component>
-                    <Component class="javax.swing.JLabel" name="lVictoriaWorkerEstado">
-                    </Component>
-                  </SubComponents>
-                </Container>
               </SubComponents>
             </Container>
           </SubComponents>
@@ -4111,15 +4087,10 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="tpWebsite" pref="1259" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="127" max="-2" attributes="0"/>
-                              <Component id="tProductoEstado" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="tpWebsite" alignment="0" pref="1259" max="32767" attributes="0"/>
+                          <Component id="tProductoEstado" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -4129,7 +4100,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="tpWebsite" min="-2" pref="625" max="-2" attributes="0"/>
-                      <EmptySpace pref="50" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" pref="53" max="32767" attributes="0"/>
                       <Component id="tProductoEstado" min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -4221,10 +4192,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bMaestroLimpiar2">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4235,10 +4206,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bMaestroBuscar2">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Buscar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Buscar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4303,10 +4274,10 @@
                     </Container>
                     <Component class="javax.swing.JLabel" name="lMaestroCantidad8">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Cantidad"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Cantidad"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4326,10 +4297,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bBorrarWS">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Borrar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Borrar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4364,32 +4335,6 @@
                               <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="lProductoCodigo3" min="-2" pref="49" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="tProductoIDSC" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="lProductoCodigo2" min="-2" pref="49" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="tProductoSC" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="tProductoNombre" min="-2" pref="234" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="lProductoCodigo4" min="-2" pref="49" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="tVisibleSC" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                                      <Component id="lProductoCodigo5" min="-2" pref="49" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="tHabilitadoSC" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
-                                      <Component id="bProductoActualizar" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="bProductoLimpiarSC" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="bProductoBuscarSC" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="sProductoSeparador7" alignment="0" min="-2" pref="1248" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="103" alignment="0" groupAlignment="1" attributes="0">
                                               <Component id="lProductoMarca5" min="-2" max="-2" attributes="0"/>
@@ -4404,14 +4349,16 @@
                                                   </Group>
                                                   <EmptySpace min="-2" pref="112" max="-2" attributes="0"/>
                                                   <Component id="lProductoExistencia13" min="-2" max="-2" attributes="0"/>
-                                                  <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                                       <Group type="102" attributes="0">
                                                           <EmptySpace min="-2" pref="154" max="-2" attributes="0"/>
                                                           <Component id="lProductoMarca4" min="-2" max="-2" attributes="0"/>
                                                       </Group>
-                                                      <Group type="102" alignment="0" attributes="0">
+                                                      <Group type="102" attributes="0">
                                                           <EmptySpace max="-2" attributes="0"/>
                                                           <Component id="tStockSC" max="-2" attributes="0"/>
+                                                          <EmptySpace max="32767" attributes="0"/>
+                                                          <Component id="lProductoExistencia14" min="-2" max="-2" attributes="0"/>
                                                       </Group>
                                                   </Group>
                                               </Group>
@@ -4439,23 +4386,56 @@
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="tProductoSCRubro" max="-2" attributes="0"/>
                                           <Component id="tProductoRubroSCCodigo" max="-2" attributes="0"/>
+                                          <Component id="tPrecioSC" alignment="0" min="-2" pref="102" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Component id="lProductoDetallesTecnicos4" min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Group type="102" attributes="0">
+                                              <EmptySpace min="-2" pref="988" max="-2" attributes="0"/>
+                                              <Component id="sProductoSeparador7" min="-2" pref="1248" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" attributes="0">
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="spProductoDetallesTecnicos2" max="32767" attributes="0"/>
+                                              <EmptySpace min="-2" pref="1655" max="-2" attributes="0"/>
+                                          </Group>
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="lProductoDetallesTecnicos4" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="spProductoDetallesTecnicos2" pref="0" max="32767" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="0" attributes="0">
+                                          <Group type="102" attributes="0">
                                               <Component id="lProductoDescripcionLarga2" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="spProductoDescripcionLarga2" min="-2" pref="384" max="-2" attributes="0"/>
+                                              <Component id="spProductoDescripcionLarga2" max="32767" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="lProductoCodigo3" min="-2" pref="49" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="tProductoIDSC" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="lProductoCodigo2" min="-2" pref="49" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="tProductoSC" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="tProductoNombre" min="-2" pref="234" max="-2" attributes="0"/>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="lProductoCodigo4" min="-2" pref="49" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="tVisibleSC" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="spProductoDetallesTecnicos3" min="-2" pref="586" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                                      <Component id="lProductoCodigo5" min="-2" pref="49" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="tHabilitadoSC" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
+                                      <Component id="bProductoActualizar" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="bProductoLimpiarSC" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="bProductoBuscarSC" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
@@ -4482,26 +4462,18 @@
                                   <Component id="tHabilitadoSC" min="-2" max="-2" attributes="0"/>
                                   <Component id="lProductoCodigo5" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="sProductoSeparador7" min="-2" pref="10" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="spProductoDescripcionLarga2" alignment="0" min="-2" pref="195" max="-2" attributes="0"/>
-                                          <Component id="lProductoDescripcionLarga2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="lProductoDetallesTecnicos4" min="-2" max="-2" attributes="0"/>
-                                          <Component id="spProductoDetallesTecnicos2" min="-2" pref="197" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
-                                      <Component id="spProductoDetallesTecnicos3" min="-2" pref="197" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="spProductoDescripcionLarga2" alignment="0" min="-2" pref="195" max="-2" attributes="0"/>
+                                  <Component id="lProductoDescripcionLarga2" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace type="separate" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lProductoDetallesTecnicos4" min="-2" max="-2" attributes="0"/>
+                                  <Component id="spProductoDetallesTecnicos2" min="-2" pref="197" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" pref="21" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
                                       <Group type="103" groupAlignment="3" attributes="0">
@@ -4513,7 +4485,11 @@
                                           <Component id="lProductoMarca4" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="tProductoRubroSCCodigo" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="lProductoExistencia14" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="tPrecioSC" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -4544,9 +4520,9 @@
                                               <Component id="tStockSC" alignment="3" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
+                              <EmptySpace min="28" pref="28" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -4554,10 +4530,10 @@
                   <SubComponents>
                     <Component class="javax.swing.JLabel" name="lProductoCodigo2">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="C&#xf3;digo"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="C&#xf3;digo"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4565,10 +4541,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoDescripcionLarga2">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Descripci&#xf3;n:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Descripci&#xf3;n:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4576,10 +4552,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoMarca2">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Marca:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Marca:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4587,10 +4563,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoExistencia12">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Existencia:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Existencia:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4598,10 +4574,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoDetallesTecnicos4">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Cuotas: "/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Cuotas: "/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4609,10 +4585,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bProductoLimpiarSC">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Limpiar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4623,10 +4599,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bProductoBuscarSC">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Buscar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Buscar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4744,10 +4720,37 @@
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                               <Table columnCount="4" rowCount="0">
                                 <Column editable="true" title="Numero" type="java.lang.Object"/>
-                                <Column editable="true" title="Precio Cr&#xe9;dito" type="java.lang.Object"/>
-                                <Column editable="true" title="Precio Contado" type="java.lang.Object"/>
-                                <Column editable="true" title="Precio Cuota" type="java.lang.Object"/>
+                                <Column editable="true" title="Importe Cuota" type="java.lang.Object"/>
+                                <Column editable="true" title="Posee Descuento" type="java.lang.Object"/>
+                                <Column editable="true" title="Importe Descuento" type="java.lang.Object"/>
                               </Table>
+                            </Property>
+                            <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                              <TableColumnModel selectionModel="0">
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
+                              </TableColumnModel>
+                            </Property>
+                            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                             </Property>
                           </Properties>
                         </Component>
@@ -4755,10 +4758,10 @@
                     </Container>
                     <Component class="javax.swing.JLabel" name="lProductoExistencia13">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Stock:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Stock:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4766,10 +4769,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoMarca4">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="C&#xf3;digo:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="C&#xf3;digo:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4777,10 +4780,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoMarca5">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Rubro:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Rubro:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4799,10 +4802,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoMarca6">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="C&#xf3;digo:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="C&#xf3;digo:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4821,10 +4824,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoCodigo3">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="ID:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="ID:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4845,10 +4848,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoCodigo4">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Visible:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Visible:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4870,10 +4873,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoCodigo5">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Habilitado"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Habilitado"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4881,10 +4884,10 @@
                     </Component>
                     <Component class="javax.swing.JButton" name="bProductoActualizar">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Actualizar"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Actualizar"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4895,10 +4898,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoMarca7">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Porcentaje Descuento:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Porcentaje Descuento:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4906,10 +4909,10 @@
                     </Component>
                     <Component class="javax.swing.JLabel" name="lProductoMarca8">
                       <Properties>
+                        <Property name="text" type="java.lang.String" value="Posee Descuento:"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Posee Descuento:"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[80, 20]"/>
                         </Property>
@@ -4934,7 +4937,157 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Container class="javax.swing.JScrollPane" name="spProductoDetallesTecnicos3">
+                    <Component class="javax.swing.JLabel" name="lProductoExistencia14">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Precio:"/>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="10" style="0"/>
+                        </Property>
+                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[80, 20]"/>
+                        </Property>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="tPrecioSC">
+                      <Properties>
+                        <Property name="editable" type="boolean" value="false"/>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="10" style="0"/>
+                        </Property>
+                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[40, 20]"/>
+                        </Property>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JPanel" name="pPreciosVigentes">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="Precios Vigentes">
+                        <Property name="tabTitle" type="java.lang.String" value="Precios Vigentes"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                                      <Component id="bGuardarPSC" min="-2" pref="91" max="-2" attributes="0"/>
+                                      <EmptySpace pref="41" max="32767" attributes="0"/>
+                                      <Component id="bActualizarPSC" min="-2" pref="91" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                                      <Component id="bBorrarPSC" min="-2" pref="91" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Group type="103" groupAlignment="1" attributes="0">
+                                                  <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel3" alignment="1" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace min="44" pref="44" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="1" attributes="0">
+                                                  <Component id="fechaDesdeSC" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="fechaHastaSC" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                          <Component id="jLabel2" alignment="0" min="-2" pref="46" max="-2" attributes="0"/>
+                                          <Group type="102" attributes="0">
+                                              <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="codAlternativo" min="-2" pref="177" max="-2" attributes="0"/>
+                                                  <Component id="precioSC" min="-2" pref="177" max="-2" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                      </Group>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Component id="spProductoDetallesTecnicos4" min="-2" pref="586" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="265" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="jLabel10" min="-2" pref="145" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="491" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                              <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="codAlternativo" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="precioSC" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel2" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="fechaDesdeSC" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="fechaHastaSC" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel8" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="bBorrarPSC" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                                          <Component id="bActualizarPSC" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                                          <Component id="bGuardarPSC" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Component id="spProductoDetallesTecnicos4" alignment="0" min="-2" pref="382" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="157" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JLabel" name="jLabel2">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Precio "/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="precioSC">
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel3">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Fecha Desde: "/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel8">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Fecha Hasta: "/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel9">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Codigo de Barras: "/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="codAlternativo">
+                    </Component>
+                    <Container class="javax.swing.JScrollPane" name="spProductoDetallesTecnicos4">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="10" style="0"/>
@@ -4949,23 +5102,117 @@
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                       <SubComponents>
-                        <Component class="javax.swing.JTable" name="tbProductoCuotasSC1">
+                        <Component class="javax.swing.JTable" name="tbPrecioSC">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Tahoma" size="10" style="0"/>
                             </Property>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                               <Table columnCount="4" rowCount="0">
-                                <Column editable="true" title="Numero" type="java.lang.Object"/>
-                                <Column editable="true" title="Precio Cr&#xe9;dito" type="java.lang.Object"/>
-                                <Column editable="true" title="Precio Contado" type="java.lang.Object"/>
-                                <Column editable="true" title="Precio Cuota" type="java.lang.Object"/>
+                                <Column editable="true" title="Codigo de Barras" type="java.lang.Object"/>
+                                <Column editable="true" title="Precio" type="java.lang.Object"/>
+                                <Column editable="true" title="Fecha Desde" type="java.lang.Object"/>
+                                <Column editable="true" title="Fecha Hasta" type="java.lang.Object"/>
                               </Table>
+                            </Property>
+                            <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                              <TableColumnModel selectionModel="0">
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
+                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                                  <Title/>
+                                  <Editor/>
+                                  <Renderer/>
+                                </Column>
+                              </TableColumnModel>
+                            </Property>
+                            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                             </Property>
                           </Properties>
                         </Component>
                       </SubComponents>
                     </Container>
+                    <Component class="javax.swing.JButton" name="bActualizarPSC">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Actualizar"/>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="10" style="0"/>
+                        </Property>
+                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[80, 20]"/>
+                        </Property>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bActualizarPSCActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="bGuardarPSC">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Guardar"/>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="10" style="0"/>
+                        </Property>
+                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[80, 20]"/>
+                        </Property>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bGuardarPSCActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="bBorrarPSC">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Borrar"/>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="10" style="0"/>
+                        </Property>
+                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[80, 20]"/>
+                        </Property>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bBorrarPSCActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="com.github.lgooddatepicker.components.DatePicker" name="fechaDesdeSC">
+                      <Properties>
+                        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="null"/>
+                        </Property>
+                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[125, 25]"/>
+                        </Property>
+                      </Properties>
+                    </Component>
+                    <Component class="com.github.lgooddatepicker.components.DatePicker" name="fechaHastaSC">
+                      <Properties>
+                        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="null"/>
+                        </Property>
+                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[125, 25]"/>
+                        </Property>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel10">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="PRECIOS VIGENTES"/>
+                      </Properties>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="pMyRSC">
@@ -4980,61 +5227,39 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="158" max="-2" attributes="0"/>
-                              <Component id="jLabel6" min="-2" pref="78" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="jLabel7" min="-2" pref="78" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="234" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                              <Component id="tMarcasSC" min="-2" pref="373" max="-2" attributes="0"/>
-                              <EmptySpace pref="149" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" alignment="1" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="btRubrosSCPost" alignment="0" pref="122" max="32767" attributes="0"/>
-                                      <Component id="btRubrosSCDelete" alignment="0" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="158" max="-2" attributes="0"/>
+                                      <Component id="jLabel6" min="-2" pref="78" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="466" max="-2" attributes="0"/>
+                                      <Component id="jLabel7" min="-2" pref="78" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="btRubrosSCCargar" alignment="1" min="-2" pref="122" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                                      <Component id="tMarcasSC" min="-2" pref="373" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="178" max="-2" attributes="0"/>
+                                      <Component id="tRubrosSC" min="-2" pref="373" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="81" max="-2" attributes="0"/>
-                              <Component id="tRubrosSC" min="-2" pref="373" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
+                              <EmptySpace pref="314" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jLabel6" min="-2" pref="30" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" attributes="0">
-                                              <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
-                                              <Component id="btRubrosSCCargar" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                                              <Component id="btRubrosSCPost" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                                              <Component id="btRubrosSCDelete" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="tRubrosSC" min="-2" pref="354" max="-2" attributes="0"/>
-                                                  <Component id="tMarcasSC" min="-2" pref="354" max="-2" attributes="0"/>
-                                              </Group>
-                                          </Group>
-                                      </Group>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-                                      <Component id="jLabel7" min="-2" pref="30" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="jLabel6" min="-2" pref="30" max="-2" attributes="0"/>
+                                  <Component id="jLabel7" alignment="1" min="-2" pref="30" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="196" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="tMarcasSC" pref="550" max="32767" attributes="0"/>
+                                  <Component id="tRubrosSC" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -5061,14 +5286,6 @@
                         <Property name="text" type="java.lang.String" value="MARCAS"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JButton" name="btRubrosSCCargar">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="CARGAR"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRubrosSCCargarActionPerformed"/>
-                      </Events>
-                    </Component>
                     <Container class="javax.swing.JScrollPane" name="tMarcasSC">
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
@@ -5089,22 +5306,6 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="RUBROS"/>
                       </Properties>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="btRubrosSCPost">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="POST TEST M"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRubrosSCPostActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="btRubrosSCDelete">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="DELETE"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRubrosSCDeleteActionPerformed"/>
-                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -5130,9 +5331,6 @@
     </Container>
     <Component class="javax.swing.JComboBox" name="cbOrigen">
       <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tahoma" size="10" style="0"/>
-        </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="5">
             <StringItem index="0" value="Impala"/>
@@ -5141,6 +5339,9 @@
             <StringItem index="3" value="Sara Comercial"/>
             <StringItem index="4" value=" "/>
           </StringArray>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Tahoma" size="10" style="0"/>
         </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[60, 20]"/>

@@ -18,15 +18,10 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import javax.swing.SwingWorker;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,8 +38,8 @@ public class CuotasWorkerSC extends SwingWorker<List<CuotaSC>, String> implement
     private Integer id;
     private ArrayList<String> codigos;
     public String[] codigo;
-    public main main;
     private ProductoSC[] productosSC;
+    public Exception errores;
     private List<CuotaSC> cuotasSC;
     private ProductoSC productoSC;
     private CuotaSC cuotaSC;
@@ -121,7 +116,7 @@ public class CuotasWorkerSC extends SwingWorker<List<CuotaSC>, String> implement
                             cuotaSC = new CuotaSC();
                             cuotaSC.loadJSONConsulta(cuotasJ);
                             cuotasSC.add(cuotaSC);
-                            // productoSC.setCuotas(cuotasSC);
+                           //productoSC.setCuotas(cuotasSC);
                             
                             setProgress(((i + 1) * 100) / cantidad);
                             //Thread.sleep(50); //JUST FOR TESTING
@@ -134,6 +129,7 @@ public class CuotasWorkerSC extends SwingWorker<List<CuotaSC>, String> implement
             }
         } catch (MalformedURLException ex) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            
         } catch (ProtocolException ex) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

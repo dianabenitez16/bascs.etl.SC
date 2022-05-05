@@ -1021,7 +1021,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         for (Precios precio : precios) {
                             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                             Date date = new Date();
-                        //    System.out.println(dateFormat.format(date)); 
                           if (prodVictoria.getCodigoAlternativo().equals(precio.getCodAlternativo())) {
                               System.out.println("SON IGUALES " + prodVictoria.getCodigoAlternativo() + "|" + precio.getCodAlternativo());
                                 if (fFechaDB.format(date).compareTo(fFechaDB.format(precio.getFechaVigencia_desde())) >= 0 && fFechaDB.format(date).compareTo(fFechaDB.format(precio.getFechaVigencia_hasta())) <= 0) {

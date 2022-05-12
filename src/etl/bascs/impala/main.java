@@ -138,6 +138,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public CuotasWorkerSC cuotasSCW;
     public ArrayList<String> codigosSC;
     public ArrayList<String> codigo;
+    public ArrayList<CuotaSC> lcuotasSC;
     public CuotaSC cuotasSC;
     public ProductoSC productoSCW;
 
@@ -208,10 +209,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             tpVictoria.setSelectedIndex(2);
         }
       
-     buscarCuotasVictoria();   
-     cargarPrecios();
+    // buscarCuotasVictoria();   
+   //  cargarPrecios();
         contadorVolumetrico = 0;
-        mostrar();
+    //    mostrar();
 
     }
 
@@ -489,10 +490,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         }
     }
 
-    public void addCheckbox(int column, JTable table) {
-        //CONTINUAR CON EL CHECKBOX
-    }
-
     public void cargarProductosSC(ProductoSC producto) {
         if (producto.cargado) {
 
@@ -516,24 +513,26 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
 
         } else {
-            JOptionPane.showInputDialog("Producto no existente, verifique ID");
+              JOptionPane.showMessageDialog(null, "Ingrese un codigo de producto válido.");
         }
-
     }
-    /*
-    public void cargarCuotas(CuotaSC cuotas) {
-        if (cuotas.cargado) {
-            Object cuota[][] = new Object[cuotas.getCuotas().size()][4];
+    
+    public void cargarCuotasSC(CuotaSC cuotas) {
+       if (cuotas.cargado) {
+           
+        Object cuota[][] = new Object[cuotas.cantidad][4];
             for (int i = 0; i < cuota.length; i++) {
-                cuota[i][0] = cuotas.getCuotas().get(i);
-                cuota[i][1] = producto.getCuotas().get(i).getPrecio_contado();
-                cuota[i][2] = producto.getCuotas().get(i).getPrecio_credito();
-                cuota[i][3] = producto.getCuotas().get(i).getPrecio_cuota();
+                cuota[i][0] = cuotas.getNumero();
+                cuota[i][1] = cuotas.getImporte_cuota();
+                cuota[i][2] = cuotas.getPorcentaje_descuento();
             }
-            cargarTablaCuotasV(cuotas);
+            cargarTablaCuotasSC(cuota);
+
+        } else {
+              JOptionPane.showMessageDialog(null, "Ingrese un codigo de producto válido.");
         }
     }
-    */
+    
     public void actualizarProductoSC(ProductoSC prodv) {
 
         if (!prodv.equals(tProductoSC.getText())
@@ -569,7 +568,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }
 
     public void cargarTablaCuotasSC(Object[][] contenido) {
-        tbProductoCuotasSC.setModel(new javax.swing.table.DefaultTableModel(contenido, new String[]{"CUOTA", "IMPORTE", "PRODUCTO ID"}));
+        tbProductoCuotasSC.setModel(new javax.swing.table.DefaultTableModel(contenido, new String[]{"CUOTA", "IMPORTE", "PORCENTAJE DESCUENTO"}));
         tbProductoCuotasSC.getColumnModel().getColumn(0).setPreferredWidth(130);
         tbProductoCuotasSC.getColumnModel().getColumn(1).setPreferredWidth(130);
         tbProductoCuotasSC.getColumnModel().getColumn(2).setPreferredWidth(130);
@@ -869,7 +868,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
      * *******************RECORRIDOS*************************************
      */
     public void rubrosRecorrido() {
-        isClicked = true;
+       // isClicked = true;
         Boolean rubroEliminar;
         Integer rubrosOmitidos = 0;
 
@@ -885,19 +884,16 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         rubroNuevo = false;
                         if (!rubVictoria.getNombre().equals(rubSC.getNombre())) {
                             System.out.println("RUBROS [PUT] (Nombres diferentes) \t VT: " + rubVictoria.getNombre() + "|" + "SC: " + rubSC.getNombre());
-                            rubrosWSPUT(rubSC.getId(), rubSC);
+                          //  rubrosWSPUT(rubSC.getId(), rubSC);
 
                         } else {
                             rubrosOmitidos++;
                         }
                     }
                 }
-
                 if (rubroNuevo) {
                     rubrosWSPOST(rubVictoria);
-                    buscarRubrosVictoria();
-
-                }
+                 }
 
             }
 
@@ -930,12 +926,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
                             }
                             System.out.println("RUBROS [PUT] (No tiene Codigo Parent) \t VT: " + rubVictoria.getNombre() + "|" + "SC: " + rubSC.getNombre());
-                            rubrosWSPUT(rubSC.getId(), rubSC);
+                            rubrosWSPUT(rubSC.getId(), rubVictoria);
 
                         }
                     }
                 }
             }
+
 
             taVictoriaSincronizar.append("\nSe omitieron " + rubrosOmitidos + " RUBROS.");
             taVictoriaSincronizar.append("\nSe completo la sincronizacion de RUBROS.");
@@ -1018,6 +1015,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         prodVictoria.setProducto_id(podSC.getId());
                         productoNuevo = false;
                         
+                        if(!podSC.getPrecio().equals(prodVictoria.getPrecio_contado())){
+                           // podSC.setPrecio(prodVictoria.getPrecio_contado());
+                            productosWSPUT(podSC.getId(), prodVictoria);
+                          //  System.out.println("PRECIO A CAMBIAR DE:  " + prodVictoria.getCodigo());
+                        }
+                        
                         for (Precios precio : precios) {
                             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                             Date date = new Date();
@@ -1031,7 +1034,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         }
                         
                         if (!prodVictoria.getNombre().trim().equals(podSC.getNombre().trim())) {
-                            productosWSPUT(podSC.getId(), prodVictoria);
+                        //    productosWSPUT(podSC.getId(), prodVictoria);
                         } else {
                             productosOmitidos++;
                         }
@@ -1117,31 +1120,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 }
                 productosXVT.add(productoVictoria);   
             }
-
-            
-            /*
-            //CUOTAS VICTORIA
-            for (ProductoCuotasVictoria cuotasVT : cuotasW.get()) {
-                nuevo = true;
-                for (ProductoVictoria productoXVT : productosXVT) {
-                    if (productoXVT.getCodigo().equals(cuotasVT.getCodigo())) {
-                        nuevo = false;
-                        productoXVT.getCuotas().add(cuotasVT);
-                    }
-                }
-
-                if (nuevo) {
-                    ProductoVictoria producto;
-                    List<ProductoCuotasVictoria> cuotas = new ArrayList<>();
-
-                    producto = productosW.obtenerProducto(cuotasVT.getCodigo());
-                    cuotas.add(cuotasVT);
-
-                    producto.setCuotas(cuotas);
-                    productosXVT.add(producto);
-                }
-            }
-            */
+ 
             System.out.println("CANTIDADES:");
             System.out.println("\tVICTORIA: "+productosXVT.size());
             System.out.println("\tSC: "+productosXSC.size());
@@ -1299,10 +1278,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 */
         }
     private void PUTproductoSC(Integer id, ProductoSC producto) {
-       
+       // System.out.println("A ACTUALIZAR EN EL WS " + producto.getJSON().toString() + "CON ID " + id);
+       /*
             try {
-
-                String url = "http://www.saracomercial.com/panel/api/loader/productos/" + id + "";
+                System.out.println("ENTRO AQUI ");
+                String url = "http://www.saracomercial.com/panel/api/loader/productos/" + id;
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -1322,6 +1302,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 wr.close();
 
                 int responseCode = con.getResponseCode();
+               
                 System.out.println("\nSending 'PUT' request to URL : " + url);
                 System.out.println("Post parameters : " + urlParameters);
                 System.out.println("Response Code : " + responseCode);
@@ -1329,29 +1310,30 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 System.out.println("Accept: " + con.getRequestProperty("Accept"));
                 System.out.println("Authorization: " + propSC.getProperty("clave"));
                 System.out.println("Method: " + con.getRequestMethod());
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
+             BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
 
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-                JOptionPane.showMessageDialog(null, "Productos Actualizados");
-                //print result
-                System.out.println(response.toString());
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ProtocolException ex) {
-                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
             }
-        
-    }
+            in.close();
+             JOptionPane.showMessageDialog(null, "Productos Actualizados");
+            System.out.println(response.toString());
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ProtocolException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    */
+        }
 
     public void marcasWSPOST(MarcaVictoria marcasVT) {
+        System.out.println("A INSERTAR " + marcasVT.getJSON().toString());
+        /*
         if (!DEBUG) {
             try {
 
@@ -1404,14 +1386,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
 
         }
-    }
+    */
+        }
 
-    public void rubrosWSPUT(Integer id, RubroSC rubroSC) {
-
-        //ACTUALIZAR EN EL WS
-        if (!DEBUG) {
+    public void rubrosWSPUT(Integer id, RubroVictoria rubroVT) {
+  
             try {
-                String url = "http://www.saracomercial.com/panel/api/loader/rubros/" + id + "";
+                String url = "https://portal.saracomercial.com/api/loader/rubros/" + id + "";
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -1419,10 +1400,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 con.setRequestMethod("PUT");
                 con.setRequestProperty("Content-type", "application/json");
                 con.setRequestProperty("Accept", "application/json");
-                //        con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+                con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
-                String urlParameters = rubroSC.getJSON().toString();
-                System.out.println("SE ACTUALIZARA " + rubroSC.getJSON().toString() + " del ID: " + id);
+                String urlParameters = rubroVT.getJSON().toString();
+                System.out.println("SE ACTUALIZARA " + rubroVT.getJSON().toString() + " del ID: " + id);
                 // Send post request
                 con.setDoOutput(true);
                 DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -1431,6 +1412,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 wr.close();
 
                 int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'PUT' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+                System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
+                System.out.println("Accept: " + con.getRequestProperty("Accept"));
+                System.out.println("Authorization: " + propSC.getProperty("clave"));
+                System.out.println("Method: " + con.getRequestMethod());
+                
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(con.getInputStream()));
                 String inputLine;
@@ -1443,6 +1432,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
                 //print result
                 System.out.println(response.toString());
+                
             } catch (MalformedURLException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ProtocolException ex) {
@@ -1450,15 +1440,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
     }
 
     public void productosWSPUT(Integer id, ProductoVictoria podVictoria) {
-        System.out.println("A ACTUALIZADAR " + podVictoria.getJSON().toString());
-        /*
-        if(!DEBUG){
+        System.out.println("A ACTUALIZAR " + podVictoria.getJSON().toString() + "con id " + id);
+       /*
             try {
-                String url = "http://www.saracomercial.com/panel/api/loader/productos/" + id + "";
+                String url = "http://www.saracomercial.com/panel/api/loader/productos/"+id;
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -1469,7 +1457,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
                 String urlParameters = podVictoria.getJSON().toString();
-                System.out.println("SE ACTUALIZARA " + podVictoria.getJSON().toString() + " del ID: " + id);
+          //      System.out.println("SE ACTUALIZARA " + podVictoria.getJSON().toString() + " del ID: " + id);
                 // Send post request
                 con.setDoOutput(true);
                 DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -1478,6 +1466,21 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 wr.close();
 
                 int responseCode = con.getResponseCode();
+                  System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+                System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
+                System.out.println("Accept: " + con.getRequestProperty("Accept"));
+                System.out.println("Authorization: " + propSC.getProperty("clave"));
+                System.out.println("Method: " + con.getRequestMethod());
+                if(responseCode != 200){
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    System.out.println("Let me rest a little bit... ");
+                }else{
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(con.getInputStream()));
                 String inputLine;
@@ -1490,15 +1493,15 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
                 //print result
                 System.out.println(response.toString());
-            } catch (MalformedURLException ex) {
+                }
+            }catch (MalformedURLException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ProtocolException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-    }
-        */
+  */
     }
     public void ProductosWSPOST(ProductoVictoria productoVT) {
         System.out.println("PRODUCTOS A INSERTAR " + productoVT.getJSON().toString());
@@ -1558,17 +1561,19 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }
 
     public void rubrosWSPOST(RubroVictoria rubroVT) {
-        if (!DEBUG) {
+        System.out.println("RUBROS A INSERTAR " + rubroVT.getJSON().toString());
+      /*/
+        if(!DEBUG){
             try {
 
-                String url = "http://www.saracomercial.com/panel/api/loader/rubros";
+                String url = "https://portal.saracomercial.com/api/loader/rubros";
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Content-type", "application/json");
                 con.setRequestProperty("Accept", "application/json");
-                //              con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+                con.setRequestProperty("Authorization", propSC.getProperty("clave"));
 
                 String urlParameters = rubroVT.getJSON().toString();
 
@@ -1608,7 +1613,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-        }
+        */
     }
     /**/
     public void generarArchivoContenido(Object[] headers, Object[][] contenido, String filename) {
@@ -2167,6 +2172,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         jScrollPane2 = new javax.swing.JScrollPane();
         tMarcasVictoria = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
+        insertarRubros = new javax.swing.JButton();
+        cargarRubros = new javax.swing.JButton();
         pVictoriaOperaciones = new javax.swing.JPanel();
         bVictoriaSincronizar = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -2252,7 +2259,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         codAlternativo = new javax.swing.JTextField();
         spProductoDetallesTecnicos4 = new javax.swing.JScrollPane();
         tbPrecioSC = new javax.swing.JTable();
-        bActualizarPSC = new javax.swing.JButton();
         bGuardarPSC = new javax.swing.JButton();
         bBorrarPSC = new javax.swing.JButton();
         fechaDesdeSC = new com.github.lgooddatepicker.components.DatePicker();
@@ -2276,16 +2282,16 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         pPrestashop.setPreferredSize(new java.awt.Dimension(980, 730));
 
-        lMaestroCantidad3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad3.setText("Archivo");
-        lMaestroCantidad3.setToolTipText("Seleccione el archivo generado con el Export de la plataforma Prestashop de Tienda Naranja. (products_...)");
+        lMaestroCantidad3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad3.setPreferredSize(new java.awt.Dimension(80, 20));
+        lMaestroCantidad3.setToolTipText("Seleccione el archivo generado con el Export de la plataforma Prestashop de Tienda Naranja. (products_...)");
 
         tPrestashopPath.setEnabled(false);
         tPrestashopPath.setPreferredSize(new java.awt.Dimension(500, 20));
 
-        bPrestashopSeleccionar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bPrestashopSeleccionar.setText("Seleccionar archivo");
+        bPrestashopSeleccionar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bPrestashopSeleccionar.setPreferredSize(new java.awt.Dimension(120, 20));
         bPrestashopSeleccionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2293,22 +2299,22 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        lMaestroCantidad4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad4.setText("Lineas");
+        lMaestroCantidad4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad4.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tPrestashopExportLineas.setEnabled(false);
         tPrestashopExportLineas.setPreferredSize(new java.awt.Dimension(50, 20));
 
-        lMaestroCantidad5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad5.setText("Columnas");
+        lMaestroCantidad5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad5.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tPrestashopExportColumnas.setEnabled(false);
         tPrestashopExportColumnas.setPreferredSize(new java.awt.Dimension(50, 20));
 
-        lMaestroCantidad6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lMaestroCantidad6.setText("Tienda Naranja");
+        lMaestroCantidad6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lMaestroCantidad6.setPreferredSize(new java.awt.Dimension(100, 25));
 
         javax.swing.GroupLayout pPrestashopLayout = new javax.swing.GroupLayout(pPrestashop);
@@ -2367,40 +2373,40 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         pConsultaDetalle.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         pConsultaDetalle.setPreferredSize(new java.awt.Dimension(960, 710));
 
-        lProductoCodigo.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCodigo.setText("Código");
+        lProductoCodigo.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCodigo.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoDescripcionLarga.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDescripcionLarga.setText("Más información");
+        lProductoDescripcionLarga.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDescripcionLarga.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoMarca.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca.setText("Marca");
+        lProductoMarca.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoCategoria.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCategoria.setText("Categoria");
+        lProductoCategoria.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCategoria.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoDivision.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDivision.setText("División");
+        lProductoDivision.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDivision.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoPrecio.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoPrecio.setText("Precio de lista");
+        lProductoPrecio.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoPrecio.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoExistencia.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia.setText("Existencia");
+        lProductoExistencia.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoDetallesTecnicos.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDetallesTecnicos.setText("Detalles Técnicos");
+        lProductoDetallesTecnicos.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDetallesTecnicos.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        bProductoLimpiar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoLimpiar.setText("Limpiar");
+        bProductoLimpiar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoLimpiar.setPreferredSize(new java.awt.Dimension(80, 20));
         bProductoLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2408,8 +2414,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        bProductoBuscar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoBuscar.setText("Buscar");
+        bProductoBuscar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoBuscar.setPreferredSize(new java.awt.Dimension(80, 20));
         bProductoBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2487,12 +2493,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         ));
         spProductoImagenes.setViewportView(tbProductoImagenes);
 
-        taProductoImagen.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         taProductoImagen.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        taProductoImagen.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         taProductoImagen.setPreferredSize(new java.awt.Dimension(400, 400));
 
-        lProductoPrecio1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoPrecio1.setText("Precio de venta");
+        lProductoPrecio1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoPrecio1.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tProductoPrecioVenta.setEditable(false);
@@ -2503,32 +2509,32 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoStock.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoStock.setPreferredSize(new java.awt.Dimension(40, 20));
 
-        lProductoExistencia1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia1.setText("Stock superior a");
+        lProductoExistencia1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia1.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoPrecio2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoPrecio2.setText("Precio de costo");
+        lProductoPrecio2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoPrecio2.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tProductoPrecioCosto.setEditable(false);
         tProductoPrecioCosto.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoPrecioCosto.setPreferredSize(new java.awt.Dimension(100, 20));
 
-        lProductoExistencia2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia2.setText("Moneda");
+        lProductoExistencia2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia2.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tProductoFactorVenta.setEditable(false);
         tProductoFactorVenta.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoFactorVenta.setPreferredSize(new java.awt.Dimension(40, 20));
 
-        lProductoExistencia3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia3.setText("Recargo venta");
+        lProductoExistencia3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia3.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoExistencia4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia4.setText("Descuento costo");
+        lProductoExistencia4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia4.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tProductoFactorCosto.setEditable(false);
@@ -2539,20 +2545,20 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoEAN.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoEAN.setPreferredSize(new java.awt.Dimension(100, 20));
 
-        lProductoDetallesTecnicos1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDetallesTecnicos1.setText("Detalles Técnicos");
+        lProductoDetallesTecnicos1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDetallesTecnicos1.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tProductoPrecioVentaFinal.setEditable(false);
         tProductoPrecioVentaFinal.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoPrecioVentaFinal.setPreferredSize(new java.awt.Dimension(100, 20));
 
-        lProductoPrecio3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoPrecio3.setText("Precio final");
+        lProductoPrecio3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoPrecio3.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoExistencia5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia5.setText("Recargo envío");
+        lProductoExistencia5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia5.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tProductoEnvioImporte.setEditable(false);
@@ -2736,8 +2742,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         sProductoSeparador2.setPreferredSize(new java.awt.Dimension(900, 10));
 
-        bMaestroLimpiar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bMaestroLimpiar.setText("Limpiar");
+        bMaestroLimpiar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bMaestroLimpiar.setPreferredSize(new java.awt.Dimension(80, 20));
         bMaestroLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2745,8 +2751,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        bMaestroBuscar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bMaestroBuscar.setText("Buscar");
+        bMaestroBuscar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bMaestroBuscar.setPreferredSize(new java.awt.Dimension(80, 20));
         bMaestroBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2766,8 +2772,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         ));
         spMaestroProductos.setViewportView(tbMaestroProductos);
 
-        lMaestroCantidad.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad.setText("Cantidad");
+        lMaestroCantidad.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tMaestroCantidad.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -2782,7 +2788,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaMaestroLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addGroup(pConsultaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(sProductoSeparador2, javax.swing.GroupLayout.DEFAULT_SIZE, 1261, Short.MAX_VALUE)
+                    .addComponent(sProductoSeparador2, javax.swing.GroupLayout.DEFAULT_SIZE, 1354, Short.MAX_VALUE)
                     .addGroup(pConsultaMaestroLayout.createSequentialGroup()
                         .addComponent(lMaestroCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(5, 5, 5)
@@ -2816,8 +2822,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         pConsultaPrestashop.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         pConsultaPrestashop.setPreferredSize(new java.awt.Dimension(960, 710));
 
-        bPrestashopProcesar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bPrestashopProcesar.setText("Procesar");
+        bPrestashopProcesar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bPrestashopProcesar.setPreferredSize(new java.awt.Dimension(80, 20));
         bPrestashopProcesar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2825,8 +2831,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        bPrestashopLimpiar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bPrestashopLimpiar.setText("Limpiar");
+        bPrestashopLimpiar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bPrestashopLimpiar.setPreferredSize(new java.awt.Dimension(80, 20));
         bPrestashopLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2846,9 +2852,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         ));
         spPrestashop.setViewportView(tbPrestashop);
 
-        bPrestashopAbrir.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bPrestashopAbrir.setText("Abrir archivo");
         bPrestashopAbrir.setEnabled(false);
+        bPrestashopAbrir.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bPrestashopAbrir.setPreferredSize(new java.awt.Dimension(100, 20));
         bPrestashopAbrir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2866,8 +2872,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lMaestroCantidad7.setText("Cantidad");
         lMaestroCantidad7.setPreferredSize(new java.awt.Dimension(100, 25));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel1.setText("Ruta");
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel1.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tPrestashopWorkerEstado.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -2889,7 +2895,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                 .addComponent(tPrestashopFileExport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(tPrestashopWorkerEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 383, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 476, Short.MAX_VALUE)
                                 .addComponent(bPrestashopAbrir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(5, 5, 5)
                                 .addComponent(bPrestashopLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2901,10 +2907,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGroup(pConsultaPrestashopLayout.createSequentialGroup()
                     .addGap(628, 628, 628)
                     .addComponent(lMaestroCantidad2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(543, Short.MAX_VALUE)))
+                    .addContainerGap(636, Short.MAX_VALUE)))
             .addGroup(pConsultaPrestashopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaPrestashopLayout.createSequentialGroup()
-                    .addContainerGap(553, Short.MAX_VALUE)
+                    .addContainerGap(646, Short.MAX_VALUE)
                     .addComponent(lMaestroCantidad7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(618, 618, 618)))
         );
@@ -2964,16 +2970,16 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         pCGenerales.setPreferredSize(new java.awt.Dimension(755, 200));
 
-        lBASCSServidor2.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         lBASCSServidor2.setText("Envios");
+        lBASCSServidor2.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         lBASCSServidor2.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lBASCSInstancia1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSInstancia1.setText("Sumar");
+        lBASCSInstancia1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSInstancia1.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lBASCSUsuario1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSUsuario1.setText("Importe");
+        lBASCSUsuario1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSUsuario1.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tGeneralesEnviosImporte.setEditable(false);
@@ -2985,21 +2991,21 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        lBASCSInstancia2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSInstancia2.setText("Desde");
+        lBASCSInstancia2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSInstancia2.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tGeneralesEnviosDesde.setEditable(false);
         tGeneralesEnviosDesde.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tGeneralesEnviosDesde.setPreferredSize(new java.awt.Dimension(150, 20));
 
-        tGeneralesEnviosSumar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tGeneralesEnviosSumar.setText("Agregar precio de envio en el precio final");
         tGeneralesEnviosSumar.setEnabled(false);
+        tGeneralesEnviosSumar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tGeneralesEnviosSumar.setPreferredSize(new java.awt.Dimension(200, 20));
 
-        lBASCSInstancia3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSInstancia3.setText("Hasta");
+        lBASCSInstancia3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSInstancia3.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tGeneralesEnviosHasta.setEditable(false);
@@ -3028,7 +3034,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                             .addComponent(tGeneralesEnviosDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tGeneralesEnviosSumar, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(lBASCSServidor2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(924, Short.MAX_VALUE))
+                .addContainerGap(1017, Short.MAX_VALUE))
         );
         pCGeneralesLayout.setVerticalGroup(
             pCGeneralesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3058,20 +3064,20 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         pCBASCS.setPreferredSize(new java.awt.Dimension(755, 200));
 
-        lBASCSServidor.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSServidor.setText("Servidor");
+        lBASCSServidor.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSServidor.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lBASCSPuerto.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSPuerto.setText("Puerto");
+        lBASCSPuerto.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSPuerto.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lBASCSInstancia.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSInstancia.setText("Metodo");
+        lBASCSInstancia.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSInstancia.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lBASCSBD.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSBD.setText("Rubro");
+        lBASCSBD.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSBD.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tVictoriaSServidor.setEditable(false);
@@ -3097,12 +3103,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jTabbedPane4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
 
-        lImpalaUsuario6.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario6.setText("Producto");
+        lImpalaUsuario6.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario6.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaUsuario7.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario7.setText("Detalles");
+        lImpalaUsuario7.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario7.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tVictoriaProductos.setEditable(false);
@@ -3138,7 +3144,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(lImpalaUsuario7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(tVictoriaProductosDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(762, Short.MAX_VALUE))
+                .addContainerGap(855, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3156,8 +3162,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jTabbedPane4.addTab("Productos", jPanel4);
 
-        lBASCSPuerto1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSPuerto1.setText("Marca");
+        lBASCSPuerto1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSPuerto1.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tVictoriaMarca.setEditable(false);
@@ -3169,8 +3175,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        lBASCSPuerto2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSPuerto2.setText("Hilos");
+        lBASCSPuerto2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lBASCSPuerto2.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tVictoriaHilos.setEditable(false);
@@ -3252,28 +3258,28 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         pCImpala.setPreferredSize(new java.awt.Dimension(755, 200));
 
-        lImpalaServidor.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaServidor.setText("Servidor");
+        lImpalaServidor.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaServidor.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaPuerto.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaPuerto.setText("Puerto");
+        lImpalaPuerto.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaPuerto.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaMetodo.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaMetodo.setText("Metodo");
+        lImpalaMetodo.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaMetodo.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaCliente.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaCliente.setText("Cliente");
+        lImpalaCliente.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaCliente.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaUsuario.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario.setText("Usuario");
+        lImpalaUsuario.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaClave.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaClave.setText("Clave");
+        lImpalaClave.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaClave.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tImpalaServidor.setEditable(false);
@@ -3314,16 +3320,16 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jTabbedPane2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
 
-        lImpalaUsuario1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario1.setText("Detalle");
+        lImpalaUsuario1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario1.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaUsuario2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario2.setText("Maestro");
+        lImpalaUsuario2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario2.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaProductosImagenes.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaProductosImagenes.setText("Imagenes");
+        lImpalaProductosImagenes.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaProductosImagenes.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tImpalaRecursoProductoDetalle.setEditable(false);
@@ -3394,8 +3400,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jTabbedPane2.addTab("Recursos", jPanel1);
 
-        lImpalaHilos.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaHilos.setText("Hilos");
+        lImpalaHilos.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaHilos.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tImpalaHilos.setEditable(false);
@@ -3409,12 +3415,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jTabbedPane6.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
 
-        lImpalaUsuario10.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario10.setText("Descuento");
+        lImpalaUsuario10.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario10.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaUsuario11.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario11.setText("Recargo");
+        lImpalaUsuario11.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario11.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tImpalaOpcionesDescuento.setEditable(false);
@@ -3548,28 +3554,28 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         pCJellyfish.setPreferredSize(new java.awt.Dimension(755, 200));
 
-        lImpalaServidor1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaServidor1.setText("Servidor");
+        lImpalaServidor1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaServidor1.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaPuerto1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaPuerto1.setText("Puerto");
+        lImpalaPuerto1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaPuerto1.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaMetodo1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaMetodo1.setText("Metodo");
+        lImpalaMetodo1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaMetodo1.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaCliente1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaCliente1.setText("Cliente");
+        lImpalaCliente1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaCliente1.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaUsuario3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario3.setText("Usuario");
+        lImpalaUsuario3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario3.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaClave1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaClave1.setText("Clave");
+        lImpalaClave1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaClave1.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tJellyfishServidor.setEditable(false);
@@ -3610,16 +3616,16 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jTabbedPane3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
 
-        lImpalaUsuario4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario4.setText("Detalle");
+        lImpalaUsuario4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario4.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaUsuario5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario5.setText("Maestro");
+        lImpalaUsuario5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario5.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaProductosImagenes1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaProductosImagenes1.setText("Imagenes");
+        lImpalaProductosImagenes1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaProductosImagenes1.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tJellyfishRecursoProductoDetalle.setEditable(false);
@@ -3668,7 +3674,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(lImpalaUsuario5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(tJellyfishRecursoProductoMaestro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(759, Short.MAX_VALUE))
+                .addContainerGap(852, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3690,8 +3696,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jTabbedPane3.addTab("Recursos", jPanel3);
 
-        lJellyfishHilos.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lJellyfishHilos.setText("Hilos");
+        lJellyfishHilos.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lJellyfishHilos.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tJellyfishHilos.setEditable(false);
@@ -3705,12 +3711,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jTabbedPane5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
 
-        lImpalaUsuario8.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario8.setText("Descuento");
+        lImpalaUsuario8.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario8.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaUsuario9.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario9.setText("Recargo");
+        lImpalaUsuario9.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaUsuario9.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tJellyfishOpcionesDescuento.setEditable(false);
@@ -3746,7 +3752,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(lImpalaUsuario9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(tJellyfishOpcionesRecargo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(1109, Short.MAX_VALUE))
+                .addContainerGap(1202, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3877,12 +3883,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         ));
         spCPrestashopCargado.setViewportView(tbCPrestashopCargado);
 
-        lImpalaServidor2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaServidor2.setText("Default");
+        lImpalaServidor2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaServidor2.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lImpalaServidor3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaServidor3.setText("Cargado");
+        lImpalaServidor3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lImpalaServidor3.setPreferredSize(new java.awt.Dimension(80, 20));
 
         javax.swing.GroupLayout pCPrestashopLayout = new javax.swing.GroupLayout(pCPrestashop);
@@ -3955,7 +3961,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             pDebugLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pDebugLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addComponent(spDebug, javax.swing.GroupLayout.DEFAULT_SIZE, 1261, Short.MAX_VALUE)
+                .addComponent(spDebug, javax.swing.GroupLayout.DEFAULT_SIZE, 1354, Short.MAX_VALUE)
                 .addGap(5, 5, 5))
         );
         pDebugLayout.setVerticalGroup(
@@ -3978,8 +3984,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         sProductoSeparador5.setPreferredSize(new java.awt.Dimension(900, 10));
 
-        bVictoriaLimpiar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bVictoriaLimpiar.setText("Limpiar");
+        bVictoriaLimpiar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bVictoriaLimpiar.setPreferredSize(new java.awt.Dimension(80, 20));
         bVictoriaLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -3987,8 +3993,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        bVictoriaBuscar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bVictoriaBuscar.setText("Buscar");
+        bVictoriaBuscar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bVictoriaBuscar.setPreferredSize(new java.awt.Dimension(80, 20));
         bVictoriaBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4008,8 +4014,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         ));
         spMaestroProductos1.setViewportView(tbVictoriaProductos);
 
-        lMaestroCantidad1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad1.setText("Cantidad");
+        lMaestroCantidad1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad1.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tVictoriaCantidad.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -4017,8 +4023,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tVictoriaCantidad.setEnabled(false);
         tVictoriaCantidad.setPreferredSize(new java.awt.Dimension(100, 20));
 
-        Cargar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         Cargar.setText("Cargar");
+        Cargar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         Cargar.setPreferredSize(new java.awt.Dimension(80, 20));
         Cargar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4043,7 +4049,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGroup(pVictoriaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pVictoriaMaestroLayout.createSequentialGroup()
                         .addGroup(pVictoriaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(sProductoSeparador5, javax.swing.GroupLayout.DEFAULT_SIZE, 1261, Short.MAX_VALUE)
+                            .addComponent(sProductoSeparador5, javax.swing.GroupLayout.DEFAULT_SIZE, 1354, Short.MAX_VALUE)
                             .addGroup(pVictoriaMaestroLayout.createSequentialGroup()
                                 .addComponent(lMaestroCantidad1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(5, 5, 5)
@@ -4061,7 +4067,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addGap(5, 5, 5))
                     .addGroup(pVictoriaMaestroLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(spMaestroProductos1, javax.swing.GroupLayout.DEFAULT_SIZE, 1254, Short.MAX_VALUE)
+                        .addComponent(spMaestroProductos1, javax.swing.GroupLayout.DEFAULT_SIZE, 1347, Short.MAX_VALUE)
                         .addContainerGap())))
         );
         pVictoriaMaestroLayout.setVerticalGroup(
@@ -4109,6 +4115,20 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         jLabel5.setText("RUBROS");
 
+        insertarRubros.setText("INSERTAR RUBROS");
+        insertarRubros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertarRubrosActionPerformed(evt);
+            }
+        });
+
+        cargarRubros.setText("CARGAR");
+        cargarRubros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cargarRubrosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pVictoriaMyRLayout = new javax.swing.GroupLayout(pVictoriaMyR);
         pVictoriaMyR.setLayout(pVictoriaMyRLayout);
         pVictoriaMyRLayout.setHorizontalGroup(
@@ -4120,7 +4140,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pVictoriaMyRLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(443, Short.MAX_VALUE)
+                .addComponent(insertarRubros)
+                .addGap(69, 69, 69)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(336, 336, 336))
             .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -4128,6 +4150,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     .addGap(30, 30, 30)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pVictoriaMyRLayout.createSequentialGroup()
+                    .addGap(442, 442, 442)
+                    .addComponent(cargarRubros, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(780, Short.MAX_VALUE)))
         );
         pVictoriaMyRLayout.setVerticalGroup(
             pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -4141,13 +4168,22 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addContainerGap()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pVictoriaMyRLayout.createSequentialGroup()
+                        .addGap(206, 206, 206)
+                        .addComponent(insertarRubros, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(229, Short.MAX_VALUE))
             .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(pVictoriaMyRLayout.createSequentialGroup()
                     .addGap(97, 97, 97)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pVictoriaMyRLayout.createSequentialGroup()
+                    .addGap(247, 247, 247)
+                    .addComponent(cargarRubros, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(387, Short.MAX_VALUE)))
         );
 
         tpVictoria.addTab("Marcas/Rubros", pVictoriaMyR);
@@ -4174,7 +4210,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     .addGroup(pVictoriaOperacionesLayout.createSequentialGroup()
                         .addComponent(bVictoriaSincronizar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(164, 164, 164)
-                        .addComponent(lVictoriaWorkerEstado, javax.swing.GroupLayout.DEFAULT_SIZE, 834, Short.MAX_VALUE)
+                        .addComponent(lVictoriaWorkerEstado, javax.swing.GroupLayout.DEFAULT_SIZE, 927, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(lVictoriaEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -4188,8 +4224,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     .addComponent(lVictoriaWorkerEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lVictoriaEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 635, Short.MAX_VALUE))
         );
 
         tpVictoria.addTab("Operaciones", pVictoriaOperaciones);
@@ -4197,20 +4232,20 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         pVictoriaDetalle.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         pVictoriaDetalle.setPreferredSize(new java.awt.Dimension(960, 710));
 
-        lProductoCodigo1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCodigo1.setText("Código");
+        lProductoCodigo1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCodigo1.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoDescripcionLarga1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDescripcionLarga1.setText("Más información:");
+        lProductoDescripcionLarga1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDescripcionLarga1.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoMarca1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca1.setText("Marca:");
+        lProductoMarca1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca1.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        bProductoLimpiarV.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoLimpiarV.setText("Limpiar");
+        bProductoLimpiarV.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoLimpiarV.setPreferredSize(new java.awt.Dimension(80, 20));
         bProductoLimpiarV.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4218,8 +4253,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        bProductoBuscarV.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoBuscarV.setText("Buscar");
+        bProductoBuscarV.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoBuscarV.setPreferredSize(new java.awt.Dimension(80, 20));
         bProductoBuscarV.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4271,20 +4306,20 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoStock1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoStock1.setPreferredSize(new java.awt.Dimension(40, 20));
 
-        lProductoExistencia7.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia7.setText("Stock superior a:");
+        lProductoExistencia7.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia7.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoDetallesTecnicos3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDetallesTecnicos3.setText("Cuotas:");
+        lProductoDetallesTecnicos3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDetallesTecnicos3.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tProductoRubroVictoriaCodigo.setEditable(false);
         tProductoRubroVictoriaCodigo.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoRubroVictoriaCodigo.setPreferredSize(new java.awt.Dimension(150, 20));
 
-        lProductoMarca3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca3.setText("Rubro:");
+        lProductoMarca3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca3.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tProductoRubroVictoriaNombre.setEditable(false);
@@ -4341,7 +4376,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                 .addComponent(tProductoRubroVictoriaCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tProductoRubroVictoriaNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(268, Short.MAX_VALUE))
+                .addContainerGap(361, Short.MAX_VALUE))
         );
         pVictoriaDetalleLayout.setVerticalGroup(
             pVictoriaDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -4379,7 +4414,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                 .addComponent(tProductoMarcaVictoriaNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(tProductoMarcaVictoriaCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(lProductoDetallesTecnicos3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(224, 224, 224))
+                .addContainerGap())
         );
 
         tpVictoria.addTab("Detalle", pVictoriaDetalle);
@@ -4388,7 +4423,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         pVictoria.setLayout(pVictoriaLayout);
         pVictoriaLayout.setHorizontalGroup(
             pVictoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tpVictoria, javax.swing.GroupLayout.DEFAULT_SIZE, 1271, Short.MAX_VALUE)
+            .addComponent(tpVictoria, javax.swing.GroupLayout.DEFAULT_SIZE, 1364, Short.MAX_VALUE)
         );
         pVictoriaLayout.setVerticalGroup(
             pVictoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -4407,8 +4442,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         sProductoSeparador8.setPreferredSize(new java.awt.Dimension(900, 10));
 
-        bMaestroLimpiar2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bMaestroLimpiar2.setText("Limpiar");
+        bMaestroLimpiar2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bMaestroLimpiar2.setPreferredSize(new java.awt.Dimension(80, 20));
         bMaestroLimpiar2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4416,8 +4451,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        bMaestroBuscar2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bMaestroBuscar2.setText("Buscar");
+        bMaestroBuscar2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bMaestroBuscar2.setPreferredSize(new java.awt.Dimension(80, 20));
         bMaestroBuscar2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4428,17 +4463,17 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         spMaestroProductos2.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         spMaestroProductos2.setPreferredSize(new java.awt.Dimension(900, 480));
 
-        tbProductosSC.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         tbProductosSC.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             tablaHeaderMaestro
         ));
+        tbProductosSC.setFont(new java.awt.Font("Tahoma", 0, 8)); // NOI18N
         spMaestroProductos2.setViewportView(tbProductosSC);
 
-        lMaestroCantidad8.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad8.setText("Cantidad");
+        lMaestroCantidad8.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lMaestroCantidad8.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tMaestroCantidad2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -4446,8 +4481,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tMaestroCantidad2.setEnabled(false);
         tMaestroCantidad2.setPreferredSize(new java.awt.Dimension(100, 20));
 
-        bBorrarWS.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bBorrarWS.setText("Borrar");
+        bBorrarWS.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bBorrarWS.setPreferredSize(new java.awt.Dimension(80, 20));
         bBorrarWS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4467,7 +4502,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(lMaestroCantidad8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(5, 5, 5)
                         .addComponent(tMaestroCantidad2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 806, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 899, Short.MAX_VALUE)
                         .addComponent(bBorrarWS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(bMaestroLimpiar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -4499,28 +4534,28 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         pWebsiteDetalle.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         pWebsiteDetalle.setPreferredSize(new java.awt.Dimension(960, 710));
 
-        lProductoCodigo2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCodigo2.setText("Código");
+        lProductoCodigo2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCodigo2.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoDescripcionLarga2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDescripcionLarga2.setText("Descripción:");
+        lProductoDescripcionLarga2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDescripcionLarga2.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoMarca2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca2.setText("Marca:");
+        lProductoMarca2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca2.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoExistencia12.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia12.setText("Existencia:");
+        lProductoExistencia12.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia12.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoDetallesTecnicos4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDetallesTecnicos4.setText("Cuotas: ");
+        lProductoDetallesTecnicos4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoDetallesTecnicos4.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        bProductoLimpiarSC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoLimpiarSC.setText("Limpiar");
+        bProductoLimpiarSC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoLimpiarSC.setPreferredSize(new java.awt.Dimension(80, 20));
         bProductoLimpiarSC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4528,8 +4563,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        bProductoBuscarSC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoBuscarSC.setText("Buscar");
+        bProductoBuscarSC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoBuscarSC.setPreferredSize(new java.awt.Dimension(80, 20));
         bProductoBuscarSC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4584,32 +4619,32 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         ));
         spProductoDetallesTecnicos2.setViewportView(tbProductoCuotasSC);
 
-        lProductoExistencia13.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia13.setText("Stock:");
+        lProductoExistencia13.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia13.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoMarca4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca4.setText("Código:");
+        lProductoMarca4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca4.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoMarca5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca5.setText("Rubro:");
+        lProductoMarca5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca5.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tProductoSCRubro.setEditable(false);
         tProductoSCRubro.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoSCRubro.setPreferredSize(new java.awt.Dimension(150, 20));
 
-        lProductoMarca6.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca6.setText("Código:");
+        lProductoMarca6.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca6.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tProductoRubroSCCodigo.setEditable(false);
         tProductoRubroSCCodigo.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tProductoRubroSCCodigo.setPreferredSize(new java.awt.Dimension(150, 20));
 
-        lProductoCodigo3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCodigo3.setText("ID:");
+        lProductoCodigo3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCodigo3.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tProductoIDSC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -4620,20 +4655,20 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        lProductoCodigo4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCodigo4.setText("Visible:");
+        lProductoCodigo4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCodigo4.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tVisibleSC.setPreferredSize(new java.awt.Dimension(20, 20));
 
         tHabilitadoSC.setPreferredSize(new java.awt.Dimension(20, 20));
 
-        lProductoCodigo5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCodigo5.setText("Habilitado");
+        lProductoCodigo5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoCodigo5.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        bProductoActualizar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoActualizar.setText("Actualizar");
+        bProductoActualizar.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bProductoActualizar.setPreferredSize(new java.awt.Dimension(80, 20));
         bProductoActualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4641,12 +4676,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        lProductoMarca7.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca7.setText("Porcentaje Descuento:");
+        lProductoMarca7.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca7.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        lProductoMarca8.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca8.setText("Posee Descuento:");
+        lProductoMarca8.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoMarca8.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tPorcentajeDescuento.setEditable(false);
@@ -4656,8 +4691,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tProductoExistencia3.setEnabled(false);
         tProductoExistencia3.setPreferredSize(new java.awt.Dimension(20, 20));
 
-        lProductoExistencia14.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia14.setText("Precio:");
+        lProductoExistencia14.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         lProductoExistencia14.setPreferredSize(new java.awt.Dimension(80, 20));
 
         tPrecioSC.setEditable(false);
@@ -4681,8 +4716,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                         .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
                                             .addComponent(lProductoMarca7, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(tPorcentajeDescuento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGap(112, 112, 112)
+                                            .addComponent(tPorcentajeDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGap(87, 87, 87)
                                     .addComponent(lProductoExistencia13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(pWebsiteDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addGroup(pWebsiteDetalleLayout.createSequentialGroup()
@@ -4844,15 +4879,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         ));
         spProductoDetallesTecnicos4.setViewportView(tbPrecioSC);
 
-        bActualizarPSC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        bActualizarPSC.setText("Actualizar");
-        bActualizarPSC.setPreferredSize(new java.awt.Dimension(80, 20));
-        bActualizarPSC.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bActualizarPSCActionPerformed(evt);
-            }
-        });
-
         bGuardarPSC.setText("Guardar");
         bGuardarPSC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bGuardarPSC.setPreferredSize(new java.awt.Dimension(80, 20));
@@ -4862,8 +4888,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        bBorrarPSC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bBorrarPSC.setText("Borrar");
+        bBorrarPSC.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         bBorrarPSC.setPreferredSize(new java.awt.Dimension(80, 20));
         bBorrarPSC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4887,31 +4913,28 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGap(26, 26, 26)
                 .addGroup(pPreciosVigentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pPreciosVigentesLayout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(bGuardarPSC, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                        .addComponent(bActualizarPSC, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31)
-                        .addComponent(bBorrarPSC, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33))
+                        .addGroup(pPreciosVigentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel3))
+                        .addGap(44, 44, 44)
+                        .addGroup(pPreciosVigentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(fechaDesdeSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fechaHastaSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pPreciosVigentesLayout.createSequentialGroup()
+                        .addGroup(pPreciosVigentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(bGuardarPSC, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9))
                         .addGroup(pPreciosVigentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pPreciosVigentesLayout.createSequentialGroup()
-                                .addGroup(pPreciosVigentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel3))
-                                .addGap(44, 44, 44)
-                                .addGroup(pPreciosVigentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(fechaDesdeSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fechaHastaSC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pPreciosVigentesLayout.createSequentialGroup()
-                                .addComponent(jLabel9)
                                 .addGap(21, 21, 21)
                                 .addGroup(pPreciosVigentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(codAlternativo, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(precioSC, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(precioSC, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pPreciosVigentesLayout.createSequentialGroup()
+                                .addGap(92, 92, 92)
+                                .addComponent(bBorrarPSC, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(33, 174, Short.MAX_VALUE)
                 .addComponent(spProductoDetallesTecnicos4, javax.swing.GroupLayout.PREFERRED_SIZE, 586, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(265, 265, 265))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pPreciosVigentesLayout.createSequentialGroup()
@@ -4945,10 +4968,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addGap(55, 55, 55)
                         .addGroup(pPreciosVigentesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(bBorrarPSC, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(bActualizarPSC, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(bGuardarPSC, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(spProductoDetallesTecnicos4, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addContainerGap(160, Short.MAX_VALUE))
         );
 
         tpWebsite.addTab("Precios Vigentes", pPreciosVigentes);
@@ -4993,7 +5015,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(tMarcasSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(178, 178, 178)
                         .addComponent(tRubrosSC, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(314, Short.MAX_VALUE))
+                .addContainerGap(407, Short.MAX_VALUE))
         );
         pMyRSCLayout.setVerticalGroup(
             pMyRSCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -5027,7 +5049,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             .addGroup(pWebsiteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pWebsiteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tpWebsite, javax.swing.GroupLayout.PREFERRED_SIZE, 1259, Short.MAX_VALUE)
+                    .addComponent(tpWebsite, javax.swing.GroupLayout.PREFERRED_SIZE, 1352, Short.MAX_VALUE)
                     .addComponent(tProductoEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -5041,8 +5063,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         tpPrincipal.addTab("Website", pWebsite);
 
-        cbOrigen.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         cbOrigen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Impala", "Jellyfish", "Victoria", "Sara Comercial", " " }));
+        cbOrigen.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         cbOrigen.setPreferredSize(new java.awt.Dimension(60, 20));
         cbOrigen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -5057,9 +5079,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 1271, Short.MAX_VALUE)
+                    .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 1257, Short.MAX_VALUE)
                         .addComponent(cbOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         layout.setVerticalGroup(
@@ -5361,10 +5383,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         actualizarProductoSC(productoBusquedaSC);     // TODO add your handling code here:
     }//GEN-LAST:event_bProductoActualizarActionPerformed
 
-    private void bActualizarPSCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bActualizarPSCActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bActualizarPSCActionPerformed
-
     private void bGuardarPSCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGuardarPSCActionPerformed
         Connection c = null;
       try {
@@ -5527,6 +5545,16 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         limpiarProductosVictoria();
     }//GEN-LAST:event_bVictoriaLimpiarActionPerformed
 
+    private void insertarRubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarRubrosActionPerformed
+marcasRecorrido();
+    }//GEN-LAST:event_insertarRubrosActionPerformed
+
+    private void cargarRubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarRubrosActionPerformed
+buscarMarcasSC();
+buscarMarcasVictoria();
+// TODO add your handling code here:
+    }//GEN-LAST:event_cargarRubrosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -5557,7 +5585,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Cargar;
     private javax.swing.JCheckBox autosync;
-    private javax.swing.JButton bActualizarPSC;
     private javax.swing.JButton bBorrarPSC;
     private javax.swing.JButton bBorrarWS;
     private javax.swing.JButton bGuardarPSC;
@@ -5579,10 +5606,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     private javax.swing.JButton bVictoriaBuscar;
     private javax.swing.JButton bVictoriaLimpiar;
     private javax.swing.JButton bVictoriaSincronizar;
+    private javax.swing.JButton cargarRubros;
     private javax.swing.JComboBox<String> cbOrigen;
     private javax.swing.JTextField codAlternativo;
     private com.github.lgooddatepicker.components.DatePicker fechaDesdeSC;
     private com.github.lgooddatepicker.components.DatePicker fechaHastaSC;
+    private javax.swing.JButton insertarRubros;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -6405,17 +6434,27 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             tProductoEstado.setText("Cargando maestro " + value + "%");
         } else if ("CuotasWorkerSC".equals(source)) {
             if (value.equals("STARTED")) {
-                taVictoriaSincronizar.append("\nCargando CUOTAS de SARA COMERCIAL.");
-
-            } else if (value.equals("DONE")) {
+                if(cuotasSCW.error){
+                    taVictoriaSincronizar.append("\nCargando CUOTAS de SARA COMERCIAL.");
+                    taVictoriaSincronizar.append("\nERROR FATAL en la carga de Cuotas: "+cuotasSCW.getErrores().toString());
+                } else {
+                    taVictoriaSincronizar.append("Error desconocido.");
+                }
+             } else if (value.equals("DONE")) {
                 if (cuotasSCW.isDone() && bVictoriaSincronizar.isSelected()) {
                     taVictoriaSincronizar.append("\nCUOTAS de SARA COMERCIAL cargadas.");
-                    taVictoriaSincronizar.append("\nIniciando sincronización....");
+
                     cuotasRecorrido();
-                } else {
-                    System.out.println("NOT DONE");
-                }
-                taVictoriaSincronizar.append("\nSincronización finalizada. ");
+
+                } else if (cuotasSCW.isDone()) {
+
+                    cargarCuotasSC((CuotaSC) cuotasSCW.cuotaSC);
+                    //       cargarCuotasSC(lcuotasSC);
+                }else if(cuotasSCW.error){
+                taVictoriaSincronizar.append(cuotasSCW.getErrores().toString());
+            }else{
+                    taVictoriaSincronizar.append("Error desconocido.");
+                    }
             }else{
                 tVictoriaEstado.setText("Cargando datos " + value + "%");
             }
@@ -6423,17 +6462,20 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }else if ("CuotasVictoriaWorker".equals(source)) {
             if (value.equals("STARTED")) {
                 taVictoriaSincronizar.append("\nCargando CUOTAS de VICTORIA... ");
+
             } else if (value.equals("DONE")) {
                 if (cuotasW.isDone()) {
-                   isDone = true;
+                    isDone = true;
                     autoclick();
-                    taVictoriaSincronizar.append("\nCUOTAS de VICTORIA cargadas.");
-                } else {
-                    System.out.println("NOT DONE");
-                    
-                }
 
-            }else{
+                    taVictoriaSincronizar.append("\nCUOTAS de VICTORIA cargadas.");
+                } else if (cuotasW.error) {
+                    taVictoriaSincronizar.append("\nERROR FATAL: " + cuotasW.getErrores().toString());
+                } else if (cuotasW.consultaV.getError()){
+                    taVictoriaSincronizar.append("\nERROR FATAL: " + cuotasW.consultaV.getErrorMessage());
+                    taVictoriaSincronizar.append("\nError desconocido.");
+                }
+            } else {
                 tVictoriaEstado.setText("Cargando datos " + value + "%");
             }
         }

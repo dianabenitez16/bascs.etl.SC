@@ -35,6 +35,7 @@ public class ProductoSC {
     public Boolean cargado;
 
     private String rubro;
+    private Boolean bandera = false;
     private List<CuotaSC> cuotas;
     private MarcaSC marcaSC;
     private RubroSC rubroSC;
@@ -58,7 +59,6 @@ public class ProductoSC {
 
     public void loadJSONConsulta(JSONObject productoJ) {
         try {
-            //         setCodigo((getId() == null ? productoJ.optInt("id"):getId()));
             setId((getId() == null ? productoJ.optInt("id") : getId()));
             setCodigo((getCodigo() == null ? productoJ.optString("codigo_interno_ws") : getCodigo()));
             setNombre((getNombre() == null ? productoJ.optString("nombre") : getNombre()));
@@ -74,7 +74,9 @@ public class ProductoSC {
             setVisible((getVisible() == null ? productoJ.optInt("visible") : getVisible()));
             setHabilitado((getHabilitado() == null ? productoJ.optInt("habilitado") : getHabilitado()));
             
+            
             cargado = true;
+            
 
         } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);

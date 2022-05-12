@@ -84,8 +84,8 @@ public class MarcaVictoria {
         object = new JSONObject();
         object.put("codigo_interno_ws", getCodigo());
         object.put("nombre", getNombre());
-        object.put("marca_id", getMarca_id());
-        System.out.println("marca_id " + getMarca_id());
+      //  object.put("marca_id", getMarca_id());
+      //  System.out.println("marca_id " + getMarca_id());
         return object;
     }
     

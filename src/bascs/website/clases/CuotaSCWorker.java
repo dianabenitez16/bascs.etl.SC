@@ -30,34 +30,34 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class CuotasWorkerSC extends SwingWorker<List<CuotaSC>, String> implements PropertyChangeListener {
+public class CuotaSCWorker extends SwingWorker<List<CuotaSC>, String> implements PropertyChangeListener {
 
     public ConsultaHttpSC consulta;
     private Properties propiedades;
     private Integer cantidad;
     private Integer id;
     private ArrayList<String> codigos;
+    public Boolean error;
     public String[] codigo;
     private ProductoSC[] productosSC;
     public Exception errores;
-    public Boolean error;
     public List<CuotaSC> cuotasSC;
     private ProductoSC productoSC;
     public CuotaSC cuotaSC;
     private JSONObject jsonCodigo;
     public JSONObject jsonResponse;
     
-    public CuotasWorkerSC(ArrayList codigo, Properties propSC) {
+    public CuotaSCWorker(ArrayList codigo, Properties propSC) {
         this.codigos = codigo;
         this.propiedades = propSC;
     }
 
-    public CuotasWorkerSC(String[] producto, Properties propSC) {
+    public CuotaSCWorker(String[] producto, Properties propSC) {
         this.codigo = producto;
         this.propiedades = propSC;
     }
 
-    public CuotasWorkerSC() {
+    public CuotaSCWorker() {
     }
 
     @Override
@@ -113,7 +113,7 @@ public class CuotasWorkerSC extends SwingWorker<List<CuotaSC>, String> implement
                         page++;
                         for (int i = 0; i < cantidad; i++) {
                             JSONObject cuotasJ = respuesta.getJSONObject(i);
-                      //      System.out.println("ENTRO HASTA AQUÍ ");
+                       //     System.out.println("ENTRO HASTA AQUÍ ");
                             //System.out.println(cuotasJ.toString());
                             cuotaSC = new CuotaSC();
                             cuotaSC.loadJSONConsulta(cuotasJ);
@@ -132,10 +132,7 @@ public class CuotasWorkerSC extends SwingWorker<List<CuotaSC>, String> implement
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             
         } catch (ProtocolException ex) {
-            error = true;
-            //System.out.println("_Error desconocido al consultar: "+producto.getCodigo());
-            System.out.println("ERROR " + ex);
-            errores = ex;
+           
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             error = true;
@@ -201,20 +198,20 @@ public class CuotasWorkerSC extends SwingWorker<List<CuotaSC>, String> implement
         this.codigos = codigos;
     }
 
-    public Exception getErrores() {
-        return errores;
-    }
-
-    public void setErrores(Exception errores) {
-        this.errores = errores;
-    }
-
     public Boolean getError() {
         return error;
     }
 
     public void setError(Boolean error) {
         this.error = error;
+    }
+
+    public Exception getErrores() {
+        return errores;
+    }
+
+    public void setErrores(Exception errores) {
+        this.errores = errores;
     }
 
     public ProductoSC obtenerRubro(String codigo) {

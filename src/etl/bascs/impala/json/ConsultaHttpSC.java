@@ -50,21 +50,19 @@ public class ConsultaHttpSC {
         this.metodo = metodo;
         this.marcas = recurso;
          
-        
         conectar();
-
     }
     
        
     private void conectar() {
         try {
             url = new URL(protocolo+"://"+servidor+marcas);
-           
-            con = url.openConnection();
+            System.out.println("URL " + url.toString());
             
+            con = url.openConnection();
             con.setRequestProperty("Access-Control-Request-Method", metodo);
             //System.out.println("METODO " + metodo);
-            con.setRequestProperty("Authorization", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+            con.setRequestProperty("Authorization", "Bearer 3|GJSYrWbgAtXlJ7COevCZgC9ecCFhCNAtmCujZ8RE");
             con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:27.0) Gecko/20100101 Firefox/27.0.2 Waterfox/27.0");
             //con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             con.setRequestProperty("Content-Type", "application/json");
@@ -78,9 +76,10 @@ public class ConsultaHttpSC {
             response = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
              response.append(inputLine);
+             
             }
             in.close();
-            
+            System.out.println("RESPONSE " + response.toString());
             jason = new JSONArray(response.toString());
            
             error = false;

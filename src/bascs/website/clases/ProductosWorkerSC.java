@@ -40,7 +40,7 @@ public class ProductosWorkerSC extends SwingWorker<ProductoSC[], String> impleme
 
         try {
             setProgress(0);
-            consulta = new ConsultaHttpSC("http",
+            consulta = new ConsultaHttpSC("https",
                     propiedades.getProperty("servidor"),
                     propiedades.getProperty("metodoGET"),
                     propiedades.getProperty("productos")

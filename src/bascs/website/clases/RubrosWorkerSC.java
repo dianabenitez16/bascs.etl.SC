@@ -42,13 +42,16 @@ public class RubrosWorkerSC extends SwingWorker<RubroSC[], String> implements Pr
     protected RubroSC[] doInBackground(){
         try{
              setProgress(0);
-             consulta = new ConsultaHttpSC("http",
+             consulta = new ConsultaHttpSC("https",
              propiedades.getProperty("servidor"),
              propiedades.getProperty("metodoGET"),
              propiedades.getProperty("rubros")
              );
+             System.out.println("SERVIDOR " + propiedades.getProperty("servidor"));
+             System.out.println("MET " + propiedades.getProperty("metodoGET"));
+             System.out.println("RUBROS " + propiedades.getProperty("rubros"));
           JSONArray respuesta = consulta.getJason();
-                cantidad = consulta.getJason().length();
+               cantidad = consulta.getJason().length();
                rubrosSC = new RubroSC[respuesta.length()];
                          for (int i = 0; i < respuesta.length(); i++) {
                             JSONObject object = respuesta.getJSONObject(i);
@@ -61,7 +64,7 @@ public class RubrosWorkerSC extends SwingWorker<RubroSC[], String> implements Pr
                            
                          }
         } catch (Exception ex) {
-            Logger.getLogger(RubrosVictoriaWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RubrosWorkerSC.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("_ERROR" + ex);
         }
         return rubrosSC;
@@ -97,7 +100,6 @@ public class RubrosWorkerSC extends SwingWorker<RubroSC[], String> implements Pr
     public RubroSC obtenerRubro(String codigo){
         for (RubroSC rubrosSC1 : rubrosSC) {
             if(rubrosSC1.getCodigo().equals(codigo)){
-        //        System.out.println("RUBROS " + codigo); 
                 return rubrosSC1;
             }
         }

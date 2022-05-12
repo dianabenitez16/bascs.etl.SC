@@ -33,7 +33,7 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
     public ProductoVictoria producto;
     public ProductoCuotasVictoria cuotaV;
     public ProductoCuotasVictoria[] cuotasV;
-    public Boolean error;
+    public Boolean error = false;
     public Boolean cargado;
     
     public CuotasVictoriaWorker(ProductoVictoria producto, Properties propVictoria){
@@ -83,8 +83,10 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
                              }
                     }else{
                         publish("No se encontraron productos en el maestro.");
+                     
                     }
                 }else{
+                  
                     publish("No se encontraron productos en el maestro.");
                 }
           
@@ -121,15 +123,7 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
         this.propiedades = propVictoria;
     }
 
-    public Boolean getError() {
-        return error;
-    }
-
-    public void setError(Boolean error) {
-        this.error = error;
-    }
-
-    public Integer getId() {
+     public Integer getId() {
         return id;
     }
 
@@ -143,6 +137,14 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
 
     public void setErrores(Exception errores) {
         this.errores = errores;
+    }
+
+    public Boolean getError() {
+        return error;
+    }
+
+    public void setError(Boolean error) {
+        this.error = error;
     }
 
    

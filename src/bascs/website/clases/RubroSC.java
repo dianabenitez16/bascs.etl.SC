@@ -123,7 +123,7 @@ public class RubroSC {
         object.put("codigo_interno_ws", getCodigo());
         object.put("nombre", getNombre());
         object.put("parent_codigo", getParent_id());
-    //    System.out.println("parent_id del jason " + getParent_id());
+  //      System.out.println("parent_id del jason " + getParent_id());
         return object;
     }
     

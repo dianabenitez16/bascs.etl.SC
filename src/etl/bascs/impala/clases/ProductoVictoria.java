@@ -42,7 +42,7 @@ public class ProductoVictoria {
 
     private MarcaVictoria marcaVictoria;
     private MarcaSC marcaSC;
-
+    private Boolean bandera = false;
     public ProductoVictoria() {
     }
 
@@ -61,6 +61,8 @@ public class ProductoVictoria {
 
             cuotas = new ArrayList<>();
             if (productoJ.has("cuotas")) {
+                bandera = true;
+                System.out.println("BANDERAita " + bandera);
                 JSONArray cuotaJ = productoJ.optJSONArray("cuotas");
                 
                 for (int i = 0; i < cuotaJ.length(); i++) {
@@ -246,9 +248,9 @@ public class ProductoVictoria {
         object.put("codigo_interno_ws", getCodigo());
         object.put("nombre", getNombre());
         //    object.put("descripcion", getDescripcion());
-//        object.put("marca_id", getMarcaSC().getId());
+        object.put("marca_id", getMarcaSC().getId());
 //        System.out.println("MARCASC " + getMarcaSC().getId() + "RUBROSC " + getRubroSC().getId());
-//        object.put("rubro_id", getRubroSC().getId());
+        object.put("rubro_id", getRubroSC().getId());
         object.put("precio", getPrecio_contado());
 //        object.put("stock", "10");
 

@@ -124,14 +124,14 @@ public class Propiedades {
                 propiedades.setProperty("stock", "10");
                 break;
             case "SaraComercial":
-                propiedades.setProperty("servidor", "www.saracomercial.com");
+                propiedades.setProperty("servidor", "portal.saracomercial.com");
                 propiedades.setProperty("metodoGET", "GET");
                 propiedades.setProperty("metodoPOST", "POST");
-                propiedades.setProperty("rubros", "/panel/api/loader/rubros");
-                propiedades.setProperty("marcas", "/panel/api/loader/marcas");
-                propiedades.setProperty("productos", "/panel/api/loader/productos");
-                propiedades.setProperty("detalle", "/panel/api/loader/productos/");
-                propiedades.setProperty("clave", "Bearer 4|fRCGP9hboE5eiZPOrCu0bnpEug2IlGfIv05L7uYK");
+                propiedades.setProperty("rubros", "/api/loader/rubros");
+                propiedades.setProperty("marcas", "/api/loader/marcas");
+                propiedades.setProperty("productos", "/api/loader/productos");
+                propiedades.setProperty("detalle", "/api/loader/productos/");
+                propiedades.setProperty("clave", "Bearer 3|GJSYrWbgAtXlJ7COevCZgC9ecCFhCNAtmCujZ8RE");
                 propiedades.setProperty("pages", "1,2,3");
                 break;
             case "prestashop":

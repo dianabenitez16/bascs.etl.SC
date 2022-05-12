@@ -43,14 +43,14 @@ public class MarcasWorkerSC extends SwingWorker<MarcaSC[], String> implements Pr
     protected MarcaSC[] doInBackground(){
   try{
              setProgress(0);
-             consulta = new ConsultaHttpSC("http",
+             consulta = new ConsultaHttpSC("https",
              propiedades.getProperty("servidor"),
              propiedades.getProperty("metodoGET"),
              propiedades.getProperty("marcas")
              );
         
                 JSONArray respuesta = consulta.getJason();
-                cantidad = consulta.getJason().length();
+               cantidad = consulta.getJason().length();
                marcasSC = new MarcaSC[respuesta.length()];
                          for (int i = 0; i < respuesta.length(); i++) {
                             JSONObject object = respuesta.getJSONObject(i);
@@ -64,14 +64,14 @@ public class MarcasWorkerSC extends SwingWorker<MarcaSC[], String> implements Pr
                          
                 } catch (Exception ex) {
             Logger.getLogger(MarcasWorkerSC.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("_ERROR" + ex);
+            System.out.println("_ERROR " + ex);
         }
         return marcasSC;
     
     }
  @Override
     protected void done() {
-        System.out.println("Marcas obtenido. Se encontraron "+marcasSC.length+" marcas de Victoria.");
+        System.out.println("Marcas obtenido. Se encontraron "+marcasSC.length+" marcas de la WS.");
     }
     
     @Override

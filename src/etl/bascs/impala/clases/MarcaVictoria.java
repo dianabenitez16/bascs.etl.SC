@@ -6,6 +6,7 @@
 package etl.bascs.impala.clases;
 
 import etl.bascs.impala.main;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,7 +48,7 @@ public class MarcaVictoria {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = decodeUFT(nombre);
     }
 
     public Integer getCantidad() {
@@ -79,6 +80,20 @@ public class MarcaVictoria {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }     
    }
+   public String decodeUFT(String rawString){
+        if(rawString == null || rawString.isEmpty()) {
+            return "";
+        }
+        
+        String stringLegible = rawString;
+        try {
+            stringLegible = new String(rawString.getBytes("UTF-8"));
+                       
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(MarcaVictoria.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stringLegible;
+    }
     public JSONObject getJSON(){
         JSONObject object;
         object = new JSONObject();

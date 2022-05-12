@@ -970,9 +970,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 if (marcaNueva) {
                     marcasWSPOST(marVictoria);
                     //     System.out.println("Se insertara a marcas : "+marVictoria.getNombre());
-                    buscarMarcasVictoria();
+                   
                 }
-
+                   
             }
 
             //RECORRIDO WEBSERVICE ESTO DEBE SER PARA ELIMINAR MARCAS
@@ -996,6 +996,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         } catch (Exception e) {
             e.printStackTrace();
         }
+         buscarMarcasVictoria();
     }
 
     public void productosRecorrido() {
@@ -1332,12 +1333,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         }
 
     public void marcasWSPOST(MarcaVictoria marcasVT) {
-        System.out.println("A INSERTAR " + marcasVT.getJSON().toString());
-        /*
-        if (!DEBUG) {
+     //   System.out.println("A INSERTAR " + marcasVT.getJSON().toString());
+       
             try {
 
-                String url = "http://www.saracomercial.com/panel/api/loader/productos/marcas";
+                String url = "https://portal.saracomercial.com/api/loader/marcas";
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -1345,18 +1345,19 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Content-type", "application/json");
                 con.setRequestProperty("Accept", "application/json");
-                //           con.setRequestProperty("Authorization", propSC.getProperty("clave"));
-
+                con.setRequestProperty("Authorization", propSC.getProperty("clave"));
+                
                 String urlParameters = marcasVT.getJSON().toString();
-
+                
                 // Send post request
                 con.setDoOutput(true);
-                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                wr.writeBytes(urlParameters);
-                wr.flush();
-                wr.close();
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
+                bw.write(urlParameters);
+                bw.flush();
+                bw.close();
 
                 int responseCode = con.getResponseCode();
+                
                 System.out.println("\nSending 'POST' request to URL : " + url);
                 System.out.println("Post parameters : " + urlParameters);
                 System.out.println("Response Code : " + responseCode);
@@ -1364,7 +1365,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 System.out.println("Accept: " + con.getRequestProperty("Accept"));
                 System.out.println("Authorization: " + propSC.getProperty("clave"));
                 System.out.println("Method: " + con.getRequestMethod());
-
+                while(responseCode == 200){ //TRABAJAR EN EL WHILE PARA PODER SUBIR MAS DE 60 Y DESCANSAR 10S
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(con.getInputStream()));
                 String inputLine;
@@ -1374,9 +1375,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     response.append(inputLine);
                 }
                 in.close();
-
-                //print result
-                System.out.println(response.toString());
+                }  
+                    try {
+                        Thread.sleep(15000);
+                        System.out.println("Let me rest a little bit... ");
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+                    }
             } catch (MalformedURLException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ProtocolException ex) {
@@ -1384,9 +1389,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        }
-    */
         }
 
     public void rubrosWSPUT(Integer id, RubroVictoria rubroVT) {

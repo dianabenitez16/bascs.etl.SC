@@ -79,7 +79,7 @@ public class ConsultaHttpSC {
              
             }
             in.close();
-            System.out.println("RESPONSE " + response.toString());
+        //    System.out.println("RESPONSE " + response.toString());
             jason = new JSONArray(response.toString());
            
             error = false;

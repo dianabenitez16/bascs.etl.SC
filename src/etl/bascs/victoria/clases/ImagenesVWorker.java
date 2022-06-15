@@ -25,7 +25,7 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> implements PropertyChangeListener {
+public class ImagenesVWorker extends SwingWorker<ImagenesVictoria[], String> implements PropertyChangeListener {
     private Integer hilosMaximo;
     private Integer hilosCorriendo;
     private Integer hilosIniciados;
@@ -43,20 +43,23 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     public Properties propSC = new Properties();
     
     public ProductoVictoria[] productosFinalizados;
-    public ProductoVictoria productosAComparar;
+    public ImagenesVictoria[] imagenesProductos;
+    public ImagenVictoriaWorker imagenesProductosW;
+    public ImagenesVictoria productosAComparar;
     
     public ProductosVictoriaWorker productosWorker;
-    public ProductoVictoriaWorker[] productosDetalleWorker;
+    public ImagenVictoriaWorker[] imagenesVictoriaWorker;
     public ProductoVictoriaWorker productoDetalleWorker;
+    public ImagenesVictoria imagenVictoria[];
     //public CuotasVictoriaWorker[] productosCuotasWorker; // se deshabilita porque el worker de DETALLE ya trae las cuotas
     
     public JLabel estado;
     public JLabel progress;
     
    
-    public VictoriaWorker(Properties prop){
+    public ImagenesVWorker(Properties prop){
         productosFinalizados = new ProductoVictoria[0];
-        productosDetalleWorker = new ProductoVictoriaWorker[0];
+        imagenesVictoriaWorker = new ImagenVictoriaWorker[0];
         proSCW1 = new ProductosWorkerSC[0];
         
         //productosCuotasWorker = new CuotasVictoriaWorker[0];
@@ -81,7 +84,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     }
 
     @Override
-    protected ProductoVictoria[] doInBackground() {
+    protected ImagenesVictoria[] doInBackground() {
         try {
             publish("LOADING");
             productosWorker.execute();
@@ -90,7 +93,8 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
             //hilosACorrer = 20;   
             
             productosFinalizados = new ProductoVictoria[hilosACorrer];
-            productosDetalleWorker = new ProductoVictoriaWorker[hilosACorrer];
+            imagenesVictoriaWorker = new ImagenVictoriaWorker[hilosACorrer];
+            imagenesProductos = new ImagenesVictoria[hilosACorrer];
             //productosCuotasWorker = new CuotasVictoriaWorker[hilosACorrer];
             
             setProgress(0);
@@ -99,10 +103,10 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                 if(hilosCorriendo < hilosMaximo){
                     publish("RUNNING");
                     
-                    productosDetalleWorker[hilosIniciados] = new ProductoVictoriaWorker(productosWorker.get()[hilosIniciados],propiedades);
-                    productosDetalleWorker[hilosIniciados].addPropertyChangeListener(this);
-                    productosDetalleWorker[hilosIniciados].setId(hilosIniciados);
-                    productosDetalleWorker[hilosIniciados].execute();
+                    imagenesVictoriaWorker[hilosIniciados] = new ImagenVictoriaWorker(productosWorker.get()[hilosIniciados],propiedades);
+                    imagenesVictoriaWorker[hilosIniciados].addPropertyChangeListener(this);
+                    imagenesVictoriaWorker[hilosIniciados].setId(hilosIniciados);
+                    imagenesVictoriaWorker[hilosIniciados].execute();
                     
                      /*
                     productosCuotasWorker[hilosIniciados] = new CuotasVictoriaWorker(productosWorker.get()[hilosIniciados],propiedades);
@@ -131,17 +135,16 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
             
         } catch (InterruptedException ex) {
             System.out.println("PROCESO INTERRUMPIDO: No se pudo ejecutar el Worker de PRODUCTOS.");
-            Logger.getLogger(VictoriaWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ImagenesVWorker.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ExecutionException ex) {
             System.out.println("ERROR: No se pudo ejecutar el Worker de PRODUCTOS.");
-            Logger.getLogger(VictoriaWorker.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ImagenesVWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
         jsArray = new JSONArray();
         test = new JSONObject();
-          return productosFinalizados;
          
-       
-    
+        return imagenesProductos;
+         
     }
    
     @Override
@@ -152,9 +155,9 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     public void cancelar(Boolean mayInterruptIfRunning){
         super.cancel(mayInterruptIfRunning);
         productosWorker.cancel(mayInterruptIfRunning);
-        for (ProductoVictoriaWorker detalleW : productosDetalleWorker) {
-            if(detalleW != null){
-                detalleW.cancel(mayInterruptIfRunning);
+        for (ImagenVictoriaWorker imagenW : imagenesVictoriaWorker) {
+            if(imagenW != null){
+                imagenW.cancel(mayInterruptIfRunning);
             }
             
         }
@@ -170,29 +173,29 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
         String value = evt.getNewValue().toString();
         evt.setPropagationId(clase);
         
-        if("ProductoVictoriaWorker".equals(source)){
-            ProductoVictoriaWorker detalle = (ProductoVictoriaWorker) evt.getSource();
+        if("ImagenVictoriaWorker".equals(source)){
+            ImagenVictoriaWorker detalle = (ImagenVictoriaWorker) evt.getSource();
 
             System.out.println(clase+">> "+source+" > "+value+" | ID: "+detalle.id);
 
             if(value.equals("DONE")){
                 try {
-                    if(productosDetalleWorker[detalle.id].isCancelled()){
+                    if(imagenesVictoriaWorker[detalle.id].isCancelled()){
                         
                     }else{
-                        productosFinalizados[hilosFinalizados] = productosDetalleWorker[detalle.id].get();
+                        imagenesProductos[hilosFinalizados] = imagenesVictoriaWorker[detalle.id].get();
                         
                         
-                        if(productosDetalleWorker[detalle.id].getError()){
+                        if(imagenesVictoriaWorker[detalle.id].getError()){
                             hilosConError++;
                             codigosConError += detalle.producto.getCodigo()+", ";
-                            System.out.println("Producto ERROR: "+productosDetalleWorker[detalle.id].get());
+                            System.out.println("Producto ERROR: "+imagenesVictoriaWorker[detalle.id].get());
                         }else{
                            
                            Boolean nuevo = true;
                            String[] soco = {"1000","10087"};
-                           productoDetalleWorker = productosDetalleWorker[detalle.id];
-                           productosAComparar = productoDetalleWorker.get() ; 
+                           imagenesProductosW = imagenesVictoriaWorker[detalle.id];
+                           productosAComparar = imagenesProductosW.get() ; 
                                 for (String socos : soco ) {
                                     
                                  if (productosAComparar.getCodigo().equals(socos)) {
@@ -204,7 +207,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                                   ProductosWSPOST(productosAComparar);
                               } 
                             
-                            System.out.println("Producto OK: "+productosDetalleWorker[detalle.id].get().getCodigo());
+                            System.out.println("Producto OK: "+imagenesVictoriaWorker[detalle.id].get().getCodigo());
                         }
                         
                         hilosFinalizados ++;
@@ -217,40 +220,10 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                     
                 } catch (InterruptedException | ExecutionException ex) {
                     System.out.println("EX:"+ex.getLocalizedMessage());
-                    Logger.getLogger(VictoriaWorker.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ImagenesVWorker.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             }
-        }else if("CuotasVictoriaWorker".equals(source)){
-            /*
-            CuotasVictoriaWorker cuotas = (ProductoVictoriaWorker) evt.getSource();
-            //System.out.println(clase+">> "+source+" > "+value+" | ID: "+detalle.id);
-            if(value.equals("DONE")){
-                try {
-                    if(productosDetalleWorker[detalle.id].isCancelled()){
-                        
-                    }else{
-                        productosFinalizados[hilosFinalizados] = productosDetalleWorker[detalle.id].get();
-                        
-                        
-                        
-                        //System.out.println("Producto: "+detalleV[detalle.id].get().getCodigo());
-                        if(productosDetalleWorker[detalle.id].getError()){
-                            hilosConError++;
-                            codigosConError += detalle.producto.getCodigo()+", ";
-                        }
-                        hilosFinalizados ++;
-                        hilosCorriendo --;
-                        setProgress(((hilosFinalizados+1)*100)/hilosACorrer);
-                        Integer progress = ((hilosFinalizados+1)*100)/hilosACorrer;
-                        this.progress.setText("Cargando " + (progress).toString()+"%");
-                    }
-                } catch (InterruptedException | ExecutionException ex) {
-                    System.out.println("EX:"+ex.getLocalizedMessage());
-                    Logger.getLogger(VictoriaWorker.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        */
         }
     }
 
@@ -309,7 +282,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     public void setCodigosConError(String codigosConError) {
         this.codigosConError = codigosConError;
     }
-    public void ProductosWSPOST(ProductoVictoria productoVT) {
+    public void ProductosWSPOST(ImagenesVictoria productoVT) {
        System.out.println("PRODUCTOS A INSERTAR " + productoVT.getJSON().toString());
        }
 

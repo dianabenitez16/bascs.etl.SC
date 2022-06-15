@@ -99,7 +99,7 @@ public class RubrosWorkerSC extends SwingWorker<RubroSC[], String> implements Pr
     
     public RubroSC obtenerRubro(String codigo){
         for (RubroSC rubrosSC1 : rubrosSC) {
-            if(rubrosSC1.getCodigo().equals(codigo)){
+            if(rubrosSC1.getCodigo().equals(codigo)){ //OJO, SOLO MANDA E0, PROBABLEMENTE UN ERROR DE COMPARACION
                 return rubrosSC1;
             }
         }

@@ -247,12 +247,11 @@ public class ProductoVictoria {
 
         object.put("codigo_interno_ws", getCodigo());
         object.put("nombre", getNombre());
-        //    object.put("descripcion", getDescripcion());
+        object.put("descripcion_corta", getDescripcion());
         object.put("marca_id", getMarcaSC().getId());
-//        System.out.println("MARCASC " + getMarcaSC().getId() + "RUBROSC " + getRubroSC().getId());
         object.put("rubro_id", getRubroSC().getId());
         object.put("precio", getPrecio_contado());
-//        object.put("stock", "10");
+        object.put("stock", "10");
 
         return object;
     }

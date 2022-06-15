@@ -45,7 +45,7 @@ public class ProductosWorkerSC extends SwingWorker<ProductoSC[], String> impleme
                     propiedades.getProperty("metodoGET"),
                     propiedades.getProperty("productos")
             );
-
+            
             JSONArray respuesta = consulta.getJason();
             cantidad = consulta.getJason().length();
             productosSC = new ProductoSC[respuesta.length()];

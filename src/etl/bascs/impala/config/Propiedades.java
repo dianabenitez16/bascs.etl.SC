@@ -131,7 +131,7 @@ public class Propiedades {
                 propiedades.setProperty("marcas", "/api/loader/marcas");
                 propiedades.setProperty("productos", "/api/loader/productos");
                 propiedades.setProperty("detalle", "/api/loader/productos/");
-                propiedades.setProperty("clave", "Bearer 3|GJSYrWbgAtXlJ7COevCZgC9ecCFhCNAtmCujZ8RE");
+                propiedades.setProperty("clave", "Bearer 5|qWJSOFV23sfTloGxkvkT0KUym0gCnEfkGQuipq9k");
                 propiedades.setProperty("pages", "1,2,3");
                 break;
             case "prestashop":

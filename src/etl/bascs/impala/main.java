@@ -1892,14 +1892,14 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
     public Properties getOrigen() {
 
-        switch (tpPrincipal.getSelectedIndex()) {
+        switch (cbOrigen2.getSelectedIndex()) {
             case 0:
                 return propImpala;
             case 1:
                 return propJellyfish;
-            case 4:
+            case 2:
                 return propVictoria;
-            case 5:
+            case 3:
                 return propSC;
             default:
                 return propImpala;
@@ -2035,6 +2035,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tbMaestroProductos = new javax.swing.JTable();
         lMaestroCantidad = new javax.swing.JLabel();
         tMaestroCantidad = new javax.swing.JTextField();
+        cbOrigen2 = new javax.swing.JComboBox<>();
+        tProductoEstado1 = new javax.swing.JTextField();
         pConsultaPrestashop = new javax.swing.JPanel();
         bPrestashopProcesar = new javax.swing.JButton();
         bPrestashopLimpiar = new javax.swing.JButton();
@@ -2047,6 +2049,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lMaestroCantidad7 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         tPrestashopWorkerEstado = new javax.swing.JLabel();
+        cbOrigen = new javax.swing.JComboBox<>();
         pConsultaDetalle = new javax.swing.JPanel();
         lProductoCodigo = new javax.swing.JLabel();
         lProductoDescripcionLarga = new javax.swing.JLabel();
@@ -2208,15 +2211,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         Cargar = new javax.swing.JButton();
         tVictoriaEstado = new javax.swing.JTextField();
         autosync = new javax.swing.JCheckBox();
-        pVictoriaMyR = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tRubrosVictoria = new javax.swing.JTable();
-        jLabel4 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tMarcasVictoria = new javax.swing.JTable();
-        jLabel5 = new javax.swing.JLabel();
-        insertarRubros = new javax.swing.JButton();
-        cargarRubros = new javax.swing.JButton();
         pVictoriaOperaciones = new javax.swing.JPanel();
         bVictoriaSincronizar = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -2245,6 +2239,15 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lProductoMarca3 = new javax.swing.JLabel();
         tProductoRubroVictoriaNombre = new javax.swing.JTextField();
         tProductoMarcaVictoriaCodigo = new javax.swing.JTextField();
+        pVictoriaMyR = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tRubrosVictoria = new javax.swing.JTable();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tMarcasVictoria = new javax.swing.JTable();
+        jLabel5 = new javax.swing.JLabel();
+        insertarRubros = new javax.swing.JButton();
+        cargarRubros = new javax.swing.JButton();
         pWebsite = new javax.swing.JPanel();
         tpWebsite = new javax.swing.JTabbedPane();
         pWebsiteMaestro = new javax.swing.JPanel();
@@ -2317,7 +2320,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tMarcaSC = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
         tProductoEstado = new javax.swing.JTextField();
-        cbOrigen = new javax.swing.JComboBox<>();
+        cbOrigen1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ETL - PrestaShop - v210617");
@@ -2405,7 +2408,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     .addComponent(tPrestashopExportColumnas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(599, Short.MAX_VALUE))
+                .addContainerGap(617, Short.MAX_VALUE))
         );
 
         tpPrincipal.addTab("Prestashop", pPrestashop);
@@ -2459,6 +2462,24 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tMaestroCantidad.setEnabled(false);
         tMaestroCantidad.setPreferredSize(new java.awt.Dimension(100, 20));
 
+        cbOrigen2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        cbOrigen2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Impala", "Jellyfish", "Victoria", "Sara Comercial", " " }));
+        cbOrigen2.setPreferredSize(new java.awt.Dimension(60, 20));
+        cbOrigen2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbOrigen2ActionPerformed(evt);
+            }
+        });
+
+        tProductoEstado1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        tProductoEstado1.setEnabled(false);
+        tProductoEstado1.setPreferredSize(new java.awt.Dimension(600, 20));
+        tProductoEstado1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tProductoEstado1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pConsultaMaestroLayout = new javax.swing.GroupLayout(pConsultaMaestro);
         pConsultaMaestro.setLayout(pConsultaMaestroLayout);
         pConsultaMaestroLayout.setHorizontalGroup(
@@ -2466,7 +2487,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaMaestroLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addGroup(pConsultaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(sProductoSeparador2, javax.swing.GroupLayout.DEFAULT_SIZE, 1354, Short.MAX_VALUE)
+                    .addComponent(sProductoSeparador2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pConsultaMaestroLayout.createSequentialGroup()
                         .addComponent(lMaestroCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(5, 5, 5)
@@ -2477,6 +2498,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(bMaestroBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(spMaestroProductos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(5, 5, 5))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaMaestroLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tProductoEstado1, javax.swing.GroupLayout.PREFERRED_SIZE, 1069, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addComponent(cbOrigen2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         pConsultaMaestroLayout.setVerticalGroup(
             pConsultaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2490,9 +2517,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(bMaestroBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(5, 5, 5)
                 .addComponent(sProductoSeparador2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(spMaestroProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spMaestroProductos, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(pConsultaMaestroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbOrigen2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tProductoEstado1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41))
         );
 
         tpConsulta.addTab("Maestro", pConsultaMaestro);
@@ -2557,6 +2588,15 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tPrestashopWorkerEstado.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tPrestashopWorkerEstado.setPreferredSize(new java.awt.Dimension(150, 20));
 
+        cbOrigen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Impala", "Jellyfish", "Victoria", "Sara Comercial", " " }));
+        cbOrigen.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        cbOrigen.setPreferredSize(new java.awt.Dimension(60, 20));
+        cbOrigen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbOrigenActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pConsultaPrestashopLayout = new javax.swing.GroupLayout(pConsultaPrestashop);
         pConsultaPrestashop.setLayout(pConsultaPrestashopLayout);
         pConsultaPrestashopLayout.setHorizontalGroup(
@@ -2581,6 +2621,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                                 .addComponent(bPrestashopProcesar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(sProductoSeparador3, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(5, 5, 5))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaPrestashopLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cbOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(pConsultaPrestashopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(pConsultaPrestashopLayout.createSequentialGroup()
                     .addGap(628, 628, 628)
@@ -2607,16 +2651,18 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGap(5, 5, 5)
                 .addComponent(sProductoSeparador3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spPrestashop, javax.swing.GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE)
+                .addComponent(spPrestashop, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbOrigen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(pConsultaPrestashopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(pConsultaPrestashopLayout.createSequentialGroup()
                     .addGap(331, 331, 331)
                     .addComponent(lMaestroCantidad2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(316, Short.MAX_VALUE)))
+                    .addContainerGap(334, Short.MAX_VALUE)))
             .addGroup(pConsultaPrestashopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pConsultaPrestashopLayout.createSequentialGroup()
-                    .addContainerGap(326, Short.MAX_VALUE)
+                    .addContainerGap(344, Short.MAX_VALUE)
                     .addComponent(lMaestroCantidad7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(321, 321, 321)))
         );
@@ -3003,7 +3049,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             pConsultaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pConsultaLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(tpConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, 699, Short.MAX_VALUE)
+                .addComponent(tpConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, 717, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -3102,7 +3148,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGroup(pCGeneralesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lBASCSInstancia3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tGeneralesEnviosHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(529, Short.MAX_VALUE))
+                .addContainerGap(566, Short.MAX_VALUE))
         );
 
         tpConfiguracion.addTab("Generales", pCGenerales);
@@ -3296,7 +3342,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(388, Short.MAX_VALUE))
+                .addContainerGap(425, Short.MAX_VALUE))
         );
 
         tpConfiguracion.addTab("Victoria", pCBASCS);
@@ -3986,7 +4032,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             pConfiguracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pConfiguracionLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(tpConfiguracion, javax.swing.GroupLayout.DEFAULT_SIZE, 680, Short.MAX_VALUE)
+                .addComponent(tpConfiguracion, javax.swing.GroupLayout.DEFAULT_SIZE, 717, Short.MAX_VALUE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -4013,7 +4059,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             pDebugLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pDebugLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addComponent(spDebug, javax.swing.GroupLayout.DEFAULT_SIZE, 695, Short.MAX_VALUE)
+                .addComponent(spDebug, javax.swing.GroupLayout.DEFAULT_SIZE, 713, Short.MAX_VALUE)
                 .addGap(5, 5, 5))
         );
 
@@ -4131,107 +4177,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 .addGap(11, 11, 11)
                 .addComponent(sProductoSeparador5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spMaestroProductos1, javax.swing.GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE))
+                .addComponent(spMaestroProductos1, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE))
         );
 
         tpVictoria.addTab("Productos", pVictoriaMaestro);
-
-        tRubrosVictoria.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Codigo", "Nombre"
-            }
-        ));
-        jScrollPane1.setViewportView(tRubrosVictoria);
-
-        jLabel4.setText("MARCAS");
-
-        tMarcasVictoria.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Codigo", "Nombre"
-            }
-        ));
-        jScrollPane2.setViewportView(tMarcasVictoria);
-
-        jLabel5.setText("RUBROS");
-
-        insertarRubros.setText("INSERTAR RUBROS");
-        insertarRubros.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                insertarRubrosActionPerformed(evt);
-            }
-        });
-
-        cargarRubros.setText("CARGAR");
-        cargarRubros.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cargarRubrosActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pVictoriaMyRLayout = new javax.swing.GroupLayout(pVictoriaMyR);
-        pVictoriaMyR.setLayout(pVictoriaMyRLayout);
-        pVictoriaMyRLayout.setHorizontalGroup(
-            pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pVictoriaMyRLayout.createSequentialGroup()
-                .addGap(155, 155, 155)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(353, 353, 353)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pVictoriaMyRLayout.createSequentialGroup()
-                .addContainerGap(443, Short.MAX_VALUE)
-                .addComponent(insertarRubros)
-                .addGap(69, 69, 69)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(336, 336, 336))
-            .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pVictoriaMyRLayout.createSequentialGroup()
-                    .addGap(30, 30, 30)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-            .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pVictoriaMyRLayout.createSequentialGroup()
-                    .addGap(442, 442, 442)
-                    .addComponent(cargarRubros, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(780, Short.MAX_VALUE)))
-        );
-        pVictoriaMyRLayout.setVerticalGroup(
-            pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pVictoriaMyRLayout.createSequentialGroup()
-                .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pVictoriaMyRLayout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pVictoriaMyRLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pVictoriaMyRLayout.createSequentialGroup()
-                        .addGap(206, 206, 206)
-                        .addComponent(insertarRubros, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(229, Short.MAX_VALUE))
-            .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pVictoriaMyRLayout.createSequentialGroup()
-                    .addGap(97, 97, 97)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-            .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pVictoriaMyRLayout.createSequentialGroup()
-                    .addGap(247, 247, 247)
-                    .addComponent(cargarRubros, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(387, Short.MAX_VALUE)))
-        );
-
-        tpVictoria.addTab("Marcas/Rubros", pVictoriaMyR);
 
         bVictoriaSincronizar.setText("Sincronizar");
         bVictoriaSincronizar.addActionListener(new java.awt.event.ActionListener() {
@@ -4280,7 +4229,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     .addComponent(lVictoriaWorkerEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lVictoriaEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 632, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(216, Short.MAX_VALUE))
         );
 
         tpVictoria.addTab("Operaciones", pVictoriaOperaciones);
@@ -4330,8 +4280,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
-        taProductoDescripcionV.setEditable(false);
         taProductoDescripcionV.setColumns(20);
+        taProductoDescripcionV.setEditable(false);
         taProductoDescripcionV.setFont(new java.awt.Font("Monospaced", 0, 10)); // NOI18N
         taProductoDescripcionV.setLineWrap(true);
         taProductoDescripcionV.setRows(5);
@@ -4344,7 +4294,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         spProductoDetallesTecnicos1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         spProductoDetallesTecnicos1.setPreferredSize(new java.awt.Dimension(400, 150));
 
-        tbProductoCuotas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         tbProductoCuotas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -4356,6 +4305,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 "Cuotas", "Precio Contado", "Precio Cuota", "Precio Crédito"
             }
         ));
+        tbProductoCuotas.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         spProductoDetallesTecnicos1.setViewportView(tbProductoCuotas);
 
         tProductoStock1.setEditable(false);
@@ -4475,6 +4425,103 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         tpVictoria.addTab("Detalle", pVictoriaDetalle);
 
+        tRubrosVictoria.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Codigo", "Nombre"
+            }
+        ));
+        jScrollPane1.setViewportView(tRubrosVictoria);
+
+        jLabel4.setText("MARCAS");
+
+        tMarcasVictoria.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Codigo", "Nombre"
+            }
+        ));
+        jScrollPane2.setViewportView(tMarcasVictoria);
+
+        jLabel5.setText("RUBROS");
+
+        insertarRubros.setText("INSERTAR RUBROS");
+        insertarRubros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertarRubrosActionPerformed(evt);
+            }
+        });
+
+        cargarRubros.setText("CARGAR");
+        cargarRubros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cargarRubrosActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pVictoriaMyRLayout = new javax.swing.GroupLayout(pVictoriaMyR);
+        pVictoriaMyR.setLayout(pVictoriaMyRLayout);
+        pVictoriaMyRLayout.setHorizontalGroup(
+            pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pVictoriaMyRLayout.createSequentialGroup()
+                .addGap(155, 155, 155)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(353, 353, 353)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pVictoriaMyRLayout.createSequentialGroup()
+                .addContainerGap(443, Short.MAX_VALUE)
+                .addComponent(insertarRubros)
+                .addGap(69, 69, 69)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(336, 336, 336))
+            .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pVictoriaMyRLayout.createSequentialGroup()
+                    .addGap(30, 30, 30)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pVictoriaMyRLayout.createSequentialGroup()
+                    .addGap(442, 442, 442)
+                    .addComponent(cargarRubros, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(780, Short.MAX_VALUE)))
+        );
+        pVictoriaMyRLayout.setVerticalGroup(
+            pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pVictoriaMyRLayout.createSequentialGroup()
+                .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pVictoriaMyRLayout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pVictoriaMyRLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pVictoriaMyRLayout.createSequentialGroup()
+                        .addGap(206, 206, 206)
+                        .addComponent(insertarRubros, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(247, Short.MAX_VALUE))
+            .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pVictoriaMyRLayout.createSequentialGroup()
+                    .addGap(97, 97, 97)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(pVictoriaMyRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pVictoriaMyRLayout.createSequentialGroup()
+                    .addGap(247, 247, 247)
+                    .addComponent(cargarRubros, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(405, Short.MAX_VALUE)))
+        );
+
+        tpVictoria.addTab("Marcas/Rubros", pVictoriaMyR);
+
         javax.swing.GroupLayout pVictoriaLayout = new javax.swing.GroupLayout(pVictoria);
         pVictoria.setLayout(pVictoriaLayout);
         pVictoriaLayout.setHorizontalGroup(
@@ -4483,7 +4530,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         );
         pVictoriaLayout.setVerticalGroup(
             pVictoriaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tpVictoria, javax.swing.GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE)
+            .addComponent(tpVictoria, javax.swing.GroupLayout.DEFAULT_SIZE, 723, Short.MAX_VALUE)
         );
 
         tpPrincipal.addTab("Victoria", pVictoria);
@@ -5125,14 +5172,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         tpPrincipal.addTab("Website", pWebsite);
 
-        cbOrigen.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Impala", "Jellyfish", "Victoria", "Sara Comercial", " " }));
-        cbOrigen.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
-        cbOrigen.setPreferredSize(new java.awt.Dimension(60, 20));
-        cbOrigen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbOrigenActionPerformed(evt);
-            }
-        });
+        cbOrigen1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        cbOrigen1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Impala", "Jellyfish", "Victoria", "Sara Comercial", " " }));
+        cbOrigen1.setPreferredSize(new java.awt.Dimension(60, 20));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -5140,19 +5182,23 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 1257, Short.MAX_VALUE)
-                        .addComponent(cbOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addComponent(tpPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 1364, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(cbOrigen1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(tpPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 732, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cbOrigen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(192, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 452, Short.MAX_VALUE)
+                    .addComponent(cbOrigen1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 452, Short.MAX_VALUE)))
         );
 
         pack();
@@ -5608,27 +5654,35 @@ productosRecorrido();
         limpiarProductosVictoria();
     }//GEN-LAST:event_bVictoriaLimpiarActionPerformed
 
-    private void insertarRubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarRubrosActionPerformed
-productosRecorrido();
-    }//GEN-LAST:event_insertarRubrosActionPerformed
-
-    private void cargarRubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarRubrosActionPerformed
-buscarRubrosSC();
-buscarRubrosVictoria();
-
-buscarMarcasSC();
-buscarMarcasVictoria();
-
-buscarProductosVictoria();
-buscarProductosSC();
-// TODO add your handling code here:
-    }//GEN-LAST:event_cargarRubrosActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 sincronizarImagen(); 
 // TODO add your handling code here:
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void cargarRubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarRubrosActionPerformed
+        buscarRubrosSC();
+        buscarRubrosVictoria();
+
+        buscarMarcasSC();
+        buscarMarcasVictoria();
+
+        buscarProductosVictoria();
+        buscarProductosSC();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cargarRubrosActionPerformed
+
+    private void insertarRubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarRubrosActionPerformed
+        productosRecorrido();
+    }//GEN-LAST:event_insertarRubrosActionPerformed
+
+    private void cbOrigen2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbOrigen2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbOrigen2ActionPerformed
+
+    private void tProductoEstado1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tProductoEstado1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tProductoEstado1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -5683,6 +5737,8 @@ sincronizarImagen();
     private javax.swing.JButton bVictoriaSincronizar;
     private javax.swing.JButton cargarRubros;
     private javax.swing.JComboBox<String> cbOrigen;
+    private javax.swing.JComboBox<String> cbOrigen1;
+    private javax.swing.JComboBox<String> cbOrigen2;
     private javax.swing.JTextField codAlternativo;
     private com.github.lgooddatepicker.components.DatePicker fechaDesdeSC;
     private com.github.lgooddatepicker.components.DatePicker fechaHastaSC;
@@ -5898,6 +5954,7 @@ sincronizarImagen();
     private javax.swing.JTextField tProductoEAN;
     private javax.swing.JTextField tProductoEnvioImporte;
     private javax.swing.JTextField tProductoEstado;
+    private javax.swing.JTextField tProductoEstado1;
     private javax.swing.JCheckBox tProductoExistencia;
     private javax.swing.JCheckBox tProductoExistencia3;
     private javax.swing.JTextField tProductoFactorCosto;

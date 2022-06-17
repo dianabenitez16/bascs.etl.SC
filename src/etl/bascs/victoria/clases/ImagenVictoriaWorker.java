@@ -59,6 +59,7 @@ public class ImagenVictoriaWorker extends SwingWorker<ImagenesVictoria, String> 
             System.out.println("URL " + consulta.getUrl().toString());
            
             if (consulta.getJson().has("items")) {
+                System.out.println("si tiene la imagen");
                     imagenJ = consulta.getJson().getJSONObject("items");
                     imagen.loadJSONDetalle(imagenJ);
                     setProgress(100);

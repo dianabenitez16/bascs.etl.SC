@@ -70,7 +70,7 @@ public class CuotasWorkerSC extends SwingWorker<List<CuotaSC>, String> implement
 
             setProgress(0);
 
-            String url = "http://www.saracomercial.com/panel/api/loader/cuotas/filtrar?page=";
+            String url = "https://portal.saracomercial.com/api/loader/cuotas/filtrar?page=";
             
             while (haymaspaginas) {
                 URL obj = new URL(url + page);
@@ -82,8 +82,9 @@ public class CuotasWorkerSC extends SwingWorker<List<CuotaSC>, String> implement
                 con.setRequestProperty("Authorization", propiedades.getProperty("clave"));
 
                 jsonCodigo = new JSONObject();
-                jsonCodigo.put("productos_codigo_interno_ws", codigos);  //BODY DEL POST, DENTRO VA LA LISTA DE CODIGOS, SEPARADOS POR COMA
-
+                jsonCodigo.put("productos_codigo_ws", codigos);  //BODY DEL POST, DENTRO VA LA LISTA DE CODIGOS, SEPARADOS POR COMA
+                
+             //   System.out.println("CODIGOS CUOTAS " + codigos);
                 con.setDoOutput(true);
                 DataOutputStream wr = new DataOutputStream(con.getOutputStream());
                 wr.writeBytes(jsonCodigo.toString());
@@ -114,7 +115,7 @@ public class CuotasWorkerSC extends SwingWorker<List<CuotaSC>, String> implement
                         for (int i = 0; i < cantidad; i++) {
                             JSONObject cuotasJ = respuesta.getJSONObject(i);
                       //      System.out.println("ENTRO HASTA AQUÍ ");
-                            //System.out.println(cuotasJ.toString());
+                            System.out.println(cuotasJ.toString());
                             cuotaSC = new CuotaSC();
                             cuotaSC.loadJSONConsulta(cuotasJ);
                             cuotasSC.add(cuotaSC);

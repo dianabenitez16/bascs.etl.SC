@@ -1050,7 +1050,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                             productosWSPUT(podSC.getId(), prodVictoria);
                           //  System.out.println("PRECIO A CAMBIAR DE:  " + prodVictoria.getCodigo());
                         }
-                        
+                        /*
                         for (Precios precio : precios) {
                             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                             Date date = new Date();
@@ -1062,7 +1062,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                               }
                             }
                         }
-                        
+              */          
                         if (!prodVictoria.getNombre().trim().equals(podSC.getNombre().trim())) {
                             productosWSPUT(podSC.getId(), prodVictoria);
                         } else {
@@ -1162,14 +1162,16 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             
             //PRODUCTOS
             for (ProductoVictoria productoVictoria : productosXVT) {
+               
                 for (ProductoSC productoSC : productosXSC) {
                     if (productoSC.getCodigo().equals(productoVictoria.getCodigo())) {
+                     //   System.out.println("EQUALS");
                         //System.out.println("");
                         //System.out.print("VICTORIA: "+productoVictoria.getCodigo() + " [ID:"+(productoVictoria.getProducto_id() == null?"null":productoVictoria.getProducto_id().toString())+"]\t" );
                         //System.out.print("SC: "+productoSC.getCodigo() + " [ID:"+productoSC.getId().toString()+"]");
                         for (ProductoCuotasVictoria cuotaVT : productoVictoria.getCuotas()) {
                             nuevo = true;
-                            
+                          //  System.out.println("ES NUEVO? " + nuevo);
                             for (CuotaSC cuotaSC : productoSC.getCuotas()) {
                                 if (cuotaVT.getNumero() == (cuotaSC.getNumero())) {
                                     nuevo = false;
@@ -1367,22 +1369,21 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         }
 
     public void marcasWSPOST(MarcaVictoria marcasVT) {
-        System.out.println("A INSERTAR " + marcasVT.getJSON().toString());
-       /*
+     //   System.out.println("A INSERTAR " + marcasVT.getJSON().toString());
+       
             try {
 
                 String url = "https://portal.saracomercial.com/api/loader/marcas";
                 URL obj = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-                //add reuqest header
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Content-type", "application/json");
                 con.setRequestProperty("Accept", "application/json");
                 con.setRequestProperty("Authorization", propSC.getProperty("clave"));
-                
+
                 String urlParameters = marcasVT.getJSON().toString();
-                
+
                 // Send post request
                 con.setDoOutput(true);
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
@@ -1391,7 +1392,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 bw.close();
 
                 int responseCode = con.getResponseCode();
-                
                 System.out.println("\nSending 'POST' request to URL : " + url);
                 System.out.println("Post parameters : " + urlParameters);
                 System.out.println("Response Code : " + responseCode);
@@ -1399,7 +1399,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 System.out.println("Accept: " + con.getRequestProperty("Accept"));
                 System.out.println("Authorization: " + propSC.getProperty("clave"));
                 System.out.println("Method: " + con.getRequestMethod());
-                while(responseCode == 200){ //TRABAJAR EN EL WHILE PARA PODER SUBIR MAS DE 60 Y DESCANSAR 10S
+
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(con.getInputStream()));
                 String inputLine;
@@ -1409,13 +1409,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                     response.append(inputLine);
                 }
                 in.close();
-                }  
-                    try {
-                        Thread.sleep(15000);
-                        System.out.println("Let me rest a little bit... ");
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+
+                //print result
+                System.out.println(response.toString());
             } catch (MalformedURLException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ProtocolException ex) {
@@ -1423,12 +1419,12 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-     */
+     
         }
 
     public void rubrosWSPUT(Integer id, RubroVictoria rubroVT) {
-       System.out.println("A ACTUALIZAR " + rubroVT.getJSON().toString());  
-   /*
+     //  System.out.println("A ACTUALIZAR " + rubroVT.getJSON().toString());  
+   
       try {
                 String url = "https://portal.saracomercial.com/api/loader/rubros/" + id + "";
                 URL obj = new URL(url);
@@ -1480,7 +1476,6 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-      */
       }
 
     public void productosWSPUT(Integer id, ProductoVictoria podVictoria) {
@@ -1545,8 +1540,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
   */
     }
     public void ProductosWSPOST(ProductoVictoria productoVT) {
-       System.out.println("PRODUCTOS A INSERTAR " + productoVT.getJSON().toString());
-    /*
+    //   System.out.println("PRODUCTOS A INSERTAR " + productoVT.getJSON().toString());
+    
     try {
 
                 String url = "https://portal.saracomercial.com/api/loader/productos";
@@ -1595,7 +1590,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             } catch (IOException ex) {
                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
             }
-    */
+    
     }
 
     public void rubrosWSPOST(RubroVictoria rubroVT) {
@@ -5556,7 +5551,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     }//GEN-LAST:event_bProductoLimpiarVActionPerformed
 
     private void bVictoriaSincronizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bVictoriaSincronizarActionPerformed
-        if (bVictoriaSincronizar.getText().equals("Sincronizar")) {
+/*        if (bVictoriaSincronizar.getText().equals("Sincronizar")) {
 
             buscarRubrosVictoria();
             buscarMarcasVictoria();
@@ -5565,7 +5560,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             buscarMarcasSC();
             buscarProductosSC();
 
-            while (!rubrosW.isDone() || !rubrosSC.isDone() || !marcasSC.isDone() || !marcasW.isDone() || !cuotasW.isDone()) {
+            while (!rubrosW.isDone() || !rubrosSC.isDone() || !marcasSC.isDone() || !marcasW.isDone()) {
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException ex) {
@@ -5573,8 +5568,9 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 }
             }
         } else {
-            cuotasSCW.cancel(false);
-        }
+           // cuotasSCW.cancel(false);
+        }*/
+sincronizarVictoria();
     }//GEN-LAST:event_bVictoriaSincronizarActionPerformed
 
     private void CargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CargarActionPerformed
@@ -5661,19 +5657,24 @@ sincronizarImagen();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void cargarRubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarRubrosActionPerformed
-        buscarRubrosSC();
+     /*   buscarRubrosSC();
         buscarRubrosVictoria();
 
         buscarMarcasSC();
         buscarMarcasVictoria();
-
+*/
+     
+        buscarCuotasVictoria();
         buscarProductosVictoria();
         buscarProductosSC();
         // TODO add your handling code here:
     }//GEN-LAST:event_cargarRubrosActionPerformed
 
     private void insertarRubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarRubrosActionPerformed
-        productosRecorrido();
+       // productosRecorrido();
+      //  rubrosRecorrido();
+      //  marcasRecorrido();
+      cuotasRecorrido();
     }//GEN-LAST:event_insertarRubrosActionPerformed
 
     private void cbOrigen2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbOrigen2ActionPerformed
@@ -6545,7 +6546,7 @@ sincronizarImagen();
 
                                 i++;
                             }
-                  //          buscarCuotasSC(codigosSC);
+                            buscarCuotasSC(codigosSC);
                             //SE DEBE MANDAR UNA LISTA, YA QUE EL GET FUNCIONA COMO CODIGO: ["100","102"]
                             //AL MANDAR UN STRING[] EL RESULTADO SERA POR CADA CODIGO, UN ARRAY, CODIGO:["100"], CODIGO["102"]. SOBRECARGA EL SERVIDOR
                             //AL BUSCAR TODOS LOS PRODUCTOS DE LA WEBSITE, SE VA A IR CARGANDO LOS CODIGOS PARA LAS CUOTAS
@@ -6604,18 +6605,16 @@ sincronizarImagen();
             tProductoEstado.setText("Cargando maestro " + value + "%");
         } else if ("CuotasWorkerSC".equals(source)) {
             if (value.equals("STARTED")) {
-                if(cuotasSCW.error){
+               
                     taVictoriaSincronizar.append("\nCargando CUOTAS de SARA COMERCIAL.");
-                    taVictoriaSincronizar.append("\nERROR FATAL en la carga de Cuotas: "+cuotasSCW.getErrores().toString());
-                } else {
-                    taVictoriaSincronizar.append("Error desconocido.");
-                }
+                   
              } else if (value.equals("DONE")) {
-                if (cuotasSCW.isDone() && bVictoriaSincronizar.isSelected()) {
+                if (cuotasSCW.isDone()) {
                     taVictoriaSincronizar.append("\nCUOTAS de SARA COMERCIAL cargadas.");
+                       cuotasRecorrido();
+                    
 
-                    cuotasRecorrido();
-
+                  
                 } else if (cuotasSCW.isDone()) {
 
                     cargarCuotasSC((CuotaSC) cuotasSCW.cuotaSC);

@@ -205,6 +205,7 @@ public class ImagenesVWorker extends SwingWorker<ImagenesVictoria[], String> imp
                           } 
                               if(nuevo){
                                   ProductosWSPOST(productosAComparar);
+                                  System.out.println("productosAComparar" + productosAComparar.getCodigo());
                               } 
                             
                             System.out.println("Producto OK: "+imagenesVictoriaWorker[detalle.id].get().getCodigo());

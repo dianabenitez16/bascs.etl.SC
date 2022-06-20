@@ -38,6 +38,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     public JSONArray jsArray;
     private ProductosWorkerSC proSCW;
     private ProductosWorkerSC[] proSCW1;
+    private ProductoSC[] productosACompararSC;
     
     public Properties propiedades;
     public Properties propSC = new Properties();
@@ -85,7 +86,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
         try {
             publish("LOADING");
             productosWorker.execute();
-           
+            proSCW.execute();
             hilosACorrer = productosWorker.get().length;   
             //hilosACorrer = 20;   
             
@@ -176,6 +177,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
             System.out.println(clase+">> "+source+" > "+value+" | ID: "+detalle.id);
 
             if(value.equals("DONE")){
+                System.out.println("CODIGO "  + productosAComparar.getCodigo());
                 try {
                     if(productosDetalleWorker[detalle.id].isCancelled()){
                         
@@ -190,13 +192,15 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                         }else{
                            
                            Boolean nuevo = true;
-                           String[] soco = {"1000","10087"};
+                          
                            productoDetalleWorker = productosDetalleWorker[detalle.id];
                            productosAComparar = productoDetalleWorker.get() ; 
-                                for (String socos : soco ) {
+                           productosACompararSC = proSCW.get();
+                                for (ProductoSC productoSC : productosACompararSC ) {
                                     
-                                 if (productosAComparar.getCodigo().equals(socos)) {
+                                 if (productosAComparar.getCodigo().equals(productoSC.getCodigo())) {
                                     nuevo = false;
+                                     System.out.println("YA ESTA EN LA PAGINA WEB");
                                    
                                 }
                           } 

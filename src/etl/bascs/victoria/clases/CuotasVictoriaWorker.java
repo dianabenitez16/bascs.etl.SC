@@ -65,7 +65,7 @@ public class CuotasVictoriaWorker extends SwingWorker<ProductoCuotasVictoria[], 
                 if(consultaV.getJson().has("total")){
                     cantidad = consultaV.getJson().getInt("total");
                 }else{
-                    publish("No se encontraron productos en el maestro.");
+                    publish("No se encontraron cuotas en el maestro.");
                 }
                if(cantidad > 0){
                     if(consultaV.getJson().has("cuotas")){

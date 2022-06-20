@@ -62,7 +62,7 @@ public class ConsultaHttpSC {
             con = url.openConnection();
             con.setRequestProperty("Access-Control-Request-Method", metodo);
             //System.out.println("METODO " + metodo);
-            con.setRequestProperty("Authorization", "Bearer 3|GJSYrWbgAtXlJ7COevCZgC9ecCFhCNAtmCujZ8RE");
+            con.setRequestProperty("Authorization", "Bearer 5|qWJSOFV23sfTloGxkvkT0KUym0gCnEfkGQuipq9k");
             con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:27.0) Gecko/20100101 Firefox/27.0.2 Waterfox/27.0");
             //con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             con.setRequestProperty("Content-Type", "application/json");

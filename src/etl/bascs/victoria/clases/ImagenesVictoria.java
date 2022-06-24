@@ -5,9 +5,6 @@
  */
 package etl.bascs.victoria.clases;
 
-import etl.bascs.impala.clases.MarcaVictoria;
-import etl.bascs.impala.clases.ProductoCuotasVictoria;
-import etl.bascs.impala.clases.RubroVictoria;
 import etl.bascs.impala.main;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,17 +23,22 @@ public class ImagenesVictoria {
 
     public ImagenesVictoria() {
     }
-    
+     public ImagenesVictoria(JSONObject imagenJ) {
+      loadJSONDetalle(imagenJ);
+    }
     
     
        public void loadJSONDetalle(JSONObject imagenJ) {
         try {
-            setCodigo((getCodigo() == null ? imagenJ.optString("codigo_interno_ws") : getCodigo()));
             setImagen((getImagen() == null ? imagenJ.optString("imagen") : getImagen()));
+            setCodigo((getCodigo() == null ? imagenJ.optString("codigo_interno_ws") : getCodigo()));
+            cargado = true;
+            
           } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);
         }
-        cargado = true;
+        
+          
       }
 
     public String getCodigo() {

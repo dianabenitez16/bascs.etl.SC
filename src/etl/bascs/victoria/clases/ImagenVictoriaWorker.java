@@ -24,7 +24,9 @@ public class ImagenVictoriaWorker extends SwingWorker<ImagenesVictoria, String> 
 
     public ConsultaHttpVictoria consulta;
     public ImagenesVictoria[] imagenesV;
+    public ImagenesVictoria imagenes;
     public ImagenesVictoria imagen;
+    public ImagenesVWorker imganes;
     public Properties propiedades;
     public String codigo;
     public Integer id;
@@ -37,18 +39,18 @@ public class ImagenVictoriaWorker extends SwingWorker<ImagenesVictoria, String> 
         this.propiedades = propVictoria;
         this.error = false;
     }
-
+  
       public ImagenVictoriaWorker(Properties prop) {
         imagenesV = new ImagenesVictoria[0];
         propiedades = prop;
-
+          
     }
 
    
     @Override
     protected ImagenesVictoria doInBackground() {
 
-        try {
+       try {
             setProgress(0);
             consulta = new ConsultaHttpVictoria("http",
                     propiedades.getProperty("servidor"),
@@ -56,20 +58,26 @@ public class ImagenVictoriaWorker extends SwingWorker<ImagenesVictoria, String> 
                     propiedades.getProperty("metodoGET"),
                     propiedades.getProperty("imagen") + producto.getCodigo());
 
-            System.out.println("URL " + consulta.getUrl().toString());
            
-            if (consulta.getJson().has("items")) {
-                System.out.println("si tiene la imagen");
+            if (!consulta.getError()) {
+                if (consulta.getJson().has("items")) {
+                    System.out.println("POSIBLES ERRORES " + consulta.getErrorMessage());
+                    System.out.println("POSIBLES ERRORES " + consulta.getError());
+                    
                     imagenJ = consulta.getJson().getJSONObject("items");
-        //            System.out.println("IMAGEN " + imagenJ.toString());
+                    System.out.println("JSON " + imagenJ);
                     imagen.loadJSONDetalle(imagenJ);
                     setProgress(100);
                 } else {
                     error = true;
-                    publish("No se obtuvo información al consultar: " + producto.getCodigo());
+                    publish("No se obtubo información al consultar: " + producto.getCodigo());
                     //System.out.println("_No se obtubo información al consultar: "+producto.getCodigo());
                 }
-          
+            } else {
+                error = true;
+                publish(consulta.getErrorMessage() + ": " + producto.getCodigo());
+                //System.out.println("_"+consulta.getErrorMessage()+": "+producto.getCodigo());
+            }
             //Thread.sleep(5000); //JUST FOR TESTING
         } catch (Exception e) {
             error = true;
@@ -128,6 +136,4 @@ public class ImagenVictoriaWorker extends SwingWorker<ImagenesVictoria, String> 
 
         System.out.println(clase + ">> " + source + " > " + value);
     }
-
-
 }

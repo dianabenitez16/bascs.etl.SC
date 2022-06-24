@@ -115,7 +115,7 @@ public class CuotasWorkerSC extends SwingWorker<List<CuotaSC>, String> implement
                         for (int i = 0; i < cantidad; i++) {
                             JSONObject cuotasJ = respuesta.getJSONObject(i);
                       //      System.out.println("ENTRO HASTA AQUÍ ");
-                            System.out.println(cuotasJ.toString());
+                       //     System.out.println(cuotasJ.toString());
                             cuotaSC = new CuotaSC();
                             cuotaSC.loadJSONConsulta(cuotasJ);
                             cuotasSC.add(cuotaSC);

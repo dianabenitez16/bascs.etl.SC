@@ -26,13 +26,14 @@ import java.util.Properties;
 public class Propiedades {
     
     private main main;
+
     private final String[] tablaHeaderPrestashopDefault = {"ID","Nombre","Precio impuestos incluidos","ID regla de impuestos","En oferta (0/1)","Valor del descuento","Porcentaje de descuento","Descuento desde (aaaa-mm-dd)","Descuento hasta (aaaa-mm-dd)","Referencia nº","N° de referencia proveedor","Marca","EAN13","UPC","Ecotasa","Anchura","Altura","Profundidad","Peso","Cantidad","Cantidad mínima","Nivel de stock bajo","Envíame un mensaje de correo electrónico cuando la cantidad esté por debajo de este nivel","Visible en","Coste adicional del envío","Unidad para el precio unitario","Resumen","Descripción","Etiquetas (x,y,z...)","Meta-título","Meta keywords","Meta descripción","URL reescrita","Disponible para pedidos (0 = No, 1 = Si)","Fecha de disponibilidad del producto","Fecha de creación del producto","URL's de las imágenes (x,y,z...)","Textos alternativos de imagen (x,y,z...)","Elimine las imágenes existentes (0 = No, 1 = Si)","Característica (Nombre:Valor:Posición:Personalizado)","Estado","Destacado"};
 
     public Propiedades(main main) {
         this.main = main;
         iniciarPropiedades();
     }
-    
+  
     private void iniciarPropiedades(){
         main.propGenerales = new Properties();
         main.propGenerales.setProperty("config","generales");
@@ -42,7 +43,10 @@ public class Propiedades {
         main.appendMensaje("");
         
         main.propVictoria = new Properties();
+        
+      
         main.propVictoria.setProperty("config","victoria");
+      
         cargarPropiedades(main.propVictoria,"config/victoria.conf");
         main.appendMensaje("Se cargo archivo de configuraciones Victoria");
         main.appendMensaje(main.propVictoria.toString());
@@ -111,15 +115,15 @@ public class Propiedades {
                 propiedades.setProperty("clave", "ws");
                 break;
             case "victoria":
-                propiedades.setProperty("servidor", "192.168.192.60");
-                propiedades.setProperty("puerto", "8080");
+                propiedades.setProperty("servidorVT", "192.168.192.60");
+                propiedades.setProperty("puertoVT", "8080");
                 propiedades.setProperty("metodoGET", "GET");
-                propiedades.setProperty("rubros", "/WS/webapi/victoria/rubros");
-                propiedades.setProperty("marcas", "/WS/webapi/victoria/marcas");
-                propiedades.setProperty("productos", "/WS/webapi/victoria/productos");
-                propiedades.setProperty("marcas", "/WS/webapi/victoria/marcas");
-                propiedades.setProperty("detalle", "/WS/webapi/victoria/productos/");
-                propiedades.setProperty("cuotas", "/WS/webapi/victoria/cuotas/");
+                propiedades.setProperty("rubrosVT", "/WS/webapi/victoria/rubros");
+                propiedades.setProperty("marcasVT", "/WS/webapi/victoria/marcas");
+                propiedades.setProperty("productosVT", "/WS/webapi/victoria/productos");
+                propiedades.setProperty("marcasVT", "/WS/webapi/victoria/marcas");
+                propiedades.setProperty("detalleVT", "/WS/webapi/victoria/productos/");
+                propiedades.setProperty("cuotasVT", "/WS/webapi/victoria/cuotas/");
                 propiedades.setProperty("hilos", "200");
                 propiedades.setProperty("stock", "10");
                 break;

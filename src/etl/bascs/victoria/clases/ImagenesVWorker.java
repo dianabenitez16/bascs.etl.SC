@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package etl.bascs.victoria.clases;
 
 
@@ -45,7 +40,7 @@ public class ImagenesVWorker extends SwingWorker<ImagenesVictoria[], String> imp
     public ProductoVictoria[] productosFinalizados;
     public ImagenesVictoria[] imagenesProductos;
     public ImagenVictoriaWorker imagenesProductosW;
-    public ImagenesVictoria productosAComparar;
+    public ImagenesVictoria imagenesAComparar;
     
     public ProductosVictoriaWorker productosWorker;
     public ImagenVictoriaWorker[] imagenesVictoriaWorker;
@@ -72,7 +67,7 @@ public class ImagenesVWorker extends SwingWorker<ImagenesVictoria[], String> imp
       productosWorker.addPropertyChangeListener(this);
      
         
-        System.out.println("PROP " + propSC.getProperty("servidor"));
+     //   System.out.println("PROP " + propSC.getProperty("servidor"));
       hilosMaximo = 2; //Integer.valueOf(propiedades.getProperty("hilos"));
       hilosCorriendo = 0;
       hilosIniciados = 0;
@@ -89,10 +84,11 @@ public class ImagenesVWorker extends SwingWorker<ImagenesVictoria[], String> imp
             publish("LOADING");
             productosWorker.execute();
            
+           
             hilosACorrer = productosWorker.get().length;   
             //hilosACorrer = 20;   
             
-            productosFinalizados = new ProductoVictoria[hilosACorrer];
+           // productosFinalizados = new ProductoVictoria[hilosACorrer];
             imagenesVictoriaWorker = new ImagenVictoriaWorker[hilosACorrer];
             imagenesProductos = new ImagenesVictoria[hilosACorrer];
             //productosCuotasWorker = new CuotasVictoriaWorker[hilosACorrer];
@@ -175,7 +171,6 @@ public class ImagenesVWorker extends SwingWorker<ImagenesVictoria[], String> imp
         
         if("ImagenVictoriaWorker".equals(source)){
             ImagenVictoriaWorker detalle = (ImagenVictoriaWorker) evt.getSource();
-
             System.out.println(clase+">> "+source+" > "+value+" | ID: "+detalle.id);
 
             if(value.equals("DONE")){
@@ -184,7 +179,7 @@ public class ImagenesVWorker extends SwingWorker<ImagenesVictoria[], String> imp
                         
                     }else{
                         imagenesProductos[hilosFinalizados] = imagenesVictoriaWorker[detalle.id].get();
-                        
+                        System.out.println("");
                         
                         if(imagenesVictoriaWorker[detalle.id].getError()){
                             hilosConError++;
@@ -195,17 +190,17 @@ public class ImagenesVWorker extends SwingWorker<ImagenesVictoria[], String> imp
                            Boolean nuevo = true;
                            String[] soco = {"1000","10087"};
                            imagenesProductosW = imagenesVictoriaWorker[detalle.id];
-                           productosAComparar = imagenesProductosW.get() ; 
-                                for (String socos : soco ) {
+                           imagenesAComparar  = imagenesProductosW.get();
+                                   for (String socos : soco ) {
                                     
-                                 if (productosAComparar.getCodigo().equals(socos)) {
+                                 if (imagenesAComparar.getCodigo().equals(socos)) {
                                     nuevo = false;
                                    
                                 }
                           } 
                               if(nuevo){
-                                  ProductosWSPOST(productosAComparar);
-                                  System.out.println("productosAComparar" + productosAComparar.getCodigo());
+                                  ProductosWSPOST(imagenesAComparar);
+                                  System.out.println("productosAComparar" + imagenesAComparar.getCodigo());
                               } 
                             
                             System.out.println("Producto OK: "+imagenesVictoriaWorker[detalle.id].get().getCodigo());

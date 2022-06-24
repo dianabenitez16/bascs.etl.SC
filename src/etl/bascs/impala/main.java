@@ -197,6 +197,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public ProductoVictoria productoBusquedaV;
     public ProductoSC productoBusquedaSC;
     public ProductoVictoria[] productosFinalizados;
+    public ImagenesVictoria[] imagenesFinalizadas;
 
     public List<ProductoSC> productosXSC;
     public List<ProductoVictoria> productosXVT;
@@ -357,9 +358,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
     public void sincronizarVictoria() {
         Properties propiedades = new Properties();
         propiedades.putAll(propVictoria);
-        propiedades.putAll(propGenerales);
+        propiedades.putAll(propSC);
+       // propiedades.putAll(propGenerales);
         victoriaW = new VictoriaWorker(propiedades);
-
+        
+      
+      
+        
         victoriaW.estado = lVictoriaWorkerEstado;
         victoriaW.progress = lVictoriaEstado;
         victoriaW.addPropertyChangeListener(this);
@@ -378,6 +383,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         imagenesW.iniciar();
         imagenesW.execute();
     }
+    
 
     public void buscarProducto(Producto producto) {
         if (!tProductoID.getText().isEmpty()) {
@@ -1205,8 +1211,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
     //POST - PUT - DELETE DEL WEBSERVICE*/
     private void cuotasWSPOST(Integer id, ProductoCuotasVictoria cuotas) {
-       System.out.println("CUOTAS A INSERTAR " + cuotas.getJSON().toString() + "del ID: " + id + " con CODIGO " + cuotas.getCodigo());
-     /*
+      // System.out.println("CUOTAS A INSERTAR " + cuotas.getJSON().toString() + "del ID: " + id + " con CODIGO " + cuotas.getCodigo());
+     
        try {
             String url = "http://www.saracomercial.com/panel/api/loader/productos/" + id + "/cuotas";
             URL obj = new URL(url);
@@ -1239,7 +1245,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                 }
                 System.out.println("Let me rest a little bit...");
             }
-           
+           */
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;
@@ -1257,7 +1263,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         } catch (IOException ex) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         }
-         */
+         
         }
  private void cuotasWSPUT(Integer id, ProductoCuotasVictoria cuotas, Integer numero) {
        System.out.println("CUOTAS A ACTUALIZAR " + cuotas.getJSON().toString() + "del ID: " + id + " con NUMERO " + cuotas.getNumero());
@@ -2213,6 +2219,7 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         lVictoriaEstado = new javax.swing.JLabel();
         lVictoriaWorkerEstado = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         pVictoriaDetalle = new javax.swing.JPanel();
         lProductoCodigo1 = new javax.swing.JLabel();
         lProductoDescripcionLarga1 = new javax.swing.JLabel();
@@ -2457,8 +2464,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
         tMaestroCantidad.setEnabled(false);
         tMaestroCantidad.setPreferredSize(new java.awt.Dimension(100, 20));
 
-        cbOrigen2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         cbOrigen2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Impala", "Jellyfish", "Victoria", "Sara Comercial", " " }));
+        cbOrigen2.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         cbOrigen2.setPreferredSize(new java.awt.Dimension(60, 20));
         cbOrigen2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -4195,6 +4202,13 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
             }
         });
 
+        jButton2.setText("SARA COMERCIAL");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pVictoriaOperacionesLayout = new javax.swing.GroupLayout(pVictoriaOperaciones);
         pVictoriaOperaciones.setLayout(pVictoriaOperacionesLayout);
         pVictoriaOperacionesLayout.setHorizontalGroup(
@@ -4207,8 +4221,10 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(bVictoriaSincronizar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(52, 52, 52)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lVictoriaWorkerEstado, javax.swing.GroupLayout.DEFAULT_SIZE, 871, Short.MAX_VALUE)
+                        .addComponent(lVictoriaWorkerEstado, javax.swing.GroupLayout.DEFAULT_SIZE, 666, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(lVictoriaEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -4222,10 +4238,11 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
                         .addComponent(bVictoriaSincronizar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton1))
                     .addComponent(lVictoriaWorkerEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lVictoriaEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lVictoriaEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(216, Short.MAX_VALUE))
+                .addContainerGap(198, Short.MAX_VALUE))
         );
 
         tpVictoria.addTab("Operaciones", pVictoriaOperaciones);
@@ -5167,8 +5184,8 @@ public class main extends javax.swing.JFrame implements java.beans.PropertyChang
 
         tpPrincipal.addTab("Website", pWebsite);
 
-        cbOrigen1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         cbOrigen1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Impala", "Jellyfish", "Victoria", "Sara Comercial", " " }));
+        cbOrigen1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         cbOrigen1.setPreferredSize(new java.awt.Dimension(60, 20));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -5685,6 +5702,10 @@ sincronizarImagen();
         // TODO add your handling code here:
     }//GEN-LAST:event_tProductoEstado1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -5745,6 +5766,7 @@ sincronizarImagen();
     private com.github.lgooddatepicker.components.DatePicker fechaHastaSC;
     private javax.swing.JButton insertarRubros;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -6203,7 +6225,7 @@ sincronizarImagen();
             } else {
                 lVictoriaEstado.setText("Cargando " + value + "%");
             }
-        } else if ("ImagenesVWorker".equals(source)) { //PARA IMAGENES DE LA PAGINA WEB
+        } /* else if ("ImagenVWorker".equals(source)) { //PARA IMAGENES DE LA PAGINA WEB
             if (value.equals("STARTED")) {
                 taVictoriaSincronizar.setText("");
                 bVictoriaSincronizar.setText("Detener");
@@ -6221,7 +6243,7 @@ sincronizarImagen();
                         
                         //   productosTurno(victoriaW.get());
                         
-                        if (productosFinalizados != null) {
+                        if (imagenesFinalizadas != null) {
                             
                             if (imagenesW.getHilosConError() > 0) {
                                 lVictoriaEstado.setText("Finalizado con errores.");
@@ -6247,7 +6269,7 @@ sincronizarImagen();
             } else {
                 lVictoriaEstado.setText("Cargando " + value + "%");
             }
-        } //
+        } */
         else if ("ProductosVictoriaWorker".equals(source)) {
             if (value.equals("STARTED")) {
                 taVictoriaSincronizar.append("\nCargando los PRODUCTOS de VICTORIA...");
@@ -6611,7 +6633,7 @@ sincronizarImagen();
              } else if (value.equals("DONE")) {
                 if (cuotasSCW.isDone()) {
                     taVictoriaSincronizar.append("\nCUOTAS de SARA COMERCIAL cargadas.");
-                       cuotasRecorrido();
+                     //  cuotasRecorrido();
                     
 
                   

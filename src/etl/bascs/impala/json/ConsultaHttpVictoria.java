@@ -60,12 +60,14 @@ public class ConsultaHttpVictoria {
 private void conectar() {
         try {
             url = new URL(protocolo+"://"+servidor+":"+puerto+productos);
-            /*
+            
+            System.out.println("URL " + url);
+            
             System.out.println("PROT " + protocolo);
             System.out.println("SER " + servidor);
             System.out.println("PUER " + puerto);
             System.out.println("RECUR " + productos);
-            */
+            
             con = url.openConnection();
             
             con.setRequestProperty("Access-Control-Request-Method", metodoGET);
@@ -108,6 +110,7 @@ private void conectar() {
             
         } catch (MalformedURLException ex) {
             error = true;
+            
             errorMessage = "Error en el armado de URL";
             debugMessage = ex.getMessage();
             System.out.println("EX: "+ex.getMessage());

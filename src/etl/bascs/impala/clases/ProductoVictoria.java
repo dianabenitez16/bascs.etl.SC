@@ -8,6 +8,7 @@ package etl.bascs.impala.clases;
 import bascs.website.clases.RubroSC;
 import etl.bascs.impala.main;
 import etl.bascs.victoria.clases.CuotasVictoriaWorker;
+import etl.bascs.victoria.clases.ImagenesVictoria;
 import etl.bascs.victoria.clases.ProductoVictoriaWorker;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class ProductoVictoria {
     private String descripcion;
     private String nombre;
     private String marca;
+    private String imagen;
     private Integer precio_contado;
     private Integer marca_id;
     private Integer stock;
@@ -41,6 +43,7 @@ public class ProductoVictoria {
     private RubroSC rubroSC;
 
     private MarcaVictoria marcaVictoria;
+    private ImagenesVictoria imagenes;
     private MarcaSC marcaSC;
     private Boolean bandera = false;
     public ProductoVictoria() {
@@ -56,13 +59,14 @@ public class ProductoVictoria {
             setDescripcion((getDescripcion() == null ? productoJ.optString("descripcion") : getDescripcion()));
             setMarcaVictoria(new MarcaVictoria(productoJ.getJSONObject("marca")));
             setRubroVictoria(new RubroVictoria(productoJ.getJSONObject("rubro")));
-
-            setPrecio_contado((getPrecio_contado() == null ? productoJ.optInt("precio") : getPrecio_contado()));
+            setImagenes(new ImagenesVictoria(productoJ.getJSONObject("multimedia")));
+            
+          //  setPrecio_contado((getPrecio_contado() == null ? productoJ.optInt("precio") : getPrecio_contado()));
 
             cuotas = new ArrayList<>();
             if (productoJ.has("cuotas")) {
                 bandera = true;
-                System.out.println("BANDERAita " + bandera);
+             //   System.out.println("BANDERAita " + bandera);
                 JSONArray cuotaJ = productoJ.optJSONArray("cuotas");
                 
                 for (int i = 0; i < cuotaJ.length(); i++) {
@@ -78,6 +82,7 @@ public class ProductoVictoria {
                 }
 
             }
+            
 
             cargado = true;
         } catch (JSONException e) {
@@ -226,6 +231,22 @@ public class ProductoVictoria {
         this.codigoAlternativo = codigoAlternativo;
     }
 
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
+    public ImagenesVictoria getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(ImagenesVictoria imagenes) {
+        this.imagenes = imagenes;
+    }
+
     public String decodeUFT(String rawString) {
         if (rawString == null || rawString.isEmpty()) {
             return "";
@@ -248,10 +269,20 @@ public class ProductoVictoria {
         object.put("codigo_interno_ws", getCodigo());
         object.put("nombre", getNombre());
         object.put("descripcion_corta", getDescripcion());
-        object.put("marca_id", getMarcaSC().getId());
-        object.put("rubro_id", getRubroSC().getId());
+//        object.put("marca_id", getMarcaSC().getId());
+ //       object.put("rubro_id", getRubroSC().getId());
         object.put("precio", getPrecio_contado());
         object.put("stock", "10");
+
+        return object;
+    }
+public JSONObject getImagenJSON() {
+        JSONObject object;
+        object = new JSONObject();
+
+        object.put("codigo_interno_ws", getImagenes().getCodigo());
+        object.put("imagen", getImagenes().getImagen());
+
 
         return object;
     }

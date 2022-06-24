@@ -9,6 +9,7 @@ package etl.bascs.victoria.clases;
 import bascs.website.clases.ProductoSC;
 import bascs.website.clases.ProductosWorkerSC;
 import etl.bascs.impala.clases.ProductoVictoria;
+import etl.bascs.impala.main;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -38,17 +39,19 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     public JSONArray jsArray;
     private ProductosWorkerSC proSCW;
     private ProductosWorkerSC[] proSCW1;
-    private ProductoSC[] productosACompararSC;
-    
+    public ProductoSC[] productosACompararSC;
+    public Properties propVic;
     public Properties propiedades;
-    public Properties propSC = new Properties();
+    
     
     public ProductoVictoria[] productosFinalizados;
     public ProductoVictoria productosAComparar;
     
+    public ProductosWorkerSC productosWorkerSC;
     public ProductosVictoriaWorker productosWorker;
     public ProductoVictoriaWorker[] productosDetalleWorker;
     public ProductoVictoriaWorker productoDetalleWorker;
+    public ProductoSC[] productoSC;
     //public CuotasVictoriaWorker[] productosCuotasWorker; // se deshabilita porque el worker de DETALLE ya trae las cuotas
     
     public JLabel estado;
@@ -59,18 +62,24 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
         productosFinalizados = new ProductoVictoria[0];
         productosDetalleWorker = new ProductoVictoriaWorker[0];
         proSCW1 = new ProductosWorkerSC[0];
-        
+        productoSC = new ProductoSC[0];
         //productosCuotasWorker = new CuotasVictoriaWorker[0];
-      //  propiedades = propSC;
+        
         propiedades = prop;
     }
-    
+     
+   
     public void iniciar(){
+      
+        
+      
       productosWorker = new ProductosVictoriaWorker(propiedades);  
       productosWorker.addPropertyChangeListener(this);
+      
+      proSCW = new ProductosWorkerSC(propiedades);  
+  //    productosWorker.addPropertyChangeListener(this);
      
-        
-        System.out.println("PROP " + propSC.getProperty("servidor"));
+      
       hilosMaximo = 2; //Integer.valueOf(propiedades.getProperty("hilos"));
       hilosCorriendo = 0;
       hilosIniciados = 0;
@@ -78,7 +87,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
       hilosConError = 0;
       hilosACorrer = 0;
       codigosConError = "";
-     
+   
     }
 
     @Override
@@ -177,7 +186,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
             System.out.println(clase+">> "+source+" > "+value+" | ID: "+detalle.id);
 
             if(value.equals("DONE")){
-                System.out.println("CODIGO "  + productosAComparar.getCodigo());
+             
                 try {
                     if(productosDetalleWorker[detalle.id].isCancelled()){
                         
@@ -199,13 +208,11 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                                 for (ProductoSC productoSC : productosACompararSC ) {
                                     
                                  if (productosAComparar.getCodigo().equals(productoSC.getCodigo())) {
-                                    nuevo = false;
-                                     System.out.println("YA ESTA EN LA PAGINA WEB");
-                                   
+                                     System.out.println("LA IMAGEN VA ACÁ");
                                 }
-                          } 
+                                }
                               if(nuevo){
-                                  ProductosWSPOST(productosAComparar);
+                                  ImagenesWSPOST(productosAComparar);
                               } 
                             
                             System.out.println("Producto OK: "+productosDetalleWorker[detalle.id].get().getCodigo());
@@ -225,36 +232,6 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                 }
 
             }
-        }else if("CuotasVictoriaWorker".equals(source)){
-            /*
-            CuotasVictoriaWorker cuotas = (ProductoVictoriaWorker) evt.getSource();
-            //System.out.println(clase+">> "+source+" > "+value+" | ID: "+detalle.id);
-            if(value.equals("DONE")){
-                try {
-                    if(productosDetalleWorker[detalle.id].isCancelled()){
-                        
-                    }else{
-                        productosFinalizados[hilosFinalizados] = productosDetalleWorker[detalle.id].get();
-                        
-                        
-                        
-                        //System.out.println("Producto: "+detalleV[detalle.id].get().getCodigo());
-                        if(productosDetalleWorker[detalle.id].getError()){
-                            hilosConError++;
-                            codigosConError += detalle.producto.getCodigo()+", ";
-                        }
-                        hilosFinalizados ++;
-                        hilosCorriendo --;
-                        setProgress(((hilosFinalizados+1)*100)/hilosACorrer);
-                        Integer progress = ((hilosFinalizados+1)*100)/hilosACorrer;
-                        this.progress.setText("Cargando " + (progress).toString()+"%");
-                    }
-                } catch (InterruptedException | ExecutionException ex) {
-                    System.out.println("EX:"+ex.getLocalizedMessage());
-                    Logger.getLogger(VictoriaWorker.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        */
         }
     }
 
@@ -313,8 +290,13 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     public void setCodigosConError(String codigosConError) {
         this.codigosConError = codigosConError;
     }
-    public void ProductosWSPOST(ProductoVictoria productoVT) {
-       System.out.println("PRODUCTOS A INSERTAR " + productoVT.getJSON().toString());
-       }
 
+  
+    
+    public void ProductosWSPOST(ProductoVictoria productoVT) {
+       System.out.println("PRODUCTOS A INSERTAR " + productoVT.toString());
+       }
+     public void ImagenesWSPOST(ProductoVictoria productoVT) {
+       System.out.println("IMAGENES A INSERTAR " + productoVT.getImagenJSON());
+       }
 }

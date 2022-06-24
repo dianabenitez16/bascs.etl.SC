@@ -44,10 +44,10 @@ public class ProductoVictoriaWorker extends SwingWorker<ProductoVictoria, String
         try {
             setProgress(0);
             consulta = new ConsultaHttpVictoria("http",
-                    propiedades.getProperty("servidor"),
-                    propiedades.getProperty("puerto"),
+                    propiedades.getProperty("servidorVT"),
+                    propiedades.getProperty("puertoVT"),
                     propiedades.getProperty("metodoGET"),
-                    propiedades.getProperty("detalle") + producto.getCodigo());
+                    propiedades.getProperty("detalleVT") + producto.getCodigo());
 
             if (main.DEBUG) {
                 /*

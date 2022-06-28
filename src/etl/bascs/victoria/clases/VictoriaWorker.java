@@ -309,7 +309,7 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
        System.out.println("PRODUCTOS A INSERTAR " + productoVT.toString());
        }
      public void ImagenesWSPOST(ProductoVictoria productoVT, Integer id) {
-     // System.out.println("IMAGENES A INSERTAR " + productoVT.getImagenJSON() + "CON EL ID " + id);
+     System.out.println("IMAGENES A INSERTAR " + productoVT.getImagenJSON() + "CON EL ID " + id);
        
        try {
 

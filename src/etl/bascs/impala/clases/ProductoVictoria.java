@@ -271,6 +271,7 @@ public class ProductoVictoria {
         object.put("descripcion_corta", getDescripcion());
 //        object.put("marca_id", getMarcaSC().getId());
  //       object.put("rubro_id", getRubroSC().getId());
+        object.put("imagen", getImagenes().getImagen());
         object.put("precio", getPrecio_contado());
         object.put("stock", "10");
 

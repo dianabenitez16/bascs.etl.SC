@@ -33,6 +33,7 @@ public class ProductoSC {
     private Integer visible;
     private Integer habilitado;
     public Boolean cargado;
+    public Boolean imagen=false;
 
     private String rubro;
     private Boolean bandera = false;
@@ -75,6 +76,7 @@ public class ProductoSC {
             setHabilitado((getHabilitado() == null ? productoJ.optInt("habilitado") : getHabilitado()));
             
             
+            
             cargado = true;
             
 
@@ -95,7 +97,15 @@ public class ProductoSC {
             setRubroSC(new RubroSC(productoJ.getJSONObject("rubro")));
             setVisible(productoJ.optInt("visible"));
             setHabilitado(productoJ.optInt("habilitado"));
-
+            if(productoJ.has("imagenes")){
+                JSONArray imagenesJ = productoJ.optJSONArray("imagenes");
+                if(!imagenesJ.isEmpty()){
+                            imagen = true;
+                            System.out.println("TIENE IMAGEN " + getCodigo());
+                }else{
+                   
+                }
+            }
             cargado = true;
         } catch (JSONException e) {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, e);

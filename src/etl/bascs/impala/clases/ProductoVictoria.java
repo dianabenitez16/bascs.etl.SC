@@ -280,7 +280,7 @@ public JSONObject getImagenJSON() {
         JSONObject object;
         object = new JSONObject();
 
-        object.put("codigo_interno_ws", getImagenes().getCodigo());
+    //    object.put("codigo_interno_ws", getCodigo());
         object.put("imagen", getImagenes().getImagen());
 
 

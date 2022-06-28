@@ -12,6 +12,15 @@ import etl.bascs.impala.clases.ProductoVictoria;
 import etl.bascs.impala.main;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -208,12 +217,15 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
                                 for (ProductoSC productoSC : productosACompararSC ) {
                                     
                                  if (productosAComparar.getCodigo().equals(productoSC.getCodigo())) {
+                                     if(!productoSC.imagen){
+                                         ImagenesWSPOST(productosAComparar, productoSC.getId());
                                      System.out.println("LA IMAGEN VA ACÁ");
+                                     }
                                 }
+                                 
+                                 
                                 }
-                              if(nuevo){
-                                  ImagenesWSPOST(productosAComparar);
-                              } 
+                               
                             
                             System.out.println("Producto OK: "+productosDetalleWorker[detalle.id].get().getCodigo());
                         }
@@ -296,7 +308,58 @@ public class VictoriaWorker extends SwingWorker<ProductoVictoria[], String> impl
     public void ProductosWSPOST(ProductoVictoria productoVT) {
        System.out.println("PRODUCTOS A INSERTAR " + productoVT.toString());
        }
-     public void ImagenesWSPOST(ProductoVictoria productoVT) {
-       System.out.println("IMAGENES A INSERTAR " + productoVT.getImagenJSON());
+     public void ImagenesWSPOST(ProductoVictoria productoVT, Integer id) {
+     // System.out.println("IMAGENES A INSERTAR " + productoVT.getImagenJSON() + "CON EL ID " + id);
+       
+       try {
+
+                String url = "https://portal.saracomercial.com/api/loader/productos/"+id+"/imagenes";
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-type", "application/json");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Authorization", "Bearer 5|qWJSOFV23sfTloGxkvkT0KUym0gCnEfkGQuipq9k");
+
+                String urlParameters = productoVT.getJSON().toString();
+
+                // Send post request
+                con.setDoOutput(true);
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
+                bw.write(urlParameters);
+                bw.flush();
+                bw.close();
+
+                int responseCode = con.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+          //      System.out.println("Post parameters : " + urlParameters);
+                System.out.println("Response Code : " + responseCode);
+                System.out.println("Content-Type: " + con.getRequestProperty("Content-type"));
+                System.out.println("Accept: " + con.getRequestProperty("Accept"));
+                System.out.println("Authorization: " +"Bearer 5|qWJSOFV23sfTloGxkvkT0KUym0gCnEfkGQuipq9k");
+                System.out.println("Method: " + con.getRequestMethod());
+                System.out.println("Date: " + con.getDate());
+
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                //print result
+                System.out.println(response.toString());
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ProtocolException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+   
        }
 }
